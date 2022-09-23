@@ -17,13 +17,13 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#assessedBy
 <https://knacc.umbc.edu/leroy/ontologies/synthea#assessedBy> rdf:type owl:ObjectProperty ;
                                                           rdfs:subPropertyOf owl:topObjectProperty ;
-                                                          rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                          rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                           rdfs:range syn:Provider .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#assessedIn
 <https://knacc.umbc.edu/leroy/ontologies/synthea#assessedIn> rdf:type owl:ObjectProperty ;
-                                                          rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                          rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                           rdfs:range syn:Organization .
 
 
@@ -31,7 +31,7 @@
 <https://knacc.umbc.edu/leroy/ontologies/synthea#encounterdPatient> rdf:type owl:ObjectProperty ;
                                                                  rdfs:subPropertyOf owl:topObjectProperty ;
                                                                  owl:inverseOf <https://knacc.umbc.edu/leroy/ontologies/synthea#hasEncounterRecord> ;
-                                                                 rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                                 rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                                  rdfs:range syn:Patient .
 
 
@@ -39,14 +39,14 @@
 <https://knacc.umbc.edu/leroy/ontologies/synthea#hasEncounterRecord> rdf:type owl:ObjectProperty ;
                                                                   rdfs:subPropertyOf owl:topObjectProperty ;
                                                                   rdfs:domain syn:Patient ;
-                                                                  rdfs:range <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
+                                                                  rdfs:range <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#isFromEncounter
 <https://knacc.umbc.edu/leroy/ontologies/synthea#isFromEncounter> rdf:type owl:ObjectProperty ;
                                                                rdfs:subPropertyOf owl:topObjectProperty ;
                                                                rdfs:domain syn:Observation ;
-                                                               rdfs:range <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
+                                                               rdfs:range <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#observedPatient
@@ -58,7 +58,7 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#paidBy
 <https://knacc.umbc.edu/leroy/ontologies/synthea#paidBy> rdf:type owl:ObjectProperty ;
                                                       rdfs:subPropertyOf owl:topObjectProperty ;
-                                                      rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                      rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                       rdfs:range syn:Payer .
 
 
@@ -81,7 +81,7 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#base_encounter_cost
 <https://knacc.umbc.edu/leroy/ontologies/synthea#base_encounter_cost> rdf:type owl:DatatypeProperty ;
                                                                    rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                   rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                                   rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                                    rdfs:range xsd:float .
 
 
@@ -149,27 +149,27 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_class
 <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_class> rdf:type owl:DatatypeProperty ;
                                                                rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                               rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                               rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                                rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_code
 <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_code> rdf:type owl:DatatypeProperty ;
                                                               rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                              rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                              rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                               rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data
 <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> rdf:type owl:DatatypeProperty ;
                                                               rdfs:subPropertyOf owl:topDataProperty ;
-                                                              rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
+                                                              rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_description
 <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_description> rdf:type owl:DatatypeProperty ;
                                                                      rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                     rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                                     rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                                      rdfs:range xsd:string .
 
 
@@ -214,7 +214,7 @@
                                                                      <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ,
                                                                      <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
                                                   rdfs:domain [ rdf:type owl:Class ;
-                                                                owl:unionOf ( <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter>
+                                                                owl:unionOf ( <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter>
                                                                               syn:Organization
                                                                               syn:Patient
                                                                             )
@@ -290,7 +290,7 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#payer_coverage
 <https://knacc.umbc.edu/leroy/ontologies/synthea#payer_coverage> rdf:type owl:DatatypeProperty ;
                                                               rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                              rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                              rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                               rdfs:range xsd:float .
 
 
@@ -311,14 +311,14 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#reason_code
 <https://knacc.umbc.edu/leroy/ontologies/synthea#reason_code> rdf:type owl:DatatypeProperty ;
                                                            rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                           rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                           rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                            rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#reason_description
 <https://knacc.umbc.edu/leroy/ontologies/synthea#reason_description> rdf:type owl:DatatypeProperty ;
                                                                   rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                  rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                                  rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                                   rdfs:range xsd:string .
 
 
@@ -339,7 +339,7 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#start_time
 <https://knacc.umbc.edu/leroy/ontologies/synthea#start_time> rdf:type owl:DatatypeProperty ;
                                                           rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                          rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                          rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                           rdfs:range xsd:dateTime .
 
 
@@ -358,14 +358,14 @@
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#stop_time
 <https://knacc.umbc.edu/leroy/ontologies/synthea#stop_time> rdf:type owl:DatatypeProperty ;
                                                          rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                         rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                         rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                          rdfs:range xsd:dateTime .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#total_claim_cost
 <https://knacc.umbc.edu/leroy/ontologies/synthea#total_claim_cost> rdf:type owl:DatatypeProperty ;
                                                                 rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                rdfs:domain <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
+                                                                rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
                                                                 rdfs:range xsd:float .
 
 
@@ -458,7 +458,7 @@ syn:Provider rdf:type owl:Class .
 #################################################################
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( <httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter>
+  owl:members ( <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter>
                 syn:Condition
                 syn:Immunization
                 syn:Medication
