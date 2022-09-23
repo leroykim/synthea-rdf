@@ -10,6 +10,7 @@ def convert(graph, row):
     graph.add((organization, SYN.address, string_literal(row['ADDRESS'])))
     graph.add((organization, SYN.city, string_literal(row['CITY'])))
     graph.add((organization, SYN.state, string_literal(row['STATE'])))
+    graph.add((organization, SYN.zip, string_literal(row['ZIP'])))
     graph.add((organization, SYN.phone, string_literal(row['PHONE'])))
     graph.add((organization, SYN.revenue, float_literal(row['REVENUE'])))
-    graph.add((organization, SYN.utilization, int_literal(row['UTILIZATION'])))
+    graph.add((orgaS
