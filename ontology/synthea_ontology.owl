@@ -1,7 +1,7 @@
 @prefix : <http://www.semanticweb.org/owl/owlapi/turtle#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix syn: <https://knacc.umbc.edu/leroy/ontologies/synthea-covid-19#> .
+@prefix syn: <https://knacc.umbc.edu/leroy/ontologies/synthea#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -14,20 +14,20 @@
 #    Object Properties
 #################################################################
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#assessedBy
+###  http://www.semanticweb.org/owl/owlapi/turtle#assessedBy
 :assessedBy rdf:type owl:ObjectProperty ;
             rdfs:subPropertyOf owl:topObjectProperty ;
             rdfs:domain :Encounter ;
             rdfs:range :Provider .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#assessedIn
+###  http://www.semanticweb.org/owl/owlapi/turtle#assessedIn
 :assessedIn rdf:type owl:ObjectProperty ;
             rdfs:domain :Encounter ;
             rdfs:range :Organization .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounterdPatient
+###  http://www.semanticweb.org/owl/owlapi/turtle#encounterdPatient
 :encounterdPatient rdf:type owl:ObjectProperty ;
                    rdfs:subPropertyOf owl:topObjectProperty ;
                    owl:inverseOf :hasEncounterRecord ;
@@ -35,27 +35,27 @@
                    rdfs:range :Patient .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#hasEncounterRecord
+###  http://www.semanticweb.org/owl/owlapi/turtle#hasEncounterRecord
 :hasEncounterRecord rdf:type owl:ObjectProperty ;
                     rdfs:subPropertyOf owl:topObjectProperty ;
                     rdfs:domain :Patient ;
                     rdfs:range :Encounter .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#isFromEncounter
+###  http://www.semanticweb.org/owl/owlapi/turtle#isFromEncounter
 :isFromEncounter rdf:type owl:ObjectProperty ;
                  rdfs:subPropertyOf owl:topObjectProperty ;
                  rdfs:domain :Observation ;
                  rdfs:range :Encounter .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#observedPatient
+###  http://www.semanticweb.org/owl/owlapi/turtle#observedPatient
 :observedPatient rdf:type owl:ObjectProperty ;
                  rdfs:domain :Observation ;
                  rdfs:range :Patient .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#paidBy
+###  http://www.semanticweb.org/owl/owlapi/turtle#paidBy
 :paidBy rdf:type owl:ObjectProperty ;
         rdfs:subPropertyOf owl:topObjectProperty ;
         rdfs:domain :Encounter ;
@@ -66,7 +66,7 @@
 #    Data properties
 #################################################################
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#address
+###  http://www.semanticweb.org/owl/owlapi/turtle#address
 :address rdf:type owl:DatatypeProperty ;
          rdfs:subPropertyOf :organization_data ,
                             :patient_data ;
@@ -78,35 +78,35 @@
          rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#base_encounter_cost
+###  http://www.semanticweb.org/owl/owlapi/turtle#base_encounter_cost
 :base_encounter_cost rdf:type owl:DatatypeProperty ;
                      rdfs:subPropertyOf :encounter_data ;
                      rdfs:domain :Encounter ;
                      rdfs:range xsd:float .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#birthdate
+###  http://www.semanticweb.org/owl/owlapi/turtle#birthdate
 :birthdate rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :patient_data ;
            rdfs:domain :Patient ;
            rdfs:range xsd:dateTime .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#birthplace
+###  http://www.semanticweb.org/owl/owlapi/turtle#birthplace
 :birthplace rdf:type owl:DatatypeProperty ;
             rdfs:subPropertyOf :patient_data ;
             rdfs:domain :Patient ;
             rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#category
+###  http://www.semanticweb.org/owl/owlapi/turtle#category
 :category rdf:type owl:DatatypeProperty ;
           rdfs:subPropertyOf :observation_data ;
           rdfs:domain :Observation ;
           rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#city
+###  http://www.semanticweb.org/owl/owlapi/turtle#city
 :city rdf:type owl:DatatypeProperty ;
       rdfs:subPropertyOf :organization_data ,
                          :patient_data ;
@@ -118,97 +118,97 @@
       rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#county
+###  http://www.semanticweb.org/owl/owlapi/turtle#county
 :county rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf :patient_data ;
         rdfs:domain :Patient ;
         rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#date
+###  http://www.semanticweb.org/owl/owlapi/turtle#date
 :date rdf:type owl:DatatypeProperty ;
       rdfs:subPropertyOf :observation_data ;
       rdfs:domain :Observation ;
       rdfs:range xsd:dateTime .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#deathdate
+###  http://www.semanticweb.org/owl/owlapi/turtle#deathdate
 :deathdate rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :patient_data ;
            rdfs:domain :Patient ;
            rdfs:range xsd:dateTime .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#drivers
+###  http://www.semanticweb.org/owl/owlapi/turtle#drivers
 :drivers rdf:type owl:DatatypeProperty ;
          rdfs:subPropertyOf :patient_data ;
          rdfs:domain :Patient ;
          rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_class
+###  http://www.semanticweb.org/owl/owlapi/turtle#encounter_class
 :encounter_class rdf:type owl:DatatypeProperty ;
                  rdfs:subPropertyOf :encounter_data ;
                  rdfs:domain :Encounter ;
                  rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_code
+###  http://www.semanticweb.org/owl/owlapi/turtle#encounter_code
 :encounter_code rdf:type owl:DatatypeProperty ;
                 rdfs:subPropertyOf :encounter_data ;
                 rdfs:domain :Encounter ;
                 rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data
+###  http://www.semanticweb.org/owl/owlapi/turtle#encounter_data
 :encounter_data rdf:type owl:DatatypeProperty ;
                 rdfs:subPropertyOf owl:topDataProperty ;
                 rdfs:domain :Encounter .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_description
+###  http://www.semanticweb.org/owl/owlapi/turtle#encounter_description
 :encounter_description rdf:type owl:DatatypeProperty ;
                        rdfs:subPropertyOf :encounter_data ;
                        rdfs:domain :Encounter ;
                        rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#ethnicity
+###  http://www.semanticweb.org/owl/owlapi/turtle#ethnicity
 :ethnicity rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :patient_data ;
            rdfs:domain :Patient ;
            rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#firstname
+###  http://www.semanticweb.org/owl/owlapi/turtle#firstname
 :firstname rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :patient_data ;
            rdfs:domain :Patient ;
            rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#gender
+###  http://www.semanticweb.org/owl/owlapi/turtle#gender
 :gender rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf :patient_data ;
         rdfs:domain :Patient ;
         rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#healthcare_coverage
+###  http://www.semanticweb.org/owl/owlapi/turtle#healthcare_coverage
 :healthcare_coverage rdf:type owl:DatatypeProperty ;
                      rdfs:subPropertyOf :patient_data ;
                      rdfs:domain :Patient ;
                      rdfs:range xsd:float .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#healthcare_expenses
+###  http://www.semanticweb.org/owl/owlapi/turtle#healthcare_expenses
 :healthcare_expenses rdf:type owl:DatatypeProperty ;
                      rdfs:subPropertyOf :patient_data ;
                      rdfs:domain :Patient ;
                      rdfs:range xsd:float .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#id
+###  http://www.semanticweb.org/owl/owlapi/turtle#id
 :id rdf:type owl:DatatypeProperty ;
     rdfs:subPropertyOf :encounter_data ,
                        :organization_data ,
@@ -222,128 +222,128 @@
     rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#income
+###  http://www.semanticweb.org/owl/owlapi/turtle#income
 :income rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf :patient_data ;
         rdfs:domain :Patient ;
         rdfs:range xsd:int .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#lastname
+###  http://www.semanticweb.org/owl/owlapi/turtle#lastname
 :lastname rdf:type owl:DatatypeProperty ;
           rdfs:subPropertyOf :patient_data ;
           rdfs:domain :Patient ;
           rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#marital
+###  http://www.semanticweb.org/owl/owlapi/turtle#marital
 :marital rdf:type owl:DatatypeProperty ;
          rdfs:subPropertyOf :patient_data ;
          rdfs:domain :Patient ;
          rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#name
+###  http://www.semanticweb.org/owl/owlapi/turtle#name
 :name rdf:type owl:DatatypeProperty ;
       rdfs:subPropertyOf :organization_data ;
       rdfs:domain :Organization ;
       rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#observation_code
+###  http://www.semanticweb.org/owl/owlapi/turtle#observation_code
 :observation_code rdf:type owl:DatatypeProperty ;
                   rdfs:subPropertyOf :observation_data ;
                   rdfs:domain :Observation ;
                   rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data
+###  http://www.semanticweb.org/owl/owlapi/turtle#observation_data
 :observation_data rdf:type owl:DatatypeProperty ;
                   rdfs:subPropertyOf owl:topDataProperty .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#observation_description
+###  http://www.semanticweb.org/owl/owlapi/turtle#observation_description
 :observation_description rdf:type owl:DatatypeProperty ;
                          rdfs:subPropertyOf :observation_data ;
                          rdfs:domain :Observation ;
                          rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data
+###  http://www.semanticweb.org/owl/owlapi/turtle#organization_data
 :organization_data rdf:type owl:DatatypeProperty ;
                    rdfs:subPropertyOf owl:topDataProperty .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#passport
+###  http://www.semanticweb.org/owl/owlapi/turtle#passport
 :passport rdf:type owl:DatatypeProperty ;
           rdfs:subPropertyOf :patient_data ;
           rdfs:domain :Patient ;
           rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data
+###  http://www.semanticweb.org/owl/owlapi/turtle#patient_data
 :patient_data rdf:type owl:DatatypeProperty ;
               rdfs:subPropertyOf owl:topDataProperty ;
               rdfs:domain :Patient .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#payer_coverage
+###  http://www.semanticweb.org/owl/owlapi/turtle#payer_coverage
 :payer_coverage rdf:type owl:DatatypeProperty ;
                 rdfs:subPropertyOf :encounter_data ;
                 rdfs:domain :Encounter ;
                 rdfs:range xsd:float .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#phone
+###  http://www.semanticweb.org/owl/owlapi/turtle#phone
 :phone rdf:type owl:DatatypeProperty ;
        rdfs:subPropertyOf :organization_data ;
        rdfs:domain :Organization ;
        rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#race
+###  http://www.semanticweb.org/owl/owlapi/turtle#race
 :race rdf:type owl:DatatypeProperty ;
       rdfs:subPropertyOf :patient_data ;
       rdfs:domain :Patient ;
       rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#reason_code
+###  http://www.semanticweb.org/owl/owlapi/turtle#reason_code
 :reason_code rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf :encounter_data ;
              rdfs:domain :Encounter ;
              rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#reason_description
+###  http://www.semanticweb.org/owl/owlapi/turtle#reason_description
 :reason_description rdf:type owl:DatatypeProperty ;
                     rdfs:subPropertyOf :encounter_data ;
                     rdfs:domain :Encounter ;
                     rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#revenue
+###  http://www.semanticweb.org/owl/owlapi/turtle#revenue
 :revenue rdf:type owl:DatatypeProperty ;
          rdfs:subPropertyOf :organization_data ;
          rdfs:domain :Organization ;
          rdfs:range xsd:float .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#ssn
+###  http://www.semanticweb.org/owl/owlapi/turtle#ssn
 :ssn rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf :patient_data ;
      rdfs:domain :Patient ;
      rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#start_time
+###  http://www.semanticweb.org/owl/owlapi/turtle#start_time
 :start_time rdf:type owl:DatatypeProperty ;
             rdfs:subPropertyOf :encounter_data ;
             rdfs:domain :Encounter ;
             rdfs:range xsd:dateTime .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#state
+###  http://www.semanticweb.org/owl/owlapi/turtle#state
 :state rdf:type owl:DatatypeProperty ;
        rdfs:subPropertyOf :organization_data ,
                           :patient_data ;
@@ -355,49 +355,49 @@
        rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#stop_time
+###  http://www.semanticweb.org/owl/owlapi/turtle#stop_time
 :stop_time rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :encounter_data ;
            rdfs:domain :Encounter ;
            rdfs:range xsd:dateTime .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#total_claim_cost
+###  http://www.semanticweb.org/owl/owlapi/turtle#total_claim_cost
 :total_claim_cost rdf:type owl:DatatypeProperty ;
                   rdfs:subPropertyOf :encounter_data ;
                   rdfs:domain :Encounter ;
                   rdfs:range xsd:float .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#type
+###  http://www.semanticweb.org/owl/owlapi/turtle#type
 :type rdf:type owl:DatatypeProperty ;
       rdfs:subPropertyOf :observation_data ;
       rdfs:domain :Observation ;
       rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#units
+###  http://www.semanticweb.org/owl/owlapi/turtle#units
 :units rdf:type owl:DatatypeProperty ;
        rdfs:subPropertyOf :observation_data ;
        rdfs:domain :Observation ;
        rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#utilization
+###  http://www.semanticweb.org/owl/owlapi/turtle#utilization
 :utilization rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf :organization_data ;
              rdfs:domain :Organization ;
              rdfs:range xsd:int .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#value
+###  http://www.semanticweb.org/owl/owlapi/turtle#value
 :value rdf:type owl:DatatypeProperty ;
        rdfs:subPropertyOf :observation_data ;
        rdfs:domain :Observation ;
        rdfs:range xsd:string .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#zip
+###  http://www.semanticweb.org/owl/owlapi/turtle#zip
 :zip rdf:type owl:DatatypeProperty ;
      rdfs:subPropertyOf :organization_data ,
                         :patient_data ;
@@ -413,43 +413,43 @@
 #    Classes
 #################################################################
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Condition
+###  http://www.semanticweb.org/owl/owlapi/turtle#Condition
 :Condition rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter
+###  http://www.semanticweb.org/owl/owlapi/turtle#Encounter
 :Encounter rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Immunization
+###  http://www.semanticweb.org/owl/owlapi/turtle#Immunization
 :Immunization rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Medication
+###  http://www.semanticweb.org/owl/owlapi/turtle#Medication
 :Medication rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Observation
+###  http://www.semanticweb.org/owl/owlapi/turtle#Observation
 :Observation rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Organization
+###  http://www.semanticweb.org/owl/owlapi/turtle#Organization
 :Organization rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Patient
+###  http://www.semanticweb.org/owl/owlapi/turtle#Patient
 :Patient rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Payer
+###  http://www.semanticweb.org/owl/owlapi/turtle#Payer
 :Payer rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Procedure
+###  http://www.semanticweb.org/owl/owlapi/turtle#Procedure
 :Procedure rdf:type owl:Class .
 
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Provider
+###  http://www.semanticweb.org/owl/owlapi/turtle#Provider
 :Provider rdf:type owl:Class .
 
 
