@@ -13,4 +13,4 @@ def convert(graph, row):
     graph.add((organization, SYN.zip, string_literal(row['ZIP'])))
     graph.add((organization, SYN.phone, string_literal(row['PHONE'])))
     graph.add((organization, SYN.revenue, float_literal(row['REVENUE'])))
-    graph.add((orgaS
+    graph.add((organization, SYN.utilization, int_literal(row['UTILIZATION'])))
