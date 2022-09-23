@@ -413,8 +413,8 @@
 #    Classes
 #################################################################
 
-###  httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter
-<httphttps://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> rdf:type owl:Class .
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter
+<https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> rdf:type owl:Class .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#Condition
