@@ -15,51 +15,60 @@
 #################################################################
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#assessedBy
-<https://knacc.umbc.edu/leroy/ontologies/synthea#assessedBy> rdf:type owl:ObjectProperty ;
-                                                          rdfs:subPropertyOf owl:topObjectProperty ;
-                                                          rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                          rdfs:range syn:Provider .
+syn:assessedBy rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf owl:topObjectProperty ;
+               rdfs:domain syn:Encounter ;
+               rdfs:range syn:Provider .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#assessedIn
-<https://knacc.umbc.edu/leroy/ontologies/synthea#assessedIn> rdf:type owl:ObjectProperty ;
-                                                          rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                          rdfs:range syn:Organization .
+syn:assessedIn rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf owl:topObjectProperty ;
+               rdfs:domain syn:Encounter ;
+               rdfs:range syn:Organization .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#belongsTo
+syn:belongsTo rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf owl:topObjectProperty ;
+              rdfs:domain syn:Provider ;
+              rdfs:range syn:Organization .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounterdPatient
-<https://knacc.umbc.edu/leroy/ontologies/synthea#encounterdPatient> rdf:type owl:ObjectProperty ;
-                                                                 rdfs:subPropertyOf owl:topObjectProperty ;
-                                                                 owl:inverseOf <https://knacc.umbc.edu/leroy/ontologies/synthea#hasEncounterRecord> ;
-                                                                 rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                                 rdfs:range syn:Patient .
+syn:encounterdPatient rdf:type owl:ObjectProperty ;
+                      rdfs:subPropertyOf owl:topObjectProperty ;
+                      owl:inverseOf syn:hasEncounterRecord ;
+                      rdfs:domain syn:Encounter ;
+                      rdfs:range syn:Patient .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#hasEncounterRecord
-<https://knacc.umbc.edu/leroy/ontologies/synthea#hasEncounterRecord> rdf:type owl:ObjectProperty ;
-                                                                  rdfs:subPropertyOf owl:topObjectProperty ;
-                                                                  rdfs:domain syn:Patient ;
-                                                                  rdfs:range <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
+syn:hasEncounterRecord rdf:type owl:ObjectProperty ;
+                       rdfs:subPropertyOf owl:topObjectProperty ;
+                       rdfs:domain syn:Patient ;
+                       rdfs:range syn:Encounter .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#isFromEncounter
-<https://knacc.umbc.edu/leroy/ontologies/synthea#isFromEncounter> rdf:type owl:ObjectProperty ;
-                                                               rdfs:subPropertyOf owl:topObjectProperty ;
-                                                               rdfs:domain syn:Observation ;
-                                                               rdfs:range <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
+syn:isFromEncounter rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf owl:topObjectProperty ;
+                    rdfs:domain syn:Observation ;
+                    rdfs:range syn:Encounter .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#observedPatient
-<https://knacc.umbc.edu/leroy/ontologies/synthea#observedPatient> rdf:type owl:ObjectProperty ;
-                                                               rdfs:domain syn:Observation ;
-                                                               rdfs:range syn:Patient .
+syn:observedPatient rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf owl:topObjectProperty ;
+                    rdfs:domain syn:Observation ;
+                    rdfs:range syn:Patient .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#paidBy
-<https://knacc.umbc.edu/leroy/ontologies/synthea#paidBy> rdf:type owl:ObjectProperty ;
-                                                      rdfs:subPropertyOf owl:topObjectProperty ;
-                                                      rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                      rdfs:range syn:Payer .
+syn:paidBy rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf owl:topObjectProperty ;
+           rdfs:domain syn:Encounter ;
+           rdfs:range syn:Payer .
 
 
 #################################################################
@@ -67,358 +76,518 @@
 #################################################################
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#address
-<https://knacc.umbc.edu/leroy/ontologies/synthea#address> rdf:type owl:DatatypeProperty ;
-                                                       rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ,
-                                                                          <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                       rdfs:domain [ rdf:type owl:Class ;
-                                                                     owl:unionOf ( syn:Organization
-                                                                                   syn:Patient
-                                                                                 )
-                                                                   ] ;
-                                                       rdfs:range xsd:string .
+syn:address rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf syn:organization_data ,
+                               syn:patient_data ,
+                               syn:payer_data ,
+                               syn:provider_data ;
+            rdfs:domain [ rdf:type owl:Class ;
+                          owl:unionOf ( syn:Organization
+                                        syn:Patient
+                                        syn:Payer
+                                        syn:Provider
+                                      )
+                        ] ;
+            rdfs:range xsd:string .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#amount_covered
+syn:amount_covered rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf syn:payer_data ;
+                   rdfs:domain syn:Payer ;
+                   rdfs:range xsd:float .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#amount_uncovered
+syn:amount_uncovered rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf syn:payer_data ;
+                     rdfs:domain syn:Payer ;
+                     rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#base_encounter_cost
-<https://knacc.umbc.edu/leroy/ontologies/synthea#base_encounter_cost> rdf:type owl:DatatypeProperty ;
-                                                                   rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                   rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                                   rdfs:range xsd:float .
+syn:base_encounter_cost rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf syn:encounter_data ;
+                        rdfs:domain syn:Encounter ;
+                        rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#birthdate
-<https://knacc.umbc.edu/leroy/ontologies/synthea#birthdate> rdf:type owl:DatatypeProperty ;
-                                                         rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                         rdfs:domain syn:Patient ;
-                                                         rdfs:range xsd:dateTime .
+syn:birthdate rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf syn:patient_data ;
+              rdfs:domain syn:Patient ;
+              rdfs:range xsd:dateTime .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#birthplace
-<https://knacc.umbc.edu/leroy/ontologies/synthea#birthplace> rdf:type owl:DatatypeProperty ;
-                                                          rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                          rdfs:domain syn:Patient ;
-                                                          rdfs:range xsd:string .
+syn:birthplace rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf syn:patient_data ;
+               rdfs:domain syn:Patient ;
+               rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#category
-<https://knacc.umbc.edu/leroy/ontologies/synthea#category> rdf:type owl:DatatypeProperty ;
-                                                        rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> ;
-                                                        rdfs:domain syn:Observation ;
-                                                        rdfs:range xsd:string .
+syn:category rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf syn:observation_data ;
+             rdfs:domain syn:Observation ;
+             rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#city
-<https://knacc.umbc.edu/leroy/ontologies/synthea#city> rdf:type owl:DatatypeProperty ;
-                                                    rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ,
-                                                                       <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                    rdfs:domain [ rdf:type owl:Class ;
-                                                                  owl:unionOf ( syn:Organization
-                                                                                syn:Patient
-                                                                              )
-                                                                ] ;
-                                                    rdfs:range xsd:string .
+syn:city rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf syn:organization_data ,
+                            syn:patient_data ,
+                            syn:payer_data ,
+                            syn:provider_data ;
+         rdfs:domain [ rdf:type owl:Class ;
+                       owl:unionOf ( syn:Organization
+                                     syn:Patient
+                                     syn:Payer
+                                     syn:Provider
+                                   )
+                     ] ;
+         rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#county
-<https://knacc.umbc.edu/leroy/ontologies/synthea#county> rdf:type owl:DatatypeProperty ;
-                                                      rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                      rdfs:domain syn:Patient ;
-                                                      rdfs:range xsd:string .
+syn:county rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf syn:patient_data ;
+           rdfs:domain syn:Patient ;
+           rdfs:range xsd:string .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#covered_encounters
+syn:covered_encounters rdf:type owl:DatatypeProperty ;
+                       rdfs:subPropertyOf syn:payer_data ;
+                       rdfs:domain syn:Payer ;
+                       rdfs:range xsd:int .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#covered_immunizations
+syn:covered_immunizations rdf:type owl:DatatypeProperty ;
+                          rdfs:subPropertyOf syn:payer_data ;
+                          rdfs:domain syn:Payer ;
+                          rdfs:range xsd:int .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#covered_medications
+syn:covered_medications rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf syn:payer_data ;
+                        rdfs:domain syn:Payer ;
+                        rdfs:range xsd:int .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#covered_procedures
+syn:covered_procedures rdf:type owl:DatatypeProperty ;
+                       rdfs:subPropertyOf syn:payer_data ;
+                       rdfs:domain syn:Payer ;
+                       rdfs:range xsd:int .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#date
-<https://knacc.umbc.edu/leroy/ontologies/synthea#date> rdf:type owl:DatatypeProperty ;
-                                                    rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> ;
-                                                    rdfs:domain syn:Observation ;
-                                                    rdfs:range xsd:dateTime .
+syn:date rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf syn:observation_data ;
+         rdfs:domain syn:Observation ;
+         rdfs:range xsd:dateTime .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#deathdate
-<https://knacc.umbc.edu/leroy/ontologies/synthea#deathdate> rdf:type owl:DatatypeProperty ;
-                                                         rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                         rdfs:domain syn:Patient ;
-                                                         rdfs:range xsd:dateTime .
+syn:deathdate rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf syn:patient_data ;
+              rdfs:domain syn:Patient ;
+              rdfs:range xsd:dateTime .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#drivers
-<https://knacc.umbc.edu/leroy/ontologies/synthea#drivers> rdf:type owl:DatatypeProperty ;
-                                                       rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                       rdfs:domain syn:Patient ;
-                                                       rdfs:range xsd:string .
+syn:drivers rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf syn:patient_data ;
+            rdfs:domain syn:Patient ;
+            rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_class
-<https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_class> rdf:type owl:DatatypeProperty ;
-                                                               rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                               rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                               rdfs:range xsd:string .
+syn:encounter_class rdf:type owl:DatatypeProperty ;
+                    rdfs:subPropertyOf syn:encounter_data ;
+                    rdfs:domain syn:Encounter ;
+                    rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_code
-<https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_code> rdf:type owl:DatatypeProperty ;
-                                                              rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                              rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                              rdfs:range xsd:string .
+syn:encounter_code rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf syn:encounter_data ;
+                   rdfs:domain syn:Encounter ;
+                   rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data
-<https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> rdf:type owl:DatatypeProperty ;
-                                                              rdfs:subPropertyOf owl:topDataProperty ;
-                                                              rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> .
+syn:encounter_data rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf owl:topDataProperty ;
+                   rdfs:domain syn:Encounter .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_description
-<https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_description> rdf:type owl:DatatypeProperty ;
-                                                                     rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                     rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                                     rdfs:range xsd:string .
+syn:encounter_description rdf:type owl:DatatypeProperty ;
+                          rdfs:subPropertyOf syn:encounter_data ;
+                          rdfs:domain syn:Encounter ;
+                          rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#ethnicity
-<https://knacc.umbc.edu/leroy/ontologies/synthea#ethnicity> rdf:type owl:DatatypeProperty ;
-                                                         rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                         rdfs:domain syn:Patient ;
-                                                         rdfs:range xsd:string .
+syn:ethnicity rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf syn:patient_data ;
+              rdfs:domain syn:Patient ;
+              rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#firstname
-<https://knacc.umbc.edu/leroy/ontologies/synthea#firstname> rdf:type owl:DatatypeProperty ;
-                                                         rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                         rdfs:domain syn:Patient ;
-                                                         rdfs:range xsd:string .
+syn:firstname rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf syn:patient_data ;
+              rdfs:domain syn:Patient ;
+              rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#gender
-<https://knacc.umbc.edu/leroy/ontologies/synthea#gender> rdf:type owl:DatatypeProperty ;
-                                                      rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                      rdfs:domain syn:Patient ;
-                                                      rdfs:range xsd:string .
+syn:gender rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf syn:patient_data ,
+                              syn:provider_data ;
+           rdfs:domain [ rdf:type owl:Class ;
+                         owl:unionOf ( syn:Patient
+                                       syn:Provider
+                                     )
+                       ] ;
+           rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#healthcare_coverage
-<https://knacc.umbc.edu/leroy/ontologies/synthea#healthcare_coverage> rdf:type owl:DatatypeProperty ;
-                                                                   rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                                   rdfs:domain syn:Patient ;
-                                                                   rdfs:range xsd:float .
+syn:healthcare_coverage rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf syn:patient_data ;
+                        rdfs:domain syn:Patient ;
+                        rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#healthcare_expenses
-<https://knacc.umbc.edu/leroy/ontologies/synthea#healthcare_expenses> rdf:type owl:DatatypeProperty ;
-                                                                   rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                                   rdfs:domain syn:Patient ;
-                                                                   rdfs:range xsd:float .
+syn:healthcare_expenses rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf syn:patient_data ;
+                        rdfs:domain syn:Patient ;
+                        rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#id
-<https://knacc.umbc.edu/leroy/ontologies/synthea#id> rdf:type owl:DatatypeProperty ;
-                                                  rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ,
-                                                                     <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ,
-                                                                     <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                  rdfs:domain [ rdf:type owl:Class ;
-                                                                owl:unionOf ( <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter>
-                                                                              syn:Organization
-                                                                              syn:Patient
-                                                                            )
-                                                              ] ;
-                                                  rdfs:range xsd:string .
+syn:id rdf:type owl:DatatypeProperty ;
+       rdfs:subPropertyOf syn:encounter_data ,
+                          syn:organization_data ,
+                          syn:patient_data ,
+                          syn:payer_data ,
+                          syn:provider_data ;
+       rdfs:domain [ rdf:type owl:Class ;
+                     owl:unionOf ( syn:Encounter
+                                   syn:Organization
+                                   syn:Patient
+                                   syn:Payer
+                                   syn:Provider
+                                 )
+                   ] ;
+       rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#income
-<https://knacc.umbc.edu/leroy/ontologies/synthea#income> rdf:type owl:DatatypeProperty ;
-                                                      rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                      rdfs:domain syn:Patient ;
-                                                      rdfs:range xsd:int .
+syn:income rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf syn:patient_data ;
+           rdfs:domain syn:Patient ;
+           rdfs:range xsd:int .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#lastname
-<https://knacc.umbc.edu/leroy/ontologies/synthea#lastname> rdf:type owl:DatatypeProperty ;
-                                                        rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                        rdfs:domain syn:Patient ;
-                                                        rdfs:range xsd:string .
+syn:lastname rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf syn:patient_data ;
+             rdfs:domain syn:Patient ;
+             rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#marital
-<https://knacc.umbc.edu/leroy/ontologies/synthea#marital> rdf:type owl:DatatypeProperty ;
-                                                       rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                       rdfs:domain syn:Patient ;
-                                                       rdfs:range xsd:string .
+syn:marital rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf syn:patient_data ;
+            rdfs:domain syn:Patient ;
+            rdfs:range xsd:string .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#member_months
+syn:member_months rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf syn:payer_data ;
+                  rdfs:domain syn:Payer ;
+                  rdfs:range xsd:int .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#name
-<https://knacc.umbc.edu/leroy/ontologies/synthea#name> rdf:type owl:DatatypeProperty ;
-                                                    rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ;
-                                                    rdfs:domain syn:Organization ;
-                                                    rdfs:range xsd:string .
+syn:name rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf syn:organization_data ,
+                            syn:payer_data ,
+                            syn:provider_data ;
+         rdfs:domain [ rdf:type owl:Class ;
+                       owl:unionOf ( syn:Organization
+                                     syn:Payer
+                                     syn:Provider
+                                   )
+                     ] ;
+         rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#observation_code
-<https://knacc.umbc.edu/leroy/ontologies/synthea#observation_code> rdf:type owl:DatatypeProperty ;
-                                                                rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> ;
-                                                                rdfs:domain syn:Observation ;
-                                                                rdfs:range xsd:string .
+syn:observation_code rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf syn:observation_data ;
+                     rdfs:domain syn:Observation ;
+                     rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data
-<https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> rdf:type owl:DatatypeProperty ;
-                                                                rdfs:subPropertyOf owl:topDataProperty .
+syn:observation_data rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf owl:topDataProperty .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#observation_description
-<https://knacc.umbc.edu/leroy/ontologies/synthea#observation_description> rdf:type owl:DatatypeProperty ;
-                                                                       rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> ;
-                                                                       rdfs:domain syn:Observation ;
-                                                                       rdfs:range xsd:string .
+syn:observation_description rdf:type owl:DatatypeProperty ;
+                            rdfs:subPropertyOf syn:observation_data ;
+                            rdfs:domain syn:Observation ;
+                            rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data
-<https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> rdf:type owl:DatatypeProperty ;
-                                                                 rdfs:subPropertyOf owl:topDataProperty .
+syn:organization_data rdf:type owl:DatatypeProperty ;
+                      rdfs:subPropertyOf owl:topDataProperty .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#passport
-<https://knacc.umbc.edu/leroy/ontologies/synthea#passport> rdf:type owl:DatatypeProperty ;
-                                                        rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                        rdfs:domain syn:Patient ;
-                                                        rdfs:range xsd:string .
+syn:passport rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf syn:patient_data ;
+             rdfs:domain syn:Patient ;
+             rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data
-<https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> rdf:type owl:DatatypeProperty ;
-                                                            rdfs:subPropertyOf owl:topDataProperty ;
-                                                            rdfs:domain syn:Patient .
+syn:patient_data rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf owl:topDataProperty ;
+                 rdfs:domain syn:Patient .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#payer_coverage
-<https://knacc.umbc.edu/leroy/ontologies/synthea#payer_coverage> rdf:type owl:DatatypeProperty ;
-                                                              rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                              rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                              rdfs:range xsd:float .
+syn:payer_coverage rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf syn:encounter_data ;
+                   rdfs:domain syn:Encounter ;
+                   rdfs:range xsd:float .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#payer_data
+syn:payer_data rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf owl:topDataProperty .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#phone
-<https://knacc.umbc.edu/leroy/ontologies/synthea#phone> rdf:type owl:DatatypeProperty ;
-                                                     rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ;
-                                                     rdfs:domain syn:Organization ;
-                                                     rdfs:range xsd:string .
+syn:phone rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf syn:organization_data ,
+                             syn:payer_data ;
+          rdfs:domain [ rdf:type owl:Class ;
+                        owl:unionOf ( syn:Organization
+                                      syn:Payer
+                                    )
+                      ] ;
+          rdfs:range xsd:string .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#provider_data
+syn:provider_data rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf owl:topDataProperty .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#qols_avg
+syn:qols_avg rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf syn:payer_data ;
+             rdfs:domain syn:Payer ;
+             rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#race
-<https://knacc.umbc.edu/leroy/ontologies/synthea#race> rdf:type owl:DatatypeProperty ;
-                                                    rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                    rdfs:domain syn:Patient ;
-                                                    rdfs:range xsd:string .
+syn:race rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf syn:patient_data ;
+         rdfs:domain syn:Patient ;
+         rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#reason_code
-<https://knacc.umbc.edu/leroy/ontologies/synthea#reason_code> rdf:type owl:DatatypeProperty ;
-                                                           rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                           rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                           rdfs:range xsd:string .
+syn:reason_code rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf syn:encounter_data ;
+                rdfs:domain syn:Encounter ;
+                rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#reason_description
-<https://knacc.umbc.edu/leroy/ontologies/synthea#reason_description> rdf:type owl:DatatypeProperty ;
-                                                                  rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                  rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                                  rdfs:range xsd:string .
+syn:reason_description rdf:type owl:DatatypeProperty ;
+                       rdfs:subPropertyOf syn:encounter_data ;
+                       rdfs:domain syn:Encounter ;
+                       rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#revenue
-<https://knacc.umbc.edu/leroy/ontologies/synthea#revenue> rdf:type owl:DatatypeProperty ;
-                                                       rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ;
-                                                       rdfs:domain syn:Organization ;
-                                                       rdfs:range xsd:float .
+syn:revenue rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf syn:organization_data ,
+                               syn:payer_data ;
+            rdfs:domain [ rdf:type owl:Class ;
+                          owl:unionOf ( syn:Organization
+                                        syn:Payer
+                                      )
+                        ] ;
+            rdfs:range xsd:float .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#speciality
+syn:speciality rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf syn:provider_data ;
+               rdfs:domain syn:Provider ;
+               rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#ssn
-<https://knacc.umbc.edu/leroy/ontologies/synthea#ssn> rdf:type owl:DatatypeProperty ;
-                                                   rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                   rdfs:domain syn:Patient ;
-                                                   rdfs:range xsd:string .
+syn:ssn rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf syn:patient_data ;
+        rdfs:domain syn:Patient ;
+        rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#start_time
-<https://knacc.umbc.edu/leroy/ontologies/synthea#start_time> rdf:type owl:DatatypeProperty ;
-                                                          rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                          rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                          rdfs:range xsd:dateTime .
+syn:start_time rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf syn:encounter_data ;
+               rdfs:domain syn:Encounter ;
+               rdfs:range xsd:dateTime .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#state
-<https://knacc.umbc.edu/leroy/ontologies/synthea#state> rdf:type owl:DatatypeProperty ;
-                                                     rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ,
-                                                                        <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                     rdfs:domain [ rdf:type owl:Class ;
-                                                                   owl:unionOf ( syn:Organization
-                                                                                 syn:Patient
-                                                                               )
-                                                                 ] ;
-                                                     rdfs:range xsd:string .
+syn:state rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf syn:organization_data ,
+                             syn:patient_data ,
+                             syn:provider_data ;
+          rdfs:domain [ rdf:type owl:Class ;
+                        owl:unionOf ( syn:Organization
+                                      syn:Patient
+                                      syn:Provider
+                                    )
+                      ] ;
+          rdfs:range xsd:string .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#state_headquartered
+syn:state_headquartered rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf syn:payer_data ;
+                        rdfs:domain syn:Payer ;
+                        rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#stop_time
-<https://knacc.umbc.edu/leroy/ontologies/synthea#stop_time> rdf:type owl:DatatypeProperty ;
-                                                         rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                         rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                         rdfs:range xsd:dateTime .
+syn:stop_time rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf syn:encounter_data ;
+              rdfs:domain syn:Encounter ;
+              rdfs:range xsd:dateTime .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#total_claim_cost
-<https://knacc.umbc.edu/leroy/ontologies/synthea#total_claim_cost> rdf:type owl:DatatypeProperty ;
-                                                                rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#encounter_data> ;
-                                                                rdfs:domain <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> ;
-                                                                rdfs:range xsd:float .
+syn:total_claim_cost rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf syn:encounter_data ;
+                     rdfs:domain syn:Encounter ;
+                     rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#type
-<https://knacc.umbc.edu/leroy/ontologies/synthea#type> rdf:type owl:DatatypeProperty ;
-                                                    rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> ;
-                                                    rdfs:domain syn:Observation ;
-                                                    rdfs:range xsd:string .
+syn:type rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf syn:observation_data ;
+         rdfs:domain syn:Observation ;
+         rdfs:range xsd:string .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#uncovered_encounters
+syn:uncovered_encounters rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf syn:payer_data ;
+                         rdfs:domain syn:Payer ;
+                         rdfs:range xsd:int .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#uncovered_immunizations
+syn:uncovered_immunizations rdf:type owl:DatatypeProperty ;
+                            rdfs:subPropertyOf syn:payer_data ;
+                            rdfs:domain syn:Payer ;
+                            rdfs:range xsd:int .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#uncovered_medications
+syn:uncovered_medications rdf:type owl:DatatypeProperty ;
+                          rdfs:subPropertyOf syn:payer_data ;
+                          rdfs:domain syn:Payer ;
+                          rdfs:range xsd:int .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#uncovered_procedures
+syn:uncovered_procedures rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf syn:payer_data ;
+                         rdfs:domain syn:Payer ;
+                         rdfs:range xsd:int .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#unique_customers
+syn:unique_customers rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf syn:payer_data ;
+                     rdfs:domain syn:Payer ;
+                     rdfs:range xsd:int .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#units
-<https://knacc.umbc.edu/leroy/ontologies/synthea#units> rdf:type owl:DatatypeProperty ;
-                                                     rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> ;
-                                                     rdfs:domain syn:Observation ;
-                                                     rdfs:range xsd:string .
+syn:units rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf syn:observation_data ;
+          rdfs:domain syn:Observation ;
+          rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#utilization
-<https://knacc.umbc.edu/leroy/ontologies/synthea#utilization> rdf:type owl:DatatypeProperty ;
-                                                           rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ;
-                                                           rdfs:domain syn:Organization ;
-                                                           rdfs:range xsd:int .
+syn:utilization rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf syn:organization_data ,
+                                   syn:provider_data ;
+                rdfs:domain [ rdf:type owl:Class ;
+                              owl:unionOf ( syn:Organization
+                                            syn:Provider
+                                          )
+                            ] ;
+                rdfs:range xsd:int .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#value
-<https://knacc.umbc.edu/leroy/ontologies/synthea#value> rdf:type owl:DatatypeProperty ;
-                                                     rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#observation_data> ;
-                                                     rdfs:domain syn:Observation ;
-                                                     rdfs:range xsd:string .
+syn:value rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf syn:observation_data ;
+          rdfs:domain syn:Observation ;
+          rdfs:range xsd:string .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#zip
-<https://knacc.umbc.edu/leroy/ontologies/synthea#zip> rdf:type owl:DatatypeProperty ;
-                                                   rdfs:subPropertyOf <https://knacc.umbc.edu/leroy/ontologies/synthea#organization_data> ,
-                                                                      <https://knacc.umbc.edu/leroy/ontologies/synthea#patient_data> ;
-                                                   rdfs:domain [ rdf:type owl:Class ;
-                                                                 owl:unionOf ( syn:Organization
-                                                                               syn:Patient
-                                                                             )
-                                                               ] ;
-                                                   rdfs:range xsd:string .
+syn:zip rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf syn:organization_data ,
+                           syn:patient_data ,
+                           syn:payer_data ,
+                           syn:provider_data ;
+        rdfs:domain [ rdf:type owl:Class ;
+                      owl:unionOf ( syn:Organization
+                                    syn:Patient
+                                    syn:Payer
+                                    syn:Provider
+                                  )
+                    ] ;
+        rdfs:range xsd:string .
 
 
 #################################################################
 #    Classes
 #################################################################
 
-###  https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter
-<https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter> rdf:type owl:Class .
-
-
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#Condition
 syn:Condition rdf:type owl:Class .
+
+
+###  https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter
+syn:Encounter rdf:type owl:Class .
 
 
 ###  https://knacc.umbc.edu/leroy/ontologies/synthea#Immunization
@@ -458,8 +627,8 @@ syn:Provider rdf:type owl:Class .
 #################################################################
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( <https://knacc.umbc.edu/leroy/ontologies/synthea#Encounter>
-                syn:Condition
+  owl:members ( syn:Condition
+                syn:Encounter
                 syn:Immunization
                 syn:Medication
                 syn:Observation
