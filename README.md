@@ -3,7 +3,11 @@ Semantic web representation for the Synthea.
 
 ## Usage
 ```python
+from rdflib import Graph
 from synthea_rdf import patient, encounter, observation, organization, provider
+
+g = Graph()
+g.parse("ontology/synthea_ontology.owl", format="n3")
 
 patient_df = pd.read_csv("csv/patients.csv", dtype={'ZIP':str})
 for index, row in patient_df.iterrows():
