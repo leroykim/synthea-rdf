@@ -4,7 +4,7 @@ from alive_progress import alive_bar
 from .helper import organization_uri, string_literal, int_literal, organization_uri, provider_uri
 from .setting import SYN
 
-class Proider():
+class Provider():
     def __init__(self, provider_df):
         self.provider_df = provider_df
 
