@@ -136,7 +136,7 @@ class Patient(Resource):
                 graph.add((patient, SYN.id, string_literal(row['Id']))) # id
                 graph.add((patient, SYN.birthdate, date_literal(row['BIRTHDATE']))) # birthdate
                 if pd.notnull(row['DEATHDATE']):
-                    graph.add(patient, SYN.DEATHDATE, date_literal(row['DEATHDATE'])) # deathdate
+                    graph.add((patient, SYN.DEATHDATE, date_literal(row['DEATHDATE']))) # deathdate
                 graph.add((patient, SYN.ssn, string_literal(row['SSN']))) # ssn
                 graph.add((patient, SYN.drivers, string_literal(row['DRIVERS']))) # drivers license
                 graph.add((patient, SYN.passport, string_literal(row['PASSPORT'])))
