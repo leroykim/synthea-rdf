@@ -134,4 +134,4 @@ dmypy.json
 .pyre/
 
 # SQLite files
-persistence/synthea_patient.sqlite
+persistence/*
