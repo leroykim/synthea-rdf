@@ -15,6 +15,9 @@ provider_df = pd.read_csv("csv/providers.csv")
 model_path = "ontology/synthea_ontology.owl"
 
 builder = GraphBuilder()
+# Or,
+# builder = GraphBuilder(persistence='sqlite')
+# for SQLite backup.
 
 builder.patient_df = patient_df
 builder.encounter_df = encounter_df
