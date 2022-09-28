@@ -6,10 +6,10 @@ from .setting import SYN
 
 class GraphBuilder():
     def __init__(self, persistence=None):
-        if persistence is None:
-            self.graph = Graph()
-        elif persistence == "sqlite":
+        if persistence == "sqlite":
             self.__init_sqlite()
+        else:
+            self.graph = Graph()
         
         self.patient_df = None
         self.encounter_df = None
