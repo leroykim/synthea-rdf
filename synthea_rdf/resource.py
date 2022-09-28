@@ -21,7 +21,7 @@ class Resource(ABC):
 
     @resource_df.setter
     @abstractmethod
-    def resource_df(self, resource_df):
+    def resource_df(self, value):
         pass
 
     @abstractmethod
