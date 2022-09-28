@@ -1,7 +1,9 @@
 # Dissertation experiment files
 csv/
 **/test_*
+**/dev_*
 **/*_dev.ipynb
+**/*_dev.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
