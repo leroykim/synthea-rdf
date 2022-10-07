@@ -1,7 +1,6 @@
 from pathlib import Path
-from re import S
 from rdflib import Graph, Literal
-from .resource import Encounter, Observation, Organization, Patient, Provider
+from .resource import Encounter, Observation, Organization, Patient, Payer, Provider
 from .setting import SYN
 
 class GraphBuilder():
@@ -16,6 +15,7 @@ class GraphBuilder():
         self.observation_df = None
         self.organization_df = None
         self.provider_df = None
+        self.payer_df = None
 
     def build(self, model_path=None):
         if model_path is not None:
@@ -33,6 +33,7 @@ class GraphBuilder():
         self.__convert_observation()
         self.__convert_organization()
         self.__convert_provider()
+        self.__convert_payer()
 
         return self.graph
 
@@ -86,3 +87,10 @@ class GraphBuilder():
             provider.convert(self.graph)
         else:
             print("Provider_df is not set.")
+
+    def __convert_payer(self):
+        if self.payer_df is not None:
+            payer = Payer(self.payer_df)
+            payer.convert(self.graph)
+        else:
+            print("Payer_df is not set.")

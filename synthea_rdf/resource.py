@@ -178,14 +178,56 @@ class Provider(Resource):
                 graph.add((provider, SYN.name, string_literal(row['NAME'])))
                 graph.add((provider, SYN.gender, string_literal(row['GENDER'])))
                 graph.add((provider, SYN.speciality, string_literal(row['SPECIALITY'])))
-                graph.add((provider, SYN.name, string_literal(row['NAME'])))
                 graph.add((provider, SYN.address, string_literal(row['ADDRESS'])))
                 graph.add((provider, SYN.city, string_literal(row['CITY'])))
                 graph.add((provider, SYN.state, string_literal(row['STATE'])))
                 graph.add((provider, SYN.zip, string_literal(row['ZIP'])))
                 graph.add((provider, SYN.utilization, int_literal(row['UTILIZATION'])))
                 bar()
+
+class Payer(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
     
+    @property
+    def resource_df(self):
+        return self.__resource_df
+    
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+    
+    def convert(self, graph):
+        with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Payer Conversion') as bar:
+            for _, row in self.__resource_df.iterrows():
+                payer = payer_uri(row['Id'])
+                graph.add((payer, RDF.type, SYN.Payer)) # type
+                graph.add((payer, SYN.id, string_literal(row['Id']))) # id
+                graph.add((payer, SYN.name, string_literal(row['NAME']))) # name
+                graph.add((payer, SYN.address, string_literal(row['ADDRESS']))) # address
+                graph.add((payer, SYN.city, string_literal(row['CITY']))) # city
+                graph.add((payer, SYN.state_headquartered, string_literal(row['STATE_HEADQUARTERED'])))
+                graph.add((payer, SYN.zip, string_literal(row['ZIP'])))
+                graph.add((payer, SYN.phone, string_literal(row['PHONE'])))
+                graph.add((payer, SYN.amount_covered, float_literal(row['AMOUNT_COVERED'])))
+                graph.add((payer, SYN.amount_uncovered, float_literal(row['AMOUNT_UNCOVERED'])))
+                graph.add((payer, SYN.revenue, float_literal(row['REVENUE'])))
+                graph.add((payer, SYN.covered_encounters, int_literal(row['COVERED_ENCOUNTERS'])))
+                graph.add((payer, SYN.uncovered_encounters, int_literal(row['UNCOVERED_ENCOUNTERS'])))
+                graph.add((payer, SYN.covered_medications, int_literal(row['COVERED_MEDICATIONS']))) 
+                graph.add((payer, SYN.uncovered_medications, int_literal(row['UNCOVERED_MEDICATIONS'])))
+                graph.add((payer, SYN.covered_procedures, int_literal(row['COVERED_PROCEDURES'])))
+                graph.add((payer, SYN.uncovered_procedures, int_literal(row['UNCOVERED_PROCEDURES'])))
+                graph.add((payer, SYN.covered_immunizations, int_literal(row['COVERED_IMMUNIZATIONS'])))
+                graph.add((payer, SYN.uncovered_immunizations, int_literal(row['UNCOVERED_IMMUNIZATIONS'])))
+                graph.add((payer, SYN.unique_customers, int_literal(row['UNIQUE_CUSTOMERS'])))
+                graph.add((payer, SYN.qols_avg, float_literal(row['QOLS_AVG'])))
+                graph.add((payer, SYN.member_months, int_literal(row['MEMBER_MONTHS'])))
+                bar()
+
+##################
+# HELPER METHODS #
+##################
 
 # Literal helper methods
 def date_literal(date):
