@@ -1,12 +1,10 @@
 from abc import ABC, abstractmethod
-
 from datetime import datetime
-
-from alive_progress import alive_bar
-import pandas as pd
 from rdflib import Literal, URIRef
 from rdflib.namespace import RDF, XSD
-
+from alive_progress import alive_bar
+import pandas as pd
+import numpy as np
 from .setting import SYN
 
 class Resource(ABC):
@@ -45,9 +43,10 @@ class Encounter(Resource):
             for _, row in self.__resource_df.iterrows():
                 encounter = encounter_uri(row['Id'])
                 graph.add((encounter, RDF.type, SYN.Encounter))
+                graph.add((encounter, SYN.id, string_literal(row['Id'])))
                 graph.add((encounter, SYN.start_time, datetime_literal(row['START'])))
                 graph.add((encounter, SYN.stop_time, datetime_literal(row['STOP'])))
-                graph.add((encounter, SYN.encounterdPatient, patient_uri(row['PATIENT'])))
+                graph.add((encounter, SYN.encounterdPatient, individual_uri(row['PATIENT'])))
                 graph.add((encounter, SYN.assessedIn, organization_uri(row['ORGANIZATION'])))
                 graph.add((encounter, SYN.assessedBy, provider_uri(row['PROVIDER'])))
                 graph.add((encounter, SYN.paidBy, payer_uri(row['PAYER'])))
@@ -79,14 +78,15 @@ class Observation(Resource):
                 observation = observation_uri(index)
                 graph.add((observation, RDF.type, SYN.Observation))
                 graph.add((observation, SYN.date, datetime_literal(row['DATE'])))
-                graph.add((observation, SYN.observedPatient, patient_uri(row['PATIENT'])))
-                graph.add((observation, SYN.isFromEncounter, encounter_uri(row['ENCOUNTER'])))
+                graph.add((observation, SYN.observedPatient, individual_uri(row['PATIENT'])))
                 graph.add((observation, SYN.category, string_literal(row['CATEGORY'])))
                 graph.add((observation, SYN.observation_code, string_literal(row['CODE'])))
                 graph.add((observation, SYN.observation_description, string_literal(row['DESCRIPTION'])))
                 graph.add((observation, SYN.value, string_literal(row['VALUE'])))
                 graph.add((observation, SYN.units, string_literal(row['UNITS'])))
                 graph.add((observation, SYN.type, string_literal(row['TYPE'])))
+                if not np.isnan(row['ENCOUNTER']):
+                    graph.add((observation, SYN.isFromEncounter, encounter_uri(row['ENCOUNTER'])))
                 bar()
 
 class Organization(Resource):
@@ -106,6 +106,7 @@ class Organization(Resource):
             for _, row in self.__resource_df.iterrows():
                 organization = organization_uri(row['Id'])
                 graph.add((organization, RDF.type, SYN.Organization))
+                graph.add((organization, SYN.id, string_literal(row['Id'])))
                 graph.add((organization, SYN.name, string_literal(row['NAME'])))
                 graph.add((organization, SYN.address, string_literal(row['ADDRESS'])))
                 graph.add((organization, SYN.city, string_literal(row['CITY'])))
@@ -131,7 +132,7 @@ class Patient(Resource):
     def convert(self, graph):
         with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Patient Conversion') as bar:
             for _, row in self.__resource_df.iterrows():
-                patient =  patient_uri(row['Id'])
+                patient =  individual_uri(row['Id'])
                 graph.add((patient, RDF.type, SYN.Patient)) # type
                 graph.add((patient, SYN.id, string_literal(row['Id']))) # id
                 graph.add((patient, SYN.birthdate, date_literal(row['BIRTHDATE']))) # birthdate
@@ -174,6 +175,7 @@ class Provider(Resource):
             for _, row in self.__resource_df.iterrows():
                 provider = provider_uri(row['Id'])
                 graph.add((provider, RDF.type, SYN.Provider))
+                graph.add((provider, SYN.id, string_literal(row['Id'])))
                 graph.add((provider, SYN.belongsTo, organization_uri(row['ORGANIZATION'])))
                 graph.add((provider, SYN.name, string_literal(row['NAME'])))
                 graph.add((provider, SYN.gender, string_literal(row['GENDER'])))
@@ -246,20 +248,20 @@ def float_literal(string):
     return Literal(str(string), datatype=XSD.float)
 
 # URI helper methods
-def patient_uri(patient_id):
-    return URIRef(f'patient_{patient_id}')
+def individual_uri(id):
+    return URIRef(f"{SYN}patient_{id}")
 
 def encounter_uri(encounter_id):
-    return URIRef(f"encounter_{encounter_id}")
+    return URIRef(f"{SYN}encounter_{encounter_id}")
 
 def organization_uri(organization_id):
-    return URIRef(f'organization_{organization_id}')
+    return URIRef(f'{SYN}organization_{organization_id}')
 
 def provider_uri(provider_id):
-    return URIRef(f'provider_{provider_id}')
+    return URIRef(f'{SYN}provider_{provider_id}')
 
 def payer_uri(payer_id):
-    return URIRef(f'payer_{payer_id}')
+    return URIRef(f'{SYN}payer_{payer_id}')
 
 def observation_uri(observation_id):
-    return URIRef(f'observation_{observation_id}')
+    return URIRef(f'{SYN}observation_{observation_id}')

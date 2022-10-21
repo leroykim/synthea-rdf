@@ -4,12 +4,14 @@ from .resource import Encounter, Observation, Organization, Patient, Payer, Prov
 from .setting import SYN
 
 class GraphBuilder():
-    def __init__(self, persistence=None):
+    def __init__(self, model_path, persistence=None):
         if persistence == "sqlite":
             self.__init_sqlite()
         else:
             self.graph = Graph()
-        
+
+
+        self.__set_model(model_path)
         self.patient_df = None
         self.encounter_df = None
         self.observation_df = None
@@ -18,11 +20,11 @@ class GraphBuilder():
         self.payer_df = None
 
     def build(self, model_path=None):
-        if model_path is not None:
-            self.__set_model(model_path)
-        else:
-            print("Model path required!")
-            return
+        # if model_path is not None:
+        #     self.__set_model(model_path)
+        # else:
+        #     print("Model path required!")
+        #     return
 
         if self.patient_df is None:
             print("Patient data frame file must be provided!")
@@ -51,6 +53,8 @@ class GraphBuilder():
     def __set_model(self, model_path):
         self.graph.parse(model_path, format="n3")
         self.graph.bind("syn", SYN)
+        self.namespace_manager = self.graph.namespace_manager
+
         print(f"Model has {len(self.graph)} triples.")
 
     def __convert_patient(self):
