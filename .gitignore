@@ -4,6 +4,8 @@ csv/
 **/dev_*
 **/*_dev.ipynb
 **/*_dev.*
+*.owl
+*.ttl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
