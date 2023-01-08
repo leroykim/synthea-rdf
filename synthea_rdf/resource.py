@@ -4,7 +4,6 @@ from rdflib import Literal, URIRef
 from rdflib.namespace import RDF, XSD
 from alive_progress import alive_bar
 import pandas as pd
-import numpy as np
 from .setting import SYN
 
 class Resource(ABC):
@@ -43,7 +42,7 @@ class Encounter(Resource):
             for _, row in self.__resource_df.iterrows():
                 encounter = encounter_uri(row['Id'])
                 graph.add((encounter, RDF.type, SYN.Encounter))
-                graph.add((encounter, SYN.id, string_literal(row['Id'])))
+                graph.add((encounter, SYN.encounter_id, string_literal(row['Id'])))
                 graph.add((encounter, SYN.start_time, datetime_literal(row['START'])))
                 graph.add((encounter, SYN.stop_time, datetime_literal(row['STOP'])))
                 graph.add((encounter, SYN.encounterdPatient, individual_uri(row['PATIENT'])))
@@ -85,7 +84,7 @@ class Observation(Resource):
                 graph.add((observation, SYN.value, string_literal(row['VALUE'])))
                 graph.add((observation, SYN.units, string_literal(row['UNITS'])))
                 graph.add((observation, SYN.type, string_literal(row['TYPE'])))
-                if not np.isnan(row['ENCOUNTER']):
+                if pd.notnull(row['ENCOUNTER']):
                     graph.add((observation, SYN.isFromEncounter, encounter_uri(row['ENCOUNTER'])))
                 bar()
 
@@ -106,7 +105,7 @@ class Organization(Resource):
             for _, row in self.__resource_df.iterrows():
                 organization = organization_uri(row['Id'])
                 graph.add((organization, RDF.type, SYN.Organization))
-                graph.add((organization, SYN.id, string_literal(row['Id'])))
+                graph.add((organization, SYN.organization_id, string_literal(row['Id'])))
                 graph.add((organization, SYN.name, string_literal(row['NAME'])))
                 graph.add((organization, SYN.address, string_literal(row['ADDRESS'])))
                 graph.add((organization, SYN.city, string_literal(row['CITY'])))
@@ -134,7 +133,7 @@ class Patient(Resource):
             for _, row in self.__resource_df.iterrows():
                 patient =  individual_uri(row['Id'])
                 graph.add((patient, RDF.type, SYN.Patient)) # type
-                graph.add((patient, SYN.id, string_literal(row['Id']))) # id
+                graph.add((patient, SYN.patient_id, string_literal(row['Id']))) # id
                 graph.add((patient, SYN.birthdate, date_literal(row['BIRTHDATE']))) # birthdate
                 if pd.notnull(row['DEATHDATE']):
                     graph.add((patient, SYN.DEATHDATE, date_literal(row['DEATHDATE']))) # deathdate
@@ -175,7 +174,7 @@ class Provider(Resource):
             for _, row in self.__resource_df.iterrows():
                 provider = provider_uri(row['Id'])
                 graph.add((provider, RDF.type, SYN.Provider))
-                graph.add((provider, SYN.id, string_literal(row['Id'])))
+                graph.add((provider, SYN.provider_id, string_literal(row['Id'])))
                 graph.add((provider, SYN.belongsTo, organization_uri(row['ORGANIZATION'])))
                 graph.add((provider, SYN.name, string_literal(row['NAME'])))
                 graph.add((provider, SYN.gender, string_literal(row['GENDER'])))
@@ -204,7 +203,7 @@ class Payer(Resource):
             for _, row in self.__resource_df.iterrows():
                 payer = payer_uri(row['Id'])
                 graph.add((payer, RDF.type, SYN.Payer)) # type
-                graph.add((payer, SYN.id, string_literal(row['Id']))) # id
+                graph.add((payer, SYN.payer_id, string_literal(row['Id']))) # id
                 graph.add((payer, SYN.name, string_literal(row['NAME']))) # name
                 graph.add((payer, SYN.address, string_literal(row['ADDRESS']))) # address
                 graph.add((payer, SYN.city, string_literal(row['CITY']))) # city
