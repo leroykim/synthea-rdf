@@ -139,3 +139,7 @@ dmypy.json
 
 # SQLite files
 persistence/*
+ontology/dir_test.ipynb
+.gitignore
+.gitignore
+ontology/file_manager.ipynb

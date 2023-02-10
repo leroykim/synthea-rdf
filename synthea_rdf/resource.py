@@ -4,7 +4,8 @@ from rdflib import Literal, URIRef
 from rdflib.namespace import RDF, XSD
 from alive_progress import alive_bar
 import pandas as pd
-from .setting import SYN
+from .setting import SYN, TST
+from .trust import generate_user_trust, generate_org_trust, generate_veracity
 
 class Resource(ABC):
     @abstractmethod
@@ -38,8 +39,10 @@ class Encounter(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Encounter Conversion') as bar:
-            for _, row in self.__resource_df.iterrows():
+        rows = self.__resource_df.shape[0]
+        veracity = generate_veracity(rows)
+        with alive_bar(rows, force_tty=True, title='Encounter Conversion') as bar:
+            for index, row in self.__resource_df.iterrows():
                 encounter = encounter_uri(row['Id'])
                 graph.add((encounter, RDF.type, SYN.Encounter))
                 graph.add((encounter, SYN.encounter_id, string_literal(row['Id'])))
@@ -57,6 +60,12 @@ class Encounter(Resource):
                 graph.add((encounter, SYN.payer_coverage, float_literal(row['PAYER_COVERAGE'])))
                 graph.add((encounter, SYN.reason_code, string_literal(row['REASONCODE'])))
                 graph.add((encounter, SYN.reason_description, string_literal(row['REASONDESCRIPTION'])))
+
+                # Veracity
+                graph.add((encounter, TST.credibility, float_literal(veracity.iloc[index]['credibility'])))
+                graph.add((encounter, TST.objectivity, float_literal(veracity.iloc[index]['objectivity'])))
+                graph.add((encounter, TST.trustfulness, float_literal(veracity.iloc[index]['trustfulness'])))
+
                 bar()
 
 class Observation(Resource):
@@ -72,7 +81,9 @@ class Observation(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Obvervation Conversion') as bar:
+        rows = self.__resource_df.shape[0]
+        veracity = generate_veracity(rows)
+        with alive_bar(rows, force_tty=True, title='Obvervation Conversion') as bar:
             for index, row in self.__resource_df.iterrows():
                 observation = observation_uri(index)
                 graph.add((observation, RDF.type, SYN.Observation))
@@ -86,9 +97,16 @@ class Observation(Resource):
                 graph.add((observation, SYN.type, string_literal(row['TYPE'])))
                 if pd.notnull(row['ENCOUNTER']):
                     graph.add((observation, SYN.isFromEncounter, encounter_uri(row['ENCOUNTER'])))
+
+                # Veracity
+                graph.add((observation, TST.credibility, float_literal(veracity.iloc[index]['credibility'])))
+                graph.add((observation, TST.objectivity, float_literal(veracity.iloc[index]['objectivity'])))
+                graph.add((observation, TST.trustfulness, float_literal(veracity.iloc[index]['trustfulness'])))
+                
                 bar()
 
 class Organization(Resource):
+    # This class use TRUST_IRI for now.
     def __init__(self, df):
         self.__resource_df = df
 
@@ -101,19 +119,25 @@ class Organization(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Organization Conversion') as bar:
-            for _, row in self.__resource_df.iterrows():
+        rows = self.__resource_df.shape[0]
+        reputation = generate_org_trust(rows)
+        with alive_bar(rows, force_tty=True, title='Organization Conversion') as bar:
+            for index, row in self.__resource_df.iterrows():
                 organization = organization_uri(row['Id'])
-                graph.add((organization, RDF.type, SYN.Organization))
-                graph.add((organization, SYN.organization_id, string_literal(row['Id'])))
-                graph.add((organization, SYN.name, string_literal(row['NAME'])))
-                graph.add((organization, SYN.address, string_literal(row['ADDRESS'])))
-                graph.add((organization, SYN.city, string_literal(row['CITY'])))
-                graph.add((organization, SYN.state, string_literal(row['STATE'])))
-                graph.add((organization, SYN.zip, string_literal(row['ZIP'])))
-                graph.add((organization, SYN.phone, string_literal(row['PHONE'])))
-                graph.add((organization, SYN.revenue, float_literal(row['REVENUE'])))
-                graph.add((organization, SYN.utilization, int_literal(row['UTILIZATION'])))
+                graph.add((organization, RDF.type, TST.Organization))
+                graph.add((organization, TST.organization_id, string_literal(row['Id'])))
+                graph.add((organization, TST.name, string_literal(row['NAME'])))
+                graph.add((organization, TST.address, string_literal(row['ADDRESS'])))
+                graph.add((organization, TST.city, string_literal(row['CITY'])))
+                graph.add((organization, TST.state, string_literal(row['STATE'])))
+                graph.add((organization, TST.zip, string_literal(row['ZIP'])))
+                graph.add((organization, TST.phone, string_literal(row['PHONE'])))
+                graph.add((organization, TST.revenue, float_literal(row['REVENUE'])))
+                graph.add((organization, TST.utilization, int_literal(row['UTILIZATION'])))
+
+                # Reputation
+                graph.add((organization, TST.reputation, float_literal(reputation.iloc[index]['reputation'])))
+                
                 bar()
 
 class Patient(Resource):
@@ -129,8 +153,10 @@ class Patient(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Patient Conversion') as bar:
-            for _, row in self.__resource_df.iterrows():
+        rows = self.__resource_df.shape[0]
+        user_trust = generate_user_trust(rows)
+        with alive_bar(rows, force_tty=True, title='Patient Conversion') as bar:
+            for index, row in self.__resource_df.iterrows():
                 patient =  individual_uri(row['Id'])
                 graph.add((patient, RDF.type, SYN.Patient)) # type
                 graph.add((patient, SYN.patient_id, string_literal(row['Id']))) # id
@@ -155,6 +181,11 @@ class Patient(Resource):
                 graph.add((patient, SYN.healthcare_coverage, float_literal(row['HEALTHCARE_COVERAGE'])))
                 graph.add((patient, SYN.healthcare_expenses, float_literal(row['HEALTHCARE_EXPENSES'])))
                 graph.add((patient, SYN.income, int_literal(row['INCOME'])))
+
+                # User Trust
+                graph.add((patient, TST.behavior, float_literal(user_trust.iloc[index]['behavioral_trust'])))
+                graph.add((patient, TST.identity, float_literal(user_trust.iloc[index]['identity_trust'])))
+
                 bar()
 
 class Provider(Resource):
@@ -170,8 +201,10 @@ class Provider(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Provider Conversion') as bar:
-            for _, row in self.__resource_df.iterrows():
+        rows = self.__resource_df.shape[0]
+        user_trust = generate_user_trust(rows)
+        with alive_bar(rows, force_tty=True, title='Provider Conversion') as bar:
+            for index, row in self.__resource_df.iterrows():
                 provider = provider_uri(row['Id'])
                 graph.add((provider, RDF.type, SYN.Provider))
                 graph.add((provider, SYN.provider_id, string_literal(row['Id'])))
@@ -184,6 +217,11 @@ class Provider(Resource):
                 graph.add((provider, SYN.state, string_literal(row['STATE'])))
                 graph.add((provider, SYN.zip, string_literal(row['ZIP'])))
                 graph.add((provider, SYN.utilization, int_literal(row['UTILIZATION'])))
+
+                # User Trust
+                graph.add((provider, TST.behavior, float_literal(user_trust.iloc[index]['behavioral_trust'])))
+                graph.add((provider, TST.identity, float_literal(user_trust.iloc[index]['identity_trust'])))
+
                 bar()
 
 class Payer(Resource):
@@ -199,8 +237,11 @@ class Payer(Resource):
         self.__resource_df = value
     
     def convert(self, graph):
-        with alive_bar(self.__resource_df.shape[0], force_tty=True, title='Payer Conversion') as bar:
-            for _, row in self.__resource_df.iterrows():
+        rows = self.__resource_df.shape[0]
+        user_trust = generate_user_trust(rows)
+        with alive_bar(rows, force_tty=True, title='Payer Conversion') as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Synthea
                 payer = payer_uri(row['Id'])
                 graph.add((payer, RDF.type, SYN.Payer)) # type
                 graph.add((payer, SYN.payer_id, string_literal(row['Id']))) # id
@@ -224,6 +265,11 @@ class Payer(Resource):
                 graph.add((payer, SYN.unique_customers, int_literal(row['UNIQUE_CUSTOMERS'])))
                 graph.add((payer, SYN.qols_avg, float_literal(row['QOLS_AVG'])))
                 graph.add((payer, SYN.member_months, int_literal(row['MEMBER_MONTHS'])))
+                
+                # User Trust
+                graph.add((payer, TST.behavior, float_literal(user_trust.iloc[index]['behavioral_trust'])))
+                graph.add((payer, TST.identity, float_literal(user_trust.iloc[index]['identity_trust'])))
+
                 bar()
 
 ##################
@@ -254,7 +300,7 @@ def encounter_uri(encounter_id):
     return URIRef(f"{SYN}encounter_{encounter_id}")
 
 def organization_uri(organization_id):
-    return URIRef(f'{SYN}organization_{organization_id}')
+    return URIRef(f'{TST}organization_{organization_id}')
 
 def provider_uri(provider_id):
     return URIRef(f'{SYN}provider_{provider_id}')

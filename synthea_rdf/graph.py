@@ -19,7 +19,7 @@ class GraphBuilder():
         self.provider_df = None
         self.payer_df = None
 
-    def build(self, model_path=None):
+    def build(self):
         # if model_path is not None:
         #     self.__set_model(model_path)
         # else:
