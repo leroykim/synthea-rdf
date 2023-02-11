@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from .setting import USER_TRUST_COLS, ORG_TRUST_COLS, VERACITY_COLS
+from .settings import USER_TRUST_COLS, ORG_TRUST_COLS, VERACITY_COLS
 
 
 def generate_user_trust(rows):

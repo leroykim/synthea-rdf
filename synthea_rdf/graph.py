@@ -1,7 +1,7 @@
 from pathlib import Path
 from rdflib import Graph, Literal
 from .resource import Encounter, Observation, Organization, Patient, Payer, Provider
-from .setting import SYN
+from .settings import SYN
 
 class GraphBuilder():
     def __init__(self, model_path, persistence=None):

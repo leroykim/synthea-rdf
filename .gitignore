@@ -1,5 +1,6 @@
 # Dissertation experiment files
 csv/
+dev/
 **/test_*
 **/dev_*
 **/*_dev.ipynb
