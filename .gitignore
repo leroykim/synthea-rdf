@@ -1,12 +1,13 @@
 # Dissertation experiment files
 csv/
 dev/
+result/
+data_usage_agreement/
 **/test_*
 **/dev_*
 **/*_dev.ipynb
 **/*_dev.*
 *.owl
-*.ttl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

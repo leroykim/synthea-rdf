@@ -1,6 +1,8 @@
 # synthea_rdf
 Semantic web representation for the Synthea.
 
+![synthea_ontology](synthea_ontology/synthea_ontology.pdf)
+
 ## Usage
 ### Data Generation (helper script)
 Example: creating `2` groups of `100` numbers of `covid19` demographics in `Maryland`. The order of argument matters. 
