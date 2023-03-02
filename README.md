@@ -1,5 +1,5 @@
 # synthea_rdf
-Semantic web representation for the Synthea.
+Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion tool.
 
 ![synthea_ontology](synthea_ontology/synthea_ontology.png)
 
