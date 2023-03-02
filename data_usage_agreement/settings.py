@@ -1,10 +1,13 @@
 from rdflib import Namespace
 
 DUA_IRI = "https://knacc.umbc.edu/leroy/ontologies/data-usage-agreement#"
+SYNTHEA_IRI = "https://knacc.umbc.edu/leroy/ontologies/synthea#"
+
 DUA = Namespace(DUA_IRI)
+SYN = Namespace(SYNTHEA_IRI)
 
 DUA_COLS = ['dataCustodian','recipient', 'requestedData', # Basic Information
-'permittedUseOrDisclosure', 'term', 'terminationCause', 'terminationEffect',  # TermAndTermination
+'permittedUseOrDisclosure', 'terms', 'terminationCause', 'terminationEffect',  # TermAndTermination
 'dataSecurityPlanAccess', 'dataSecurityPlanProtection', 'dataSecurityPlanStorage']  # Data_Security_Plan
 DUA_COUNT = 7
 
