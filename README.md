@@ -1,7 +1,7 @@
 # synthea_rdf
 Semantic web representation for the Synthea.
 
-![synthea_ontology](synthea_ontology/synthea_ontology.pdf)
+![synthea_ontology](synthea_ontology/synthea_ontology.png)
 
 ## Usage
 ### Data Generation (helper script)
