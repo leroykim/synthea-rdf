@@ -71,8 +71,8 @@ class Encounter(Resource):
                 graph.add((encounter, SYN.start, datetime_literal(row["START"])))
                 graph.add((encounter, SYN.patientId, uuid_literal(row["PATIENT"])))
                 graph.add((encounter, SYN.organizationId, uuid_literal(row["ORGANIZATION"])))
-                graph.add((encounter, SYN.provider, uuid_literal(row["PROVIDER"])))
-                graph.add((encounter, SYN.payer, uuid_literal(row["PAYER"])))
+                graph.add((encounter, SYN.providerId, uuid_literal(row["PROVIDER"])))
+                graph.add((encounter, SYN.payerId, uuid_literal(row["PAYER"])))
                 graph.add((encounter, SYN.encounterClass, plain_literal(row["ENCOUNTERCLASS"])))
                 graph.add((encounter, SYN.code, plain_literal(row["CODE"])))
                 graph.add((encounter, SYN.description, plain_literal(row["DESCRIPTION"])))
@@ -87,29 +87,30 @@ class Encounter(Resource):
                 graph.add((encounter, SYN.isCoveredBy, organization_uri(row["PAYER"])))
 
                 # Veracity
-                graph.add(
-                    (
-                        encounter,
-                        TST.credibility,
-                        float_literal(veracity.iloc[index]["credibility"]),
-                    )
-                )
-                graph.add(
-                    (
-                        encounter,
-                        TST.objectivity,
-                        float_literal(veracity.iloc[index]["objectivity"]),
-                    )
-                )
-                graph.add(
-                    (
-                        encounter,
-                        TST.trustfulness,
-                        float_literal(veracity.iloc[index]["trustfulness"]),
-                    )
-                )
+                # graph.add(
+                #     (
+                #         encounter,
+                #         TST.credibility,
+                #         float_literal(veracity.iloc[index]["credibility"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         encounter,
+                #         TST.objectivity,
+                #         float_literal(veracity.iloc[index]["objectivity"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         encounter,
+                #         TST.trustfulness,
+                #         float_literal(veracity.iloc[index]["trustfulness"]),
+                #     )
+                # )
 
                 bar()
+        return True
 
 
 class Observation(Resource):
