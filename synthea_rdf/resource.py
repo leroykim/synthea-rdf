@@ -44,7 +44,7 @@ class Encounter(Resource):
         """
         Object properties covered by other resource conversion:
             - syn:hasOrdered
-                - [ ] syn:CarePlan
+                - [x] syn:CarePlan
                 - [ ] syn:Device
                 - [ ] syn:Procedure
                 - [ ] syn:Supply
@@ -260,7 +260,7 @@ class Patient(Resource):
                 - [ ] syn:ImagingStudy
                 - [ ] syn:Supply
             - [ ] syn:Patient syn:isMeasuredBy syn:Device
-            - [ ] syn:Patient syn:isMonitoredBy syn:CarePlan
+            - [x] syn:Patient syn:hasCarePlan syn:CarePlan
             - [ ] syn:Patient syn:hasEncounter syn:Encounter
             - [ ] syn:Patient syn:hasClaim syn:Claim
             - [ ] syn:Patient syn:hasClaimTransaction syn:ClaimTransaction
@@ -481,7 +481,42 @@ class Allergy(Resource):
 
 
 class CarePlan(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="CarePlan Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the careplan class individual
+                careplan = careplan_uri(row["Id"])
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((careplan, SYN.start, date_literal(row["START"])))
+                graph.add((careplan, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((careplan, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((careplan, SYN.code, snomedct_literal(row["CODE"])))
+                graph.add((careplan, SYN.description, plain_literal(row["DESCRIPTION"])))
+                graph.add((careplan, SYN.reasonCode, snomedct_literal(row["REASONCODE"])))
+                graph.add((careplan, SYN.reasonDescription, plain_literal(row["REASONDESCRIPTION"])))
+
+                # Object Properties
+                graph.add((careplan, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasCarePlan, careplan))
+                graph.add((careplan, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, careplan))
+
+                bar()
 
 
 class Claim(Resource):
