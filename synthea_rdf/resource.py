@@ -384,111 +384,55 @@ class Payer(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
+        """
+        Object properties covered by other resource conversion:
+            - [ ] syn:Payer syn:hasCovered syn:Encounter
+            - [ ] syn:Payer syn:hasCovered syn:Medication
+            - [ ] syn:Payer syn:hasPayerTransitionHistory syn:PayerTransition
+        """
         rows = self.__resource_df.shape[0]
         user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Payer Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
-                # Synthea
+                # Create name of the payer class individual
                 payer = payer_uri(row["Id"])
-                graph.add((payer, RDF.type, SYN.Payer))  # type
-                graph.add((payer, SYN.payer_id, plain_literal(row["Id"])))  # id
-                graph.add((payer, SYN.name, plain_literal(row["NAME"])))  # name
-                # address
-                graph.add((payer, SYN.address, plain_literal(row["ADDRESS"])))
-                graph.add((payer, SYN.city, plain_literal(row["CITY"])))  # city
-                graph.add(
-                    (
-                        payer,
-                        SYN.state_headquartered,
-                        plain_literal(row["STATE_HEADQUARTERED"]),
-                    )
-                )
-                graph.add((payer, SYN.zip, plain_literal(row["ZIP"])))
-                graph.add((payer, SYN.phone, plain_literal(row["PHONE"])))
-                graph.add((payer, SYN.amount_covered, float_literal(row["AMOUNT_COVERED"])))
-                graph.add(
-                    (
-                        payer,
-                        SYN.amount_uncovered,
-                        float_literal(row["AMOUNT_UNCOVERED"]),
-                    )
-                )
+
+                # Data Properties
+                # graph.add((payer, RDF.type, SYN.Payer))  # type
+                graph.add((payer, SYN.id, uuid_literal(row["Id"])))  # id
+                graph.add((payer, SYN.name, plain_literal(row["NAME"])))
+                graph.add((payer, SYN.amountCovered, float_literal(row["AMOUNT_COVERED"])))
+                graph.add((payer, SYN.amountUncovered, float_literal(row["AMOUNT_UNCOVERED"])))
                 graph.add((payer, SYN.revenue, float_literal(row["REVENUE"])))
-                graph.add(
-                    (
-                        payer,
-                        SYN.covered_encounters,
-                        int_literal(row["COVERED_ENCOUNTERS"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        SYN.uncovered_encounters,
-                        int_literal(row["UNCOVERED_ENCOUNTERS"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        SYN.covered_medications,
-                        int_literal(row["COVERED_MEDICATIONS"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        SYN.uncovered_medications,
-                        int_literal(row["UNCOVERED_MEDICATIONS"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        SYN.covered_procedures,
-                        int_literal(row["COVERED_PROCEDURES"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        SYN.uncovered_procedures,
-                        int_literal(row["UNCOVERED_PROCEDURES"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        SYN.covered_immunizations,
-                        int_literal(row["COVERED_IMMUNIZATIONS"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        SYN.uncovered_immunizations,
-                        int_literal(row["UNCOVERED_IMMUNIZATIONS"]),
-                    )
-                )
-                graph.add((payer, SYN.unique_customers, int_literal(row["UNIQUE_CUSTOMERS"])))
-                graph.add((payer, SYN.qols_avg, float_literal(row["QOLS_AVG"])))
-                graph.add((payer, SYN.member_months, int_literal(row["MEMBER_MONTHS"])))
+                graph.add((payer, SYN.coveredEncounters, int_literal(row["COVERED_ENCOUNTERS"])))
+                graph.add((payer, SYN.uncoveredEncounters, int_literal(row["UNCOVERED_ENCOUNTERS"])))
+                graph.add((payer, SYN.coveredMedications, int_literal(row["COVERED_MEDICATIONS"])))
+                graph.add((payer, SYN.uncoveredMedications, int_literal(row["UNCOVERED_MEDICATIONS"])))
+                graph.add((payer, SYN.coveredProcedures, int_literal(row["COVERED_PROCEDURES"])))
+                graph.add((payer, SYN.uncoveredProcedures, int_literal(row["UNCOVERED_PROCEDURES"])))
+                graph.add((payer, SYN.coveredImmunizations, int_literal(row["COVERED_IMMUNIZATIONS"])))
+                graph.add((payer, SYN.uncoveredImmunizations, int_literal(row["UNCOVERED_IMMUNIZATIONS"])))
+                graph.add((payer, SYN.uniqueCustomers, int_literal(row["UNIQUE_CUSTOMERS"])))
+                graph.add((payer, SYN.qolsAvg, float_literal(row["QOLS_AVG"])))
+                graph.add((payer, SYN.memberMonths, int_literal(row["MEMBER_MONTHS"])))
+
+                # Object Properties
 
                 # User Trust
-                graph.add(
-                    (
-                        payer,
-                        TST.behavior,
-                        float_literal(user_trust.iloc[index]["behavioral_trust"]),
-                    )
-                )
-                graph.add(
-                    (
-                        payer,
-                        TST.identity,
-                        float_literal(user_trust.iloc[index]["identity_trust"]),
-                    )
-                )
+                # graph.add(
+                #     (
+                #         payer,
+                #         TST.behavior,
+                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         payer,
+                #         TST.identity,
+                #         float_literal(user_trust.iloc[index]["identity_trust"]),
+                #     )
+                # )
 
                 bar()
 
