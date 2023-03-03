@@ -9,12 +9,6 @@ Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion
 > Synthea ontology v1.0 is done, but conversion tool is under development.
 
 ## Usage
-### Data Generation (helper script)
-Example: creating `2` groups of `100` numbers of `covid19` demographics in `Maryland`. The order of argument matters. 
-```bash
-bash data_script.sh 2 100 covid19 Maryland
-```
-### Data Conversion
 ```python
 import pandas as pd
 from synthea_rdf.graph import GraphBuilder

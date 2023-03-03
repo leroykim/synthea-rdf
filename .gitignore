@@ -8,6 +8,7 @@ data_usage_agreement/
 **/*_dev.ipynb
 **/*_dev.*
 *.owl
+*.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
