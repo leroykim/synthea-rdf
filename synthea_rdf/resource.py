@@ -1,11 +1,32 @@
 from abc import ABC, abstractmethod
-from datetime import datetime
-from rdflib import Literal, URIRef
-from rdflib.namespace import RDF, XSD
+from rdflib.namespace import RDF
 from alive_progress import alive_bar
 import pandas as pd
 from .settings import SYN, TST
 from .trust import generate_user_trust, generate_org_trust, generate_veracity
+from .literal import (
+    uuid_literal,
+    snomedct_literal,
+    loinc_literal,
+    date_literal,
+    datetime_literal,
+    plain_literal,
+    int_literal,
+    float_literal,
+)
+from .uri import (
+    allergy_uri,
+    careplan_uri,
+    claim_uri,
+    claimtransaction_uri,
+    condition_uri,
+    patient_uri,
+    encounter_uri,
+    organization_uri,
+    provider_uri,
+    payer_uri,
+    observation_uri,
+)
 
 
 class Resource(ABC):
@@ -669,88 +690,3 @@ class Procedure(Resource):
 
 class Supply(Resource):
     ...
-
-
-##################
-# HELPER METHODS #
-##################
-
-# Literal helper methods
-
-
-def uuid_literal(string):
-    # https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.namespace.html#rdflib.namespace.Namespace
-    return Literal(str(string), datatype=SYN["urn:uuid"])
-
-
-def snomedct_literal(string):
-    return Literal(str(string), datatype=SYN["snomed:SNOMED-CT"])
-
-
-def loinc_literal(string):
-    return Literal(str(string), datatype=SYN["loinc:LOINC"])
-
-
-def date_literal(date):
-    return Literal(datetime.strptime(date, "%Y-%m-%d"), datatype=XSD.dateTime)
-
-
-def datetime_literal(date):
-    return Literal(datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ"), datatype=XSD.dateTime)
-
-
-def plain_literal(string):
-    return Literal(str(string), datatype=RDF.PlainLiteral)
-
-
-def int_literal(string):
-    return Literal(str(string), datatype=XSD.int)
-
-
-def float_literal(string):
-    return Literal(str(string), datatype=XSD.float)
-
-
-# URI helper methods
-def allergy_uri(id):
-    return URIRef(f"{SYN}allergy_{id}")
-
-
-def careplan_uri(id):
-    return URIRef(f"{SYN}carePlan_{id}")
-
-
-def claim_uri(id):
-    return URIRef(f"{SYN}claim_{id}")
-
-
-def claimtransaction_uri(id):
-    return URIRef(f"{SYN}claimTransaction_{id}")
-
-
-def condition_uri(id):
-    return URIRef(f"{SYN}condition_{id}")
-
-
-def patient_uri(id):
-    return URIRef(f"{SYN}patient_{id}")
-
-
-def encounter_uri(encounter_id):
-    return URIRef(f"{SYN}encounter_{encounter_id}")
-
-
-def organization_uri(organization_id):
-    return URIRef(f"{SYN}organization_{organization_id}")
-
-
-def provider_uri(provider_id):
-    return URIRef(f"{SYN}provider_{provider_id}")
-
-
-def payer_uri(payer_id):
-    return URIRef(f"{SYN}payer_{payer_id}")
-
-
-def observation_uri(observation_id):
-    return URIRef(f"{SYN}observation_{observation_id}")
