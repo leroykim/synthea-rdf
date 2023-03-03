@@ -75,7 +75,7 @@ class Encounter(Resource):
                 - [x] syn:Device
                 - [ ] syn:Procedure
                 - [ ] syn:Supply
-                - [ ] syn:ImagingStudy
+                - [x] syn:ImagingStudy
                 - [ ] syn:Observation
             - syn:hasDiagnosed
                 - [x] syn:Condition
@@ -284,7 +284,7 @@ class Patient(Resource):
                 - [ ] syn:Procedure
                 - [ ] syn:Medication
                 - [ ] syn:Immunization
-                - [ ] syn:ImagingStudy
+                - [x] syn:ImagingStudy
                 - [ ] syn:Supply
             - [x] syn:Patient syn:isMeasuredBy syn:Device
             - [x] syn:Patient syn:hasCarePlan syn:CarePlan

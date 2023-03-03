@@ -13,6 +13,7 @@ from .resource import (
     ClaimTransaction,
     Condition,
     Device,
+    ImagingStudy,
 )
 from .settings import SYN, DUA
 
@@ -163,7 +164,11 @@ class GraphBuilder:
             print("device_df is not set.")
 
     def convert_imagingStudy(self, imagingStudy_df=None, graph=None):
-        ...
+        if imagingStudy_df is not None and graph is not None:
+            imagingStudy = ImagingStudy(imagingStudy_df)
+            imagingStudy.convert(graph)
+        else:
+            print("imagingStudy_df is not set.")
 
     def convert_immunization(self, immunization_df=None, graph=None):
         ...
