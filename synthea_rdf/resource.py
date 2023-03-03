@@ -114,6 +114,12 @@ class Encounter(Resource):
 
 
 class Observation(Resource):
+    """
+    Object properties covered by other resource conversion:
+        - [ ] syn:Patient syn:hasHistoryOf syn:Observation
+        - [ ] syn:Encounter syn:hasOrdered syn:Observation
+    """
+
     def __init__(self, df):
         self.__resource_df = df
 
@@ -130,55 +136,50 @@ class Observation(Resource):
         veracity = generate_veracity(rows)
         with alive_bar(rows, force_tty=True, title="Obvervation Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
+                # Create name of the observation class individual
                 observation = observation_uri(index)
+
+                # Data Properties
                 graph.add((observation, RDF.type, SYN.Observation))
-                graph.add((observation, SYN.date, datetime_literal(row["DATE"])))
-                graph.add((observation, SYN.observedPatient, patient_uri(row["PATIENT"])))
-                graph.add((observation, SYN.category, plain_literal(row["CATEGORY"])))
-                graph.add((observation, SYN.observation_code, plain_literal(row["CODE"])))
-                graph.add(
-                    (
-                        observation,
-                        SYN.observation_description,
-                        plain_literal(row["DESCRIPTION"]),
-                    )
-                )
-                graph.add((observation, SYN.value, plain_literal(row["VALUE"])))
-                graph.add((observation, SYN.units, plain_literal(row["UNITS"])))
-                graph.add((observation, SYN.type, plain_literal(row["TYPE"])))
+                graph.add((observation, SYN.dateTime, datetime_literal(row["DATE"])))
+                graph.add((observation, SYN.patientId, uuid_literal(row["PATIENT"])))
                 if pd.notnull(row["ENCOUNTER"]):
-                    graph.add(
-                        (
-                            observation,
-                            SYN.isFromEncounter,
-                            encounter_uri(row["ENCOUNTER"]),
-                        )
-                    )
+                    graph.add((observation, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((observation, SYN.code, plain_literal(row["CODE"])))
+                graph.add((observation, SYN.description, plain_literal(row["DESCRIPTION"])))
+                graph.add((observation, SYN.value, plain_literal(row["VALUE"])))
+                graph.add((observation, SYN.type, plain_literal(row["TYPE"])))
+
+                # Object Properties
+                if pd.notnull(row["ENCOUNTER"]):
+                    graph.add((observation, SYN.isOrderedDuring, encounter_uri(row["ENCOUNTER"])))
+                graph.add((observation, SYN.isAbout, patient_uri(row["PATIENT"])))
 
                 # Veracity
-                graph.add(
-                    (
-                        observation,
-                        TST.credibility,
-                        float_literal(veracity.iloc[index]["credibility"]),
-                    )
-                )
-                graph.add(
-                    (
-                        observation,
-                        TST.objectivity,
-                        float_literal(veracity.iloc[index]["objectivity"]),
-                    )
-                )
-                graph.add(
-                    (
-                        observation,
-                        TST.trustfulness,
-                        float_literal(veracity.iloc[index]["trustfulness"]),
-                    )
-                )
+                # graph.add(
+                #     (
+                #         observation,
+                #         TST.credibility,
+                #         float_literal(veracity.iloc[index]["credibility"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         observation,
+                #         TST.objectivity,
+                #         float_literal(veracity.iloc[index]["objectivity"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         observation,
+                #         TST.trustfulness,
+                #         float_literal(veracity.iloc[index]["trustfulness"]),
+                #     )
+                # )
 
                 bar()
+        return True
 
 
 class Organization(Resource):

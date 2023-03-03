@@ -860,23 +860,9 @@ syn:name rdf:type owl:DatatypeProperty ;
          rdfs:range rdf:PlainLiteral .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#observationCode
-syn:observationCode rdf:type owl:DatatypeProperty ;
-                    rdfs:subPropertyOf syn:observationDataProperty ;
-                    rdfs:domain syn:Observation ;
-                    rdfs:range rdf:PlainLiteral .
-
-
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#observationDataProperty
 syn:observationDataProperty rdf:type owl:DatatypeProperty ;
                             rdfs:subPropertyOf syn:syntheaDataProperty .
-
-
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#observationType
-syn:observationType rdf:type owl:DatatypeProperty ;
-                    rdfs:subPropertyOf syn:observationDataProperty ;
-                    rdfs:domain syn:Observation ;
-                    rdfs:range rdf:PlainLiteral .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#organizationDataProperty
@@ -1193,6 +1179,13 @@ syn:totalCost rdf:type owl:DatatypeProperty ;
               rdfs:range xsd:float .
 
 
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#type
+syn:type rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf syn:observationDataProperty ;
+         rdfs:domain syn:Observation ;
+         rdfs:range rdf:PlainLiteral .
+
+
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#udi
 syn:udi rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf syn:deviceDataProperty ;
@@ -1444,11 +1437,11 @@ syn:Observation rdf:type owl:Class ;
                 rdfs:subClassOf syn:Synthea ,
                                 [ owl:intersectionOf ( [ rdf:type owl:Class ;
                                                          owl:unionOf ( [ rdf:type owl:Restriction ;
-                                                                         owl:onProperty syn:observationCode ;
+                                                                         owl:onProperty syn:code ;
                                                                          owl:hasValue "numeric"
                                                                        ]
                                                                        [ rdf:type owl:Restriction ;
-                                                                         owl:onProperty syn:observationCode ;
+                                                                         owl:onProperty syn:code ;
                                                                          owl:hasValue "text"
                                                                        ]
                                                                      )
