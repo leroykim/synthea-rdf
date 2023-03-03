@@ -262,7 +262,7 @@ class Patient(Resource):
             - [ ] syn:Patient syn:isMeasuredBy syn:Device
             - [x] syn:Patient syn:hasCarePlan syn:CarePlan
             - [ ] syn:Patient syn:hasEncounter syn:Encounter
-            - [ ] syn:Patient syn:hasClaim syn:Claim
+            - [x] syn:Patient syn:hasClaim syn:Claim
             - [ ] syn:Patient syn:hasClaimTransaction syn:ClaimTransaction
             - [ ] syn:Patient syn:hasPayerTransitionHistory syn:PayerTransition
         """
@@ -327,7 +327,7 @@ class Provider(Resource):
         Object properties covered by other resource conversion:
             - [x] syn:Provider syn:hasPerformed syn:Encounter
             - [ ] syn:Provider syn:hasClaimTransaction syn:ClaimTransaction
-            - [ ] syn:Provider syn:hasFiled syn:Claim
+            - [x] syn:Provider syn:hasFiled syn:Claim
         """
         rows = self.__resource_df.shape[0]
         user_trust = generate_user_trust(rows)
@@ -520,7 +520,44 @@ class CarePlan(Resource):
 
 
 class Claim(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        """
+        Object properties covered by other resource conversion:
+            - [ ] syn:Claim syn:hasTransaction syn:ClaimTransaction
+        """
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Claim Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the claim class individual
+                claim = claim_uri(row["Id"])
+                patient = patient_uri(row["PATIENTID"])
+                provider = provider_uri(row["PROVIDERID"])
+
+                # Data Properties
+                graph.add((claim, SYN.id, uuid_literal(row["Id"])))
+                graph.add((claim, SYN.patientId, uuid_literal(row["PATIENTID"])))
+                graph.add((claim, SYN.providerId, uuid_literal(row["PROVIDERID"])))
+                graph.add((claim, SYN.departmentId, uuid_literal(row["DEPARTMENTID"])))
+                graph.add((claim, SYN.patientDepartmentId, uuid_literal(row["PATIENTDEPARTMENTID"])))
+                graph.add((claim, SYN.currentIllnessDate, datetime_literal(row["CURRENTILLNESSDATE"])))
+                graph.add((claim, SYN.serviceDate, datetime_literal(row["SERVICEDATE"])))
+
+                # Object Properties
+                graph.add((claim, SYN.isAssociatedWith, patient))
+                graph.add((patient, SYN.hasClaim, claim))
+                graph.add((claim, SYN.isFiledBy, provider))
+                graph.add((provider, SYN.hasFiled, claim))
 
 
 class ClaimTransaction(Resource):
@@ -606,6 +643,10 @@ def allergy_uri(id):
 
 def careplan_uri(id):
     return URIRef(f"{SYN}carePlan_{id}")
+
+
+def claim_uri(id):
+    return URIRef(f"{SYN}claim_{id}")
 
 
 def patient_uri(id):

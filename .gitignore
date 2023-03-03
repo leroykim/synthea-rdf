@@ -4,7 +4,9 @@ dev/
 result/
 data_usage_agreement/
 **/test_*
-**/dev_*
+/test_result/
+/persistence/
+**/dev_*.*
 **/*_dev.ipynb
 **/*_dev.*
 *.owl

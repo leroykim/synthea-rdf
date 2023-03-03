@@ -1,6 +1,6 @@
 from pathlib import Path
 from rdflib import Graph, Literal
-from .resource import Encounter, Observation, Organization, Patient, Payer, Provider
+from .resource import Encounter, Observation, Organization, Patient, Payer, Provider, Allergy, CarePlan, Claim
 from .settings import SYN, DUA
 
 
@@ -106,6 +106,54 @@ class GraphBuilder:
             payer.convert(graph)
         else:
             print("payer_df is not set.")
+
+    def convert_allergy(self, allergy_df=None, graph=None):
+        if allergy_df is not None and graph is not None:
+            allergy = Allergy(allergy_df)
+            allergy.convert(graph)
+        else:
+            print("allergy_df is not set.")
+
+    def convert_careplan(self, careplan_df=None, graph=None):
+        if careplan_df is not None and graph is not None:
+            careplan = CarePlan(careplan_df)
+            careplan.convert(graph)
+        else:
+            print("careplan_df is not set.")
+
+    def convert_claim(self, claim_df=None, graph=None):
+        if claim_df is not None and graph is not None:
+            claim = Claim(claim_df)
+            claim.convert(graph)
+        else:
+            print("claim_df is not set.")
+
+    def convert_claimTransaction(self, claimTransaction_df=None, graph=None):
+        ...
+
+    def convert_condition(self, condition_df=None, graph=None):
+        ...
+
+    def convert_device(self, device_df=None, graph=None):
+        ...
+
+    def convert_imagingStudy(self, imagingStudy_df=None, graph=None):
+        ...
+
+    def convert_immunization(self, immunization_df=None, graph=None):
+        ...
+
+    def convert_medication(self, medication_df=None, graph=None):
+        ...
+
+    def convert_payerTransition(self, payerTransition_df=None, graph=None):
+        ...
+
+    def convert_procedure(self, procedure_df=None, graph=None):
+        ...
+
+    def convert_supply(self, supply_df=None, graph=None):
+        ...
 
     # def convert_dua(self, dua_df=None, graph=None):
     #     if dua_df is not None and graph is not None:
