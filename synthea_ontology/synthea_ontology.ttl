@@ -444,15 +444,15 @@ syn:bestCost rdf:type owl:DatatypeProperty ;
              rdfs:range xsd:float .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#birthDate
-syn:birthDate rdf:type owl:DatatypeProperty ;
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#birthdate
+syn:birthdate rdf:type owl:DatatypeProperty ;
               rdfs:subPropertyOf syn:patientDataProperty ;
               rdfs:domain syn:Patient ;
               rdfs:range xsd:date .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#birthPlace
-syn:birthPlace rdf:type owl:DatatypeProperty ;
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#birthplace
+syn:birthplace rdf:type owl:DatatypeProperty ;
                rdfs:subPropertyOf syn:patientDataProperty ;
                rdfs:domain syn:Patient ;
                rdfs:range rdf:PlainLiteral .

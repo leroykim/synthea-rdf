@@ -194,11 +194,20 @@ class Organization(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
+        """
+        Object properties covered by other resource conversion:
+            - [ ] syn:Organization syn:hasClaimTransaction syn:ClaimTransaction
+            - [ ] syn:Organization syn:isResponsibleFor syn:Encounter
+            - [ ] syn:Organization syn:hasEmployed syn:Provider
+        """
         rows = self.__resource_df.shape[0]
         reputation = generate_org_trust(rows)
         with alive_bar(rows, force_tty=True, title="Organization Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
+                # Create name of the organization class individual
                 organization = organization_uri(row["Id"])
+
+                # Data Properties
                 graph.add((organization, RDF.type, SYN.Organization))
                 graph.add((organization, SYN.id, plain_literal(row["Id"])))
                 graph.add((organization, SYN.name, plain_literal(row["NAME"])))
@@ -206,6 +215,8 @@ class Organization(Resource):
                 graph.add((organization, SYN.city, plain_literal(row["CITY"])))
                 graph.add((organization, SYN.revenue, float_literal(row["REVENUE"])))
                 graph.add((organization, SYN.utilization, int_literal(row["UTILIZATION"])))
+
+                # Object Properties
 
                 # Reputation
                 # graph.add(
@@ -232,23 +243,38 @@ class Patient(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
+        """
+        Object properties covered by other resource conversion:
+            - [ ] syn:Patient syn:isAllergicTo syn:Allergy
+            - syn:Patient syn:hasHistoryOf
+                - [ ] syn:Observation
+                - [ ] syn:Condition
+                - [ ] syn:Procedure
+                - [ ] syn:Medication
+                - [ ] syn:Immunization
+                - [ ] syn:ImagingStudy
+                - [ ] syn:Supply
+            - [ ] syn:Patient syn:isMeasuredBy syn:Device
+            - [ ] syn:Patient syn:isMonitoredBy syn:CarePlan
+            - [ ] syn:Patient syn:hasEncounter syn:Encounter
+            - [ ] syn:Patient syn:hasClaim syn:Claim
+            - [ ] syn:Patient syn:hasClaimTransaction syn:ClaimTransaction
+            - [ ] syn:Patient syn:hasPayerTransitionHistory syn:PayerTransition
+        """
         rows = self.__resource_df.shape[0]
         user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Patient Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
+                # Create name of the patient class individual
                 patient = patient_uri(row["Id"])
-                graph.add((patient, RDF.type, SYN.Patient))  # type
-                graph.add((patient, SYN.patient_id, plain_literal(row["Id"])))  # id
+
+                # Data Properties
+                # graph.add((patient, RDF.type, SYN.Patient))  # type
+                graph.add((patient, SYN.id, plain_literal(row["Id"])))  # id
                 graph.add((patient, SYN.birthdate, date_literal(row["BIRTHDATE"])))  # birthdate
-                if pd.notnull(row["DEATHDATE"]):
-                    graph.add((patient, SYN.deathdate, date_literal(row["DEATHDATE"])))  # deathdate
                 graph.add((patient, SYN.ssn, plain_literal(row["SSN"])))  # ssn
-                # drivers license
-                graph.add((patient, SYN.drivers, plain_literal(row["DRIVERS"])))
-                graph.add((patient, SYN.passport, plain_literal(row["PASSPORT"])))
-                graph.add((patient, SYN.firstname, plain_literal(row["FIRST"])))
-                graph.add((patient, SYN.lastname, plain_literal(row["LAST"])))
-                graph.add((patient, SYN.marital, plain_literal(row["MARITAL"])))
+                graph.add((patient, SYN.first, plain_literal(row["FIRST"])))
+                graph.add((patient, SYN.last, plain_literal(row["LAST"])))
                 graph.add((patient, SYN.race, plain_literal(row["RACE"])))
                 graph.add((patient, SYN.ethnicity, plain_literal(row["ETHNICITY"])))
                 graph.add((patient, SYN.gender, plain_literal(row["GENDER"])))
@@ -256,39 +282,25 @@ class Patient(Resource):
                 graph.add((patient, SYN.address, plain_literal(row["ADDRESS"])))
                 graph.add((patient, SYN.city, plain_literal(row["CITY"])))
                 graph.add((patient, SYN.state, plain_literal(row["STATE"])))
-                graph.add((patient, SYN.county, plain_literal(row["COUNTY"])))
-                graph.add((patient, SYN.zip, plain_literal(row["ZIP"])))
-                graph.add(
-                    (
-                        patient,
-                        SYN.healthcare_coverage,
-                        float_literal(row["HEALTHCARE_COVERAGE"]),
-                    )
-                )
-                graph.add(
-                    (
-                        patient,
-                        SYN.healthcare_expenses,
-                        float_literal(row["HEALTHCARE_EXPENSES"]),
-                    )
-                )
+                graph.add((patient, SYN.healthcareExpense, plain_literal(row["HEALTHCARE_EXPENSES"])))
+                graph.add((patient, SYN.healthcareCoverage, plain_literal(row["HEALTHCARE_COVERAGE"])))
                 graph.add((patient, SYN.income, int_literal(row["INCOME"])))
 
                 # User Trust
-                graph.add(
-                    (
-                        patient,
-                        TST.behavior,
-                        float_literal(user_trust.iloc[index]["behavioral_trust"]),
-                    )
-                )
-                graph.add(
-                    (
-                        patient,
-                        TST.identity,
-                        float_literal(user_trust.iloc[index]["identity_trust"]),
-                    )
-                )
+                # graph.add(
+                #     (
+                #         patient,
+                #         TST.behavior,
+                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         patient,
+                #         TST.identity,
+                #         float_literal(user_trust.iloc[index]["identity_trust"]),
+                #     )
+                # )
 
                 bar()
 
