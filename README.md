@@ -1,5 +1,7 @@
 
 [![KnAcc Lab][1]](https://knacc.umbc.edu/)
+![KnAcc Lab][1]
+
 # SYNTHEA RDF [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
 
 Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion tool.
