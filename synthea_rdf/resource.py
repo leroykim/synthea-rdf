@@ -110,7 +110,6 @@ class Encounter(Resource):
                 # )
 
                 bar()
-        return True
 
 
 class Observation(Resource):
@@ -179,7 +178,6 @@ class Observation(Resource):
                 # )
 
                 bar()
-        return True
 
 
 class Organization(Resource):
@@ -202,24 +200,21 @@ class Organization(Resource):
             for index, row in self.__resource_df.iterrows():
                 organization = organization_uri(row["Id"])
                 graph.add((organization, RDF.type, SYN.Organization))
-                graph.add((organization, SYN.organization_id, plain_literal(row["Id"])))
+                graph.add((organization, SYN.id, plain_literal(row["Id"])))
                 graph.add((organization, SYN.name, plain_literal(row["NAME"])))
                 graph.add((organization, SYN.address, plain_literal(row["ADDRESS"])))
                 graph.add((organization, SYN.city, plain_literal(row["CITY"])))
-                graph.add((organization, SYN.state, plain_literal(row["STATE"])))
-                graph.add((organization, SYN.zip, plain_literal(row["ZIP"])))
-                graph.add((organization, SYN.phone, plain_literal(row["PHONE"])))
                 graph.add((organization, SYN.revenue, float_literal(row["REVENUE"])))
                 graph.add((organization, SYN.utilization, int_literal(row["UTILIZATION"])))
 
                 # Reputation
-                graph.add(
-                    (
-                        organization,
-                        TST.reputation,
-                        float_literal(reputation.iloc[index]["reputation"]),
-                    )
-                )
+                # graph.add(
+                #     (
+                #         organization,
+                #         TST.reputation,
+                #         float_literal(reputation.iloc[index]["reputation"]),
+                #     )
+                # )
 
                 bar()
 
