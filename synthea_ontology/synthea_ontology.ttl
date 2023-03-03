@@ -1089,11 +1089,11 @@ syn:sopDescription rdf:type owl:DatatypeProperty ;
                    rdfs:range rdf:PlainLiteral .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#specialty
-syn:specialty rdf:type owl:DatatypeProperty ;
-              rdfs:subPropertyOf syn:providerDataProperty ;
-              rdfs:domain syn:Provider ;
-              rdfs:range rdf:PlainLiteral .
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#speciality
+syn:speciality rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf syn:providerDataProperty ;
+               rdfs:domain syn:Provider ;
+               rdfs:range rdf:PlainLiteral .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#ssn

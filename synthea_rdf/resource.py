@@ -209,7 +209,7 @@ class Organization(Resource):
 
                 # Data Properties
                 graph.add((organization, RDF.type, SYN.Organization))
-                graph.add((organization, SYN.id, plain_literal(row["Id"])))
+                graph.add((organization, SYN.id, uuid_literal(row["Id"])))
                 graph.add((organization, SYN.name, plain_literal(row["NAME"])))
                 graph.add((organization, SYN.address, plain_literal(row["ADDRESS"])))
                 graph.add((organization, SYN.city, plain_literal(row["CITY"])))
@@ -270,7 +270,7 @@ class Patient(Resource):
 
                 # Data Properties
                 # graph.add((patient, RDF.type, SYN.Patient))  # type
-                graph.add((patient, SYN.id, plain_literal(row["Id"])))  # id
+                graph.add((patient, SYN.id, uuid_literal(row["Id"])))  # id
                 graph.add((patient, SYN.birthdate, date_literal(row["BIRTHDATE"])))  # birthdate
                 graph.add((patient, SYN.ssn, plain_literal(row["SSN"])))  # ssn
                 graph.add((patient, SYN.first, plain_literal(row["FIRST"])))
@@ -322,34 +322,35 @@ class Provider(Resource):
         user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Provider Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
+                # Create name of the provider class individual
                 provider = provider_uri(row["Id"])
+
+                # Data Properties
                 graph.add((provider, RDF.type, SYN.Provider))
-                graph.add((provider, SYN.provider_id, plain_literal(row["Id"])))
-                graph.add((provider, SYN.belongsTo, organization_uri(row["ORGANIZATION"])))
+                graph.add((provider, SYN.id, uuid_literal(row["Id"])))
+                graph.add((provider, SYN.organizationId, uuid_literal(row["ORGANIZATION"])))
                 graph.add((provider, SYN.name, plain_literal(row["NAME"])))
                 graph.add((provider, SYN.gender, plain_literal(row["GENDER"])))
                 graph.add((provider, SYN.speciality, plain_literal(row["SPECIALITY"])))
                 graph.add((provider, SYN.address, plain_literal(row["ADDRESS"])))
                 graph.add((provider, SYN.city, plain_literal(row["CITY"])))
-                graph.add((provider, SYN.state, plain_literal(row["STATE"])))
-                graph.add((provider, SYN.zip, plain_literal(row["ZIP"])))
                 graph.add((provider, SYN.utilization, int_literal(row["UTILIZATION"])))
 
                 # User Trust
-                graph.add(
-                    (
-                        provider,
-                        TST.behavior,
-                        float_literal(user_trust.iloc[index]["behavioral_trust"]),
-                    )
-                )
-                graph.add(
-                    (
-                        provider,
-                        TST.identity,
-                        float_literal(user_trust.iloc[index]["identity_trust"]),
-                    )
-                )
+                # graph.add(
+                #     (
+                #         provider,
+                #         TST.behavior,
+                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         provider,
+                #         TST.identity,
+                #         float_literal(user_trust.iloc[index]["identity_trust"]),
+                #     )
+                # )
 
                 bar()
 
