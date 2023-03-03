@@ -1,6 +1,17 @@
 from pathlib import Path
 from rdflib import Graph, Literal
-from .resource import Encounter, Observation, Organization, Patient, Payer, Provider, Allergy, CarePlan, Claim
+from .resource import (
+    Encounter,
+    Observation,
+    Organization,
+    Patient,
+    Payer,
+    Provider,
+    Allergy,
+    CarePlan,
+    Claim,
+    ClaimTransaction,
+)
 from .settings import SYN, DUA
 
 
@@ -129,7 +140,11 @@ class GraphBuilder:
             print("claim_df is not set.")
 
     def convert_claimTransaction(self, claimTransaction_df=None, graph=None):
-        ...
+        if claimTransaction_df is not None and graph is not None:
+            claimTransaction = ClaimTransaction(claimTransaction_df)
+            claimTransaction.convert(graph)
+        else:
+            print("claimTransaction_df is not set.")
 
     def convert_condition(self, condition_df=None, graph=None):
         ...

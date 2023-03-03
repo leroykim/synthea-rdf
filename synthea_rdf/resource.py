@@ -201,7 +201,7 @@ class Organization(Resource):
     def convert(self, graph):
         """
         Object properties covered by other resource conversion:
-            - [ ] syn:Organization syn:hasClaimTransaction syn:ClaimTransaction
+            - [x] syn:Organization syn:hasClaimTransaction syn:ClaimTransaction
             - [ ] syn:Organization syn:isResponsibleFor syn:Encounter
             - [x] syn:Organization syn:hasEmployed syn:Provider
         """
@@ -263,7 +263,7 @@ class Patient(Resource):
             - [x] syn:Patient syn:hasCarePlan syn:CarePlan
             - [ ] syn:Patient syn:hasEncounter syn:Encounter
             - [x] syn:Patient syn:hasClaim syn:Claim
-            - [ ] syn:Patient syn:hasClaimTransaction syn:ClaimTransaction
+            - [x] syn:Patient syn:hasClaimTransaction syn:ClaimTransaction
             - [ ] syn:Patient syn:hasPayerTransitionHistory syn:PayerTransition
         """
         rows = self.__resource_df.shape[0]
@@ -326,7 +326,7 @@ class Provider(Resource):
         """
         Object properties covered by other resource conversion:
             - [x] syn:Provider syn:hasPerformed syn:Encounter
-            - [ ] syn:Provider syn:hasClaimTransaction syn:ClaimTransaction
+            - [x] syn:Provider syn:hasClaimTransaction syn:ClaimTransaction
             - [x] syn:Provider syn:hasFiled syn:Claim
         """
         rows = self.__resource_df.shape[0]
@@ -534,7 +534,7 @@ class Claim(Resource):
     def convert(self, graph):
         """
         Object properties covered by other resource conversion:
-            - [ ] syn:Claim syn:hasTransaction syn:ClaimTransaction
+            - [x] syn:Claim syn:hasTransaction syn:ClaimTransaction
         """
         rows = self.__resource_df.shape[0]
         with alive_bar(rows, force_tty=True, title="Claim Conversion") as bar:
@@ -561,7 +561,49 @@ class Claim(Resource):
 
 
 class ClaimTransaction(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="ClaimTransaction Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the claimtransaction class individual
+                claimtransaction = claimtransaction_uri(row["ID"])
+                claim = claim_uri(row["CLAIMID"])
+                patient = patient_uri(row["PATIENTID"])
+                provider = provider_uri(row["PROVIDERID"])
+                organization = organization_uri(row["PLACEOFSERVICE"])
+
+                # Data Properties
+                graph.add((claimtransaction, SYN.id, uuid_literal(row["ID"])))
+                graph.add((claimtransaction, SYN.claimId, uuid_literal(row["CLAIMID"])))
+                graph.add((claimtransaction, SYN.chargeId, uuid_literal(row["CHARGEID"])))
+                graph.add((claimtransaction, SYN.patientId, uuid_literal(row["PATIENTID"])))
+                graph.add((claimtransaction, SYN.type, plain_literal(row["TYPE"])))
+                graph.add((claimtransaction, SYN.placeOfService, uuid_literal(row["PLACEOFSERVICE"])))
+                graph.add((claimtransaction, SYN.procedureCode, snomedct_literal(row["PROCEDURECODE"])))
+                graph.add((claimtransaction, SYN.providerId, uuid_literal(row["PROVIDERID"])))
+
+                # Object Properties
+                graph.add((claimtransaction, SYN.isTransactionFor, claim))
+                graph.add((claim, SYN.hasTransaction, claimtransaction))
+                graph.add((claimtransaction, SYN.isAssociatedWith, patient))
+                graph.add((patient, SYN.hasClaimTransaction, claimtransaction))
+                graph.add((claimtransaction, SYN.isAssociatedWith, provider))
+                graph.add((provider, SYN.hasClaimTransaction, claimtransaction))
+                graph.add((claimtransaction, SYN.hasPlaceOfService, organization))
+                graph.add((organization, SYN.hasClaimTransaction, claimtransaction))
+
+                bar()
 
 
 class Condition(Resource):
@@ -647,6 +689,10 @@ def careplan_uri(id):
 
 def claim_uri(id):
     return URIRef(f"{SYN}claim_{id}")
+
+
+def claimtransaction_uri(id):
+    return URIRef(f"{SYN}claimTransaction_{id}")
 
 
 def patient_uri(id):
