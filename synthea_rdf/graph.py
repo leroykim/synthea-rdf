@@ -34,15 +34,15 @@ class GraphBuilder:
         #     print("Patient data frame file must be provided!")
         #     return
 
-        self.__convert_patient()
-        self.__convert_encounter()
-        self.__convert_observation()
-        self.__convert_organization()
-        self.__convert_provider()
-        self.__convert_payer()
+        self.convert_patient(self.patient_df, self.graph)
+        self.convert_encounter(self.encounter_df, self.graph)
+        self.convert_observation(self.observation_df, self.graph)
+        self.convert_organization(self.organization_df, self.graph)
+        self.convert_provider(self.provider_df, self.graph)
+        self.convert_payer(self.payer_df, self.graph)
 
         if self.include_dua:
-            self.__convert_dua()
+            self.convert_dua()
 
         return self.graph
 
@@ -65,51 +65,51 @@ class GraphBuilder:
 
         print(f"Model has {len(self.graph)} triples.")
 
-    def __convert_patient(self):
-        if self.patient_df is not None:
-            patient = Patient(self.patient_df)
-            patient.convert(self.graph)
+    def convert_patient(self, patient_df=None, graph=None):
+        if patient_df is not None and graph is not None:
+            patient = Patient(patient_df)
+            patient.convert(graph)
         else:
-            print("Patient_df is not set.")
+            print("patient_df is not set.")
 
-    def __convert_encounter(self):
-        if self.encounter_df is not None:
-            encounter = Encounter(self.encounter_df)
-            encounter.convert(self.graph)
+    def convert_encounter(self, encounter_df=None, graph=None):
+        if encounter_df is not None and graph is not None:
+            encounter = Encounter(encounter_df)
+            encounter.convert(graph)
         else:
-            print("Encounter_df is not set.")
+            print("encounter_df is not set.")
 
-    def __convert_observation(self):
-        if self.observation_df is not None:
-            observation = Observation(self.observation_df)
-            observation.convert(self.graph)
+    def convert_observation(self, observation_df=None, graph=None):
+        if observation_df is not None and graph is not None:
+            observation = Observation(observation_df)
+            observation.convert(graph)
         else:
-            print("Observation_df is not set.")
+            print("observation_df is not set.")
 
-    def __convert_organization(self):
-        if self.organization_df is not None:
-            organization = Organization(self.organization_df)
-            organization.convert(self.graph)
+    def convert_organization(self, organization_df=None, graph=None):
+        if organization_df is not None and graph is not None:
+            organization = Organization(organization_df)
+            organization.convert(graph)
         else:
-            print("Organization_df is note set.")
+            print("organization_df is note set.")
 
-    def __convert_provider(self):
-        if self.provider_df is not None:
-            provider = Provider(self.provider_df)
-            provider.convert(self.graph)
+    def convert_provider(self, provider_df=None, graph=None):
+        if provider_df is not None and graph is not None:
+            provider = Provider(provider_df)
+            provider.convert(graph)
         else:
-            print("Provider_df is not set.")
+            print("provider_df is not set.")
 
-    def __convert_payer(self):
-        if self.payer_df is not None:
-            payer = Payer(self.payer_df)
-            payer.convert(self.graph)
+    def convert_payer(self, payer_df=None, graph=None):
+        if payer_df is not None and graph is not None:
+            payer = Payer(payer_df)
+            payer.convert(graph)
         else:
-            print("Payer_df is not set.")
+            print("payer_df is not set.")
 
-    def __convert_dua(self):
-        if self.dua_df is not None:
-            dua = self.dua_class(self.dua_df)
-            dua.convert(self.graph)
-        else:
-            print("DUA_df is not set.")
+    # def convert_dua(self, dua_df=None, graph=None):
+    #     if dua_df is not None and graph is not None:
+    #         dua = self.dua_class(self.dua_df)
+    #         dua.convert(self.graph)
+    #     else:
+    #         print("DUA_df is not set.")

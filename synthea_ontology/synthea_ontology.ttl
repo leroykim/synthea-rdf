@@ -65,6 +65,13 @@ syn:hasAllergy rdf:type owl:ObjectProperty ;
                rdfs:range syn:Allergy .
 
 
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#hasCarePlan
+syn:hasCarePlan rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf owl:topObjectProperty ;
+                rdfs:domain syn:Patient ;
+                rdfs:range syn:CarePlan .
+
+
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#hasClaim
 syn:hasClaim rdf:type owl:ObjectProperty ;
              rdfs:subPropertyOf owl:topObjectProperty ;
@@ -234,6 +241,7 @@ syn:isAbout rdf:type owl:ObjectProperty ;
             rdfs:subPropertyOf owl:topObjectProperty ;
             rdfs:domain [ rdf:type owl:Class ;
                           owl:unionOf ( syn:Allergy
+                                        syn:CarePlan
                                         syn:Condition
                                         syn:ImagingStudy
                                         syn:Observation
@@ -247,13 +255,6 @@ syn:isAffiliatedWith rdf:type owl:ObjectProperty ;
                      rdfs:subPropertyOf owl:topObjectProperty ;
                      rdfs:domain syn:Provider ;
                      rdfs:range syn:Organization .
-
-
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isAssignedTo
-syn:isAssignedTo rdf:type owl:ObjectProperty ;
-                 rdfs:subPropertyOf owl:topObjectProperty ;
-                 rdfs:domain syn:CarePlan ;
-                 rdfs:range syn:Patient .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isAssociatedWith
@@ -301,13 +302,6 @@ syn:isMeasuredBy rdf:type owl:ObjectProperty ;
                  rdfs:subPropertyOf owl:topObjectProperty ;
                  rdfs:domain syn:Patient ;
                  rdfs:range syn:Device .
-
-
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isMonitoredBy
-syn:isMonitoredBy rdf:type owl:ObjectProperty ;
-                  rdfs:subPropertyOf owl:topObjectProperty ;
-                  rdfs:domain syn:Patient ;
-                  rdfs:range syn:CarePlan .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isOrderedDuring
