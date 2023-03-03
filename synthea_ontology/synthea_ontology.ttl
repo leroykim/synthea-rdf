@@ -58,6 +58,13 @@ syn:urn:uuid rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#hasAllergy
+syn:hasAllergy rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf owl:topObjectProperty ;
+               rdfs:domain syn:Patient ;
+               rdfs:range syn:Allergy .
+
+
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#hasClaim
 syn:hasClaim rdf:type owl:ObjectProperty ;
              rdfs:subPropertyOf owl:topObjectProperty ;
@@ -240,13 +247,6 @@ syn:isAffiliatedWith rdf:type owl:ObjectProperty ;
                      rdfs:subPropertyOf owl:topObjectProperty ;
                      rdfs:domain syn:Provider ;
                      rdfs:range syn:Organization .
-
-
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isAllergicTo
-syn:isAllergicTo rdf:type owl:ObjectProperty ;
-                 rdfs:subPropertyOf owl:topObjectProperty ;
-                 rdfs:domain syn:Patient ;
-                 rdfs:range syn:Allergy .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isAssignedTo

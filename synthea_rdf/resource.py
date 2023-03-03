@@ -52,7 +52,7 @@ class Encounter(Resource):
                 - [ ] syn:Observation
             - syn:hasDiagnosed
                 - [ ] syn:Condition
-                - [ ] syn:Allergy
+                - [x] syn:Allergy
             - syn:hasPrescribed
                 - [ ] syn:Immunization
                 - [ ] syn:Medication
@@ -250,7 +250,7 @@ class Patient(Resource):
     def convert(self, graph):
         """
         Object properties covered by other resource conversion:
-            - [ ] syn:Patient syn:isAllergicTo syn:Allergy
+            - [x] syn:Patient syn:hasAllergy syn:Allergy
             - syn:Patient syn:hasHistoryOf
                 - [ ] syn:Observation
                 - [ ] syn:Condition
@@ -437,6 +437,93 @@ class Payer(Resource):
                 bar()
 
 
+class Allergy(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        """
+        Issue:
+            - [ ] There are no allergy data in the dataset (10 patients)
+                  so I should test this conversion with a larger dataset.
+            - [ ] syn:code should be decided by the syn:system
+        """
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Allergy Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the allergy class individual
+                allergy = allergy_uri(row["Id"])
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((allergy, SYN.start, date_literal(row["START"])))
+                graph.add((allergy, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((allergy, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((allergy, SYN.system, plain_literal(row["SYSTEM"])))
+                graph.add((allergy, SYN.description, plain_literal(row["DESCRIPTION"])))
+
+                # Object Properties
+                graph.add((allergy, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasAllergy, allergy))
+                graph.add((allergy, SYN.isDiagnosedDuring, encounter))
+                graph.add((encounter, SYN.hasDiagnosed, allergy))
+
+                bar()
+
+
+class CarePlan(Resource):
+    ...
+
+
+class Claim(Resource):
+    ...
+
+
+class ClaimTransaction(Resource):
+    ...
+
+
+class Condition(Resource):
+    ...
+
+
+class Device(Resource):
+    ...
+
+
+class ImagingStudy(Resource):
+    ...
+
+
+class Immunization(Resource):
+    ...
+
+
+class Medication(Resource):
+    ...
+
+
+class PayerTransition(Resource):
+    ...
+
+
+class Procedure(Resource):
+    ...
+
+
+class Supply(Resource):
+    ...
+
+
 ##################
 # HELPER METHODS #
 ##################
@@ -478,6 +565,8 @@ def float_literal(string):
 
 
 # URI helper methods
+def allergy_uri(id):
+    return URIRef(f"{SYN}allergy_{id}")
 
 
 def careplan_uri(id):
