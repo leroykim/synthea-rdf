@@ -10,14 +10,14 @@ class GraphBuilder:
             self.__init_sqlite()
         else:
             self.graph = Graph()
-
-        self.__set_model(model_path)
+        self.model_path = model_path
         self.patient_df = None
         self.encounter_df = None
         self.observation_df = None
         self.organization_df = None
         self.provider_df = None
         self.payer_df = None
+        self.set_model(self.graph)
 
         self.include_dua = include_dua
         self.dua_class = None
@@ -57,11 +57,11 @@ class GraphBuilder:
         else:
             self.graph.open(dburi)
 
-    def __set_model(self, model_path):
-        self.graph.parse(model_path, format="n3")
-        self.graph.bind("syn", SYN)
+    def set_model(self, graph):
+        graph.parse(self.model_path, format="n3")
+        graph.bind("syn", SYN)
         # self.graph.bind("", SYN)
-        self.namespace_manager = self.graph.namespace_manager
+        # self.namespace_manager = self.graph.namespace_manager
 
         print(f"Model has {len(self.graph)} triples.")
 
