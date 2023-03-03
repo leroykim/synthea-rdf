@@ -14,6 +14,9 @@ from .literal import (
     int_literal,
     float_literal,
     udi_literal,
+    dicom_uid_literal,
+    dicom_dcm_literal,
+    dicom_sop_literal,
 )
 from .uri import (
     allergy_uri,
@@ -28,6 +31,7 @@ from .uri import (
     payer_uri,
     observation_uri,
     device_uri,
+    imagingstudy_uri,
 )
 
 
@@ -705,7 +709,53 @@ class Device(Resource):
 
 
 class ImagingStudy(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        """
+        Issue:
+            - [ ] There are no ImagingStudy data in the dataset (10 patients)
+                  so I should test this conversion with a larger dataset.
+        """
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="ImagingStudy Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the imagingstudy class individual
+                imagingstudy = imagingstudy_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((imagingstudy, SYN.id, uuid_literal(row["Id"])))
+                graph.add((imagingstudy, SYN.dateTime, datetime_literal(row["DATE"])))
+                graph.add((imagingstudy, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((imagingstudy, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((imagingstudy, SYN.seriesUid, dicom_uid_literal(row["SERIES_UID"])))
+                graph.add((imagingstudy, SYN.bodySiteCode, snomedct_literal(row["BODYSITE_CODE"])))
+                graph.add((imagingstudy, SYN.bodySiteDescription, plain_literal(row["BODYSITE_DESCRIPTION"])))
+                graph.add((imagingstudy, SYN.modalityCode, dicom_dcm_literal(row["MODALITY_CODE"])))
+                graph.add((imagingstudy, SYN.modalityDescription, plain_literal(row["MODALITY_DESCRIPTION"])))
+                graph.add((imagingstudy, SYN.instanceUid, dicom_uid_literal(row["INSTANCE_UID"])))
+                graph.add((imagingstudy, SYN.sopCode, dicom_sop_literal(row["SOP_CODE"])))
+                graph.add((imagingstudy, SYN.sopDescription, plain_literal(row["SOP_DESCRIPTION"])))
+                graph.add((imagingstudy, SYN.procedureCode, snomedct_literal(row["PROCEDURE_CODE"])))
+
+                # Object Properties
+                graph.add((imagingstudy, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasHistoryOf, imagingstudy))
+                graph.add((imagingstudy, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, imagingstudy))
+
+                bar()
 
 
 class Immunization(Resource):

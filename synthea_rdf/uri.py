@@ -2,7 +2,6 @@ from rdflib import URIRef
 from .settings import SYN
 
 
-# URI helper methods
 def allergy_uri(id):
     return URIRef(f"{SYN}allergy_{id}")
 
@@ -29,6 +28,10 @@ def device_uri(id):
 
 def encounter_uri(encounter_id):
     return URIRef(f"{SYN}encounter_{encounter_id}")
+
+
+def imagingstudy_uri(imagingstudy_id):
+    return URIRef(f"{SYN}imagingStudy_{imagingstudy_id}")
 
 
 def observation_uri(observation_id):
