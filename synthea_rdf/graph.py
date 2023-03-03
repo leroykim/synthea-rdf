@@ -11,6 +11,7 @@ from .resource import (
     CarePlan,
     Claim,
     ClaimTransaction,
+    Condition,
 )
 from .settings import SYN, DUA
 
@@ -147,7 +148,11 @@ class GraphBuilder:
             print("claimTransaction_df is not set.")
 
     def convert_condition(self, condition_df=None, graph=None):
-        ...
+        if condition_df is not None and graph is not None:
+            condition = Condition(condition_df)
+            condition.convert(graph)
+        else:
+            print("condition_df is not set.")
 
     def convert_device(self, device_df=None, graph=None):
         ...

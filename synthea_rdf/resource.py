@@ -51,7 +51,7 @@ class Encounter(Resource):
                 - [ ] syn:ImagingStudy
                 - [ ] syn:Observation
             - syn:hasDiagnosed
-                - [ ] syn:Condition
+                - [x] syn:Condition
                 - [x] syn:Allergy
             - syn:hasPrescribed
                 - [ ] syn:Immunization
@@ -253,7 +253,7 @@ class Patient(Resource):
             - [x] syn:Patient syn:hasAllergy syn:Allergy
             - syn:Patient syn:hasHistoryOf
                 - [ ] syn:Observation
-                - [ ] syn:Condition
+                - [x] syn:Condition
                 - [ ] syn:Procedure
                 - [ ] syn:Medication
                 - [ ] syn:Immunization
@@ -607,7 +607,40 @@ class ClaimTransaction(Resource):
 
 
 class Condition(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Condition Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the condition class individual
+                condition = condition_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((condition, SYN.startDate, date_literal(row["START"])))
+                graph.add((condition, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((condition, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((condition, SYN.code, snomedct_literal(row["CODE"])))
+                graph.add((condition, SYN.description, plain_literal(row["DESCRIPTION"])))
+
+                # Object Properties
+                graph.add((condition, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasHistoryOf, condition))
+                graph.add((condition, SYN.isDiagnosedDuring, encounter))
+                graph.add((encounter, SYN.hasDiagnosed, condition))
+
+                bar()
 
 
 class Device(Resource):
@@ -693,6 +726,10 @@ def claim_uri(id):
 
 def claimtransaction_uri(id):
     return URIRef(f"{SYN}claimTransaction_{id}")
+
+
+def condition_uri(id):
+    return URIRef(f"{SYN}condition_{id}")
 
 
 def patient_uri(id):
