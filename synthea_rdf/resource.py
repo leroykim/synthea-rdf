@@ -64,6 +64,10 @@ class Encounter(Resource):
             for index, row in self.__resource_df.iterrows():
                 # Create name of the encounter class individual
                 encounter = encounter_uri(row["Id"])
+                organization = organization_uri(row["ORGANIZATION"])
+                patient = patient_uri(row["PATIENT"])
+                provider = provider_uri(row["PROVIDER"])
+                payer = payer_uri(row["PAYER"])
 
                 # Data Properties
                 graph.add((encounter, RDF.type, SYN.Encounter))
@@ -81,10 +85,11 @@ class Encounter(Resource):
                 graph.add((encounter, SYN.payerCoverage, float_literal(row["PAYER_COVERAGE"])))
 
                 # Object Properties
-                graph.add((encounter, SYN.hasPatient, patient_uri(row["PATIENT"])))
-                graph.add((encounter, SYN.isPerformedAt, organization_uri(row["ORGANIZATION"])))
-                graph.add((encounter, SYN.isPerformedBy, organization_uri(row["PROVIDER"])))
-                graph.add((encounter, SYN.isCoveredBy, organization_uri(row["PAYER"])))
+                graph.add((encounter, SYN.hasPatient, patient))
+                graph.add((encounter, SYN.isPerformedAt, organization))
+                graph.add((encounter, SYN.isPerformedBy, provider))
+                graph.add((provider, SYN.hasPerformed, encounter))
+                graph.add((encounter, SYN.isCoveredBy, payer))
 
                 # Veracity
                 # graph.add(
@@ -198,7 +203,7 @@ class Organization(Resource):
         Object properties covered by other resource conversion:
             - [ ] syn:Organization syn:hasClaimTransaction syn:ClaimTransaction
             - [ ] syn:Organization syn:isResponsibleFor syn:Encounter
-            - [ ] syn:Organization syn:hasEmployed syn:Provider
+            - [x] syn:Organization syn:hasEmployed syn:Provider
         """
         rows = self.__resource_df.shape[0]
         reputation = generate_org_trust(rows)
@@ -318,12 +323,19 @@ class Provider(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
+        """
+        Object properties covered by other resource conversion:
+            - [x] syn:Provider syn:hasPerformed syn:Encounter
+            - [ ] syn:Provider syn:hasClaimTransaction syn:ClaimTransaction
+            - [ ] syn:Provider syn:hasFiled syn:Claim
+        """
         rows = self.__resource_df.shape[0]
         user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Provider Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the provider class individual
                 provider = provider_uri(row["Id"])
+                organization = organization_uri(row["ORGANIZATION"])  # for object property
 
                 # Data Properties
                 graph.add((provider, RDF.type, SYN.Provider))
@@ -335,6 +347,10 @@ class Provider(Resource):
                 graph.add((provider, SYN.address, plain_literal(row["ADDRESS"])))
                 graph.add((provider, SYN.city, plain_literal(row["CITY"])))
                 graph.add((provider, SYN.utilization, int_literal(row["UTILIZATION"])))
+
+                # Object Properties
+                graph.add((provider, SYN.isAffiliatedWith, organization_uri(row["ORGANIZATION"])))
+                graph.add((organization, SYN.hasEmployed, provider))
 
                 # User Trust
                 # graph.add(
