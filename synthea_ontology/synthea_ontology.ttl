@@ -1097,22 +1097,6 @@ syn:ssn rdf:type owl:DatatypeProperty ;
         rdfs:range rdf:PlainLiteral .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#start
-syn:start rdf:type owl:DatatypeProperty ;
-          rdfs:subPropertyOf syn:deviceDataProperty ,
-                             syn:encounterDataProperty ,
-                             syn:medicationDataProperty ,
-                             syn:procedureDataProperty ;
-          rdfs:domain [ rdf:type owl:Class ;
-                        owl:unionOf ( syn:Device
-                                      syn:Encounter
-                                      syn:Medication
-                                      syn:Procedure
-                                    )
-                      ] ;
-          rdfs:range xsd:dateTimeStamp .
-
-
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#startDate
 syn:startDate rdf:type owl:DatatypeProperty ;
               rdfs:subPropertyOf syn:allergyDataProperty ,
@@ -1125,6 +1109,22 @@ syn:startDate rdf:type owl:DatatypeProperty ;
                                         )
                           ] ;
               rdfs:range xsd:date .
+
+
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#startDateTime
+syn:startDateTime rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf syn:deviceDataProperty ,
+                                     syn:encounterDataProperty ,
+                                     syn:medicationDataProperty ,
+                                     syn:procedureDataProperty ;
+                  rdfs:domain [ rdf:type owl:Class ;
+                                owl:unionOf ( syn:Device
+                                              syn:Encounter
+                                              syn:Medication
+                                              syn:Procedure
+                                            )
+                              ] ;
+                  rdfs:range xsd:dateTimeStamp .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#startYear

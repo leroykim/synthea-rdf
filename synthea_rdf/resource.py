@@ -13,6 +13,7 @@ from .literal import (
     plain_literal,
     int_literal,
     float_literal,
+    udi_literal,
 )
 from .uri import (
     allergy_uri,
@@ -26,6 +27,7 @@ from .uri import (
     provider_uri,
     payer_uri,
     observation_uri,
+    device_uri,
 )
 
 
@@ -66,7 +68,7 @@ class Encounter(Resource):
         Object properties covered by other resource conversion:
             - syn:hasOrdered
                 - [x] syn:CarePlan
-                - [ ] syn:Device
+                - [x] syn:Device
                 - [ ] syn:Procedure
                 - [ ] syn:Supply
                 - [ ] syn:ImagingStudy
@@ -280,7 +282,7 @@ class Patient(Resource):
                 - [ ] syn:Immunization
                 - [ ] syn:ImagingStudy
                 - [ ] syn:Supply
-            - [ ] syn:Patient syn:isMeasuredBy syn:Device
+            - [x] syn:Patient syn:isMeasuredBy syn:Device
             - [x] syn:Patient syn:hasCarePlan syn:CarePlan
             - [ ] syn:Patient syn:hasEncounter syn:Encounter
             - [x] syn:Patient syn:hasClaim syn:Claim
@@ -665,7 +667,41 @@ class Condition(Resource):
 
 
 class Device(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Device Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the device class individual
+                device = device_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((device, SYN.startDateTime, datetime_literal(row["START"])))
+                graph.add((device, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((device, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((device, SYN.code, snomedct_literal(row["CODE"])))
+                graph.add((device, SYN.description, plain_literal(row["DESCRIPTION"])))
+                graph.add((device, SYN.udi, udi_literal(row["UDI"])))
+
+                # Object Properties
+                graph.add((device, SYN.hasMeasured, patient))
+                graph.add((patient, SYN.isMeasuredBy, device))
+                graph.add((device, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, device))
+
+                bar()
 
 
 class ImagingStudy(Resource):

@@ -17,6 +17,10 @@ def loinc_literal(string):
     return Literal(str(string), datatype=SYN["loinc:LOINC"])
 
 
+def udi_literal(string):
+    return Literal(str(string), datatype=SYN["fda:UDI"])
+
+
 def date_literal(date):
     return Literal(datetime.strptime(date, "%Y-%m-%d"), datatype=XSD.dateTime)
 
