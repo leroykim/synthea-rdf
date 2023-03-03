@@ -74,7 +74,7 @@ class Encounter(Resource):
                 graph.add((encounter, SYN.providerId, uuid_literal(row["PROVIDER"])))
                 graph.add((encounter, SYN.payerId, uuid_literal(row["PAYER"])))
                 graph.add((encounter, SYN.encounterClass, plain_literal(row["ENCOUNTERCLASS"])))
-                graph.add((encounter, SYN.code, plain_literal(row["CODE"])))
+                graph.add((encounter, SYN.code, snomedct_literal(row["CODE"])))
                 graph.add((encounter, SYN.description, plain_literal(row["DESCRIPTION"])))
                 graph.add((encounter, SYN.baseEncounterCost, float_literal(row["BASE_ENCOUNTER_COST"])))
                 graph.add((encounter, SYN.totalClaimCost, float_literal(row["TOTAL_CLAIM_COST"])))
@@ -144,7 +144,7 @@ class Observation(Resource):
                 graph.add((observation, SYN.patientId, uuid_literal(row["PATIENT"])))
                 if pd.notnull(row["ENCOUNTER"]):
                     graph.add((observation, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((observation, SYN.code, plain_literal(row["CODE"])))
+                graph.add((observation, SYN.code, loinc_literal(row["CODE"])))
                 graph.add((observation, SYN.description, plain_literal(row["DESCRIPTION"])))
                 graph.add((observation, SYN.value, plain_literal(row["VALUE"])))
                 graph.add((observation, SYN.type, plain_literal(row["TYPE"])))
@@ -491,6 +491,10 @@ def uuid_literal(string):
 
 def snomedct_literal(string):
     return Literal(str(string), datatype=SYN["snomed:SNOMED-CT"])
+
+
+def loinc_literal(string):
+    return Literal(str(string), datatype=SYN["loinc:LOINC"])
 
 
 def date_literal(date):
