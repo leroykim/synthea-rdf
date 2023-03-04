@@ -29,7 +29,7 @@ graph.serialize(destination=f"{DEST_PATH}/encounter.ttl")
 ```
 
 ### All CSV
-> WIP simplified version by read all CSVs in a directory (Synthea provides CSV files in one directory.)
+> WIP simplified version by reading all CSV in a `DIR_PATH` directory (Synthea provides CSV files in one directory.)
 
 ```python
 import pandas as pd
