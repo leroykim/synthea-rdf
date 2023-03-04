@@ -16,6 +16,7 @@ from .resource import (
     ImagingStudy,
     Immunization,
     Medication,
+    PayerTransition,
 )
 from .settings import SYN  # , DUA
 
@@ -187,7 +188,11 @@ class GraphBuilder:
             print("medication_df is not set.")
 
     def convert_payerTransition(self, payerTransition_df=None, graph=None):
-        ...
+        if payerTransition_df is not None and graph is not None:
+            payerTransition = PayerTransition(payerTransition_df)
+            payerTransition.convert(graph)
+        else:
+            print("payerTransition_df is not set.")
 
     def convert_procedure(self, procedure_df=None, graph=None):
         ...

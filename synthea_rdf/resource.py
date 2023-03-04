@@ -35,6 +35,7 @@ from .uri import (
     imagingstudy_uri,
     immunization_uri,
     medication_uri,
+    payertransition_uri,
 )
 
 # from .trust import generate_user_trust, generate_org_trust, generate_veracity
@@ -847,7 +848,39 @@ class Medication(Resource):
 
 
 class PayerTransition(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Payer Transition Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the payertransition class individual
+                payertransition = payertransition_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                payer = payer_uri(row["PAYER"])
+
+                # Data Properties
+                graph.add((payertransition, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((payertransition, SYN.startYear, date_literal(row["START_YEAR"][:10])))
+                graph.add((payertransition, SYN.endYear, date_literal(row["END_YEAR"][:10])))
+                graph.add((payertransition, SYN.payerId, uuid_literal(row["PAYER"])))
+
+                # Object Properties
+                graph.add((payertransition, SYN.hasPatientRecord, patient))
+                graph.add((patient, SYN.hasPayerTransitionHistory, payertransition))
+                graph.add((payertransition, SYN.hasPayerRecord, payer))
+                graph.add((payer, SYN.hasPayerTransitionHistory, payertransition))
+
+                bar()
 
 
 class Procedure(Resource):
