@@ -17,6 +17,7 @@ from .literal import (
     dicom_dcm_literal,
     dicom_sop_literal,
     hl7_cvx_literal,
+    umls_rxnorm_literal,
 )
 from .uri import (
     allergy_uri,
@@ -33,6 +34,7 @@ from .uri import (
     device_uri,
     imagingstudy_uri,
     immunization_uri,
+    medication_uri,
 )
 
 # from .trust import generate_user_trust, generate_org_trust, generate_veracity
@@ -84,8 +86,8 @@ class Encounter(Resource):
                 - [x] syn:Condition
                 - [x] syn:Allergy
             - syn:hasPrescribed
-                - [ ] syn:Immunization
-                - [ ] syn:Medication
+                - [x] syn:Immunization
+                - [x] syn:Medication
 
         """
         rows = self.__resource_df.shape[0]
@@ -285,8 +287,8 @@ class Patient(Resource):
                 - [ ] syn:Observation
                 - [x] syn:Condition
                 - [ ] syn:Procedure
-                - [ ] syn:Medication
-                - [ ] syn:Immunization
+                - [x] syn:Medication
+                - [x] syn:Immunization
                 - [x] syn:ImagingStudy
                 - [ ] syn:Supply
             - [x] syn:Patient syn:isMeasuredBy syn:Device
@@ -417,7 +419,7 @@ class Payer(Resource):
         """
         Object properties covered by other resource conversion:
             - [ ] syn:Payer syn:hasCovered syn:Encounter
-            - [ ] syn:Payer syn:hasCovered syn:Medication
+            - [x] syn:Payer syn:hasCovered syn:Medication
             - [ ] syn:Payer syn:hasPayerTransitionHistory syn:PayerTransition
         """
         rows = self.__resource_df.shape[0]
@@ -800,7 +802,48 @@ class Immunization(Resource):
 
 
 class Medication(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Medication Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the medication class individual
+                medication = medication_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+                payer = payer_uri(row["PAYER"])
+
+                # Data Properties
+                graph.add((medication, SYN.startDateTime, datetime_literal(row["START"])))
+                graph.add((medication, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((medication, SYN.payerId, uuid_literal(row["PAYER"])))
+                graph.add((medication, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((medication, SYN.code, umls_rxnorm_literal(row["CODE"])))
+                graph.add((medication, SYN.description, plain_literal(row["DESCRIPTION"])))
+                graph.add((medication, SYN.baseCost, float_literal(row["BASE_COST"])))
+                graph.add((medication, SYN.payerCoverage, float_literal(row["PAYER_COVERAGE"])))
+                graph.add((medication, SYN.dispense, float_literal(row["DISPENSES"])))
+                graph.add((medication, SYN.totalCost, float_literal(row["TOTALCOST"])))
+
+                # Object Properties
+                graph.add((medication, SYN.isPrescribedFor, patient))
+                graph.add((patient, SYN.hasHistoryOf, medication))
+                graph.add((medication, SYN.isPrescribedDuring, encounter))
+                graph.add((encounter, SYN.hasPrescribed, medication))
+                graph.add((payer, SYN.hasCovered, medication))
+                graph.add((medication, SYN.isCoveredBy, payer))
+
+                bar()
 
 
 class PayerTransition(Resource):

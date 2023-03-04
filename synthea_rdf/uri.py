@@ -38,6 +38,10 @@ def immunization_uri(id):
     return URIRef(f"{SYN}immunization_{id}")
 
 
+def medication_uri(id):
+    return URIRef(f"{SYN}medication_{id}")
+
+
 def observation_uri(observation_id):
     return URIRef(f"{SYN}observation_{observation_id}")
 

@@ -419,15 +419,8 @@ syn:amountUncovered rdf:type owl:DatatypeProperty ;
                     rdfs:comment "The monetary amount not paid to Organizations during the entire simulation, and covered out of pocket by patients." .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#baseEncounterCost
-syn:baseEncounterCost rdf:type owl:DatatypeProperty ;
-                      rdfs:subPropertyOf syn:encounterDataProperty ;
-                      rdfs:domain syn:Encounter ;
-                      rdfs:range xsd:float .
-
-
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#bestCost
-syn:bestCost rdf:type owl:DatatypeProperty ;
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#baseCost
+syn:baseCost rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf syn:medicationDataProperty ,
                                 syn:procedureDataProperty ;
              rdfs:domain [ rdf:type owl:Class ;
@@ -436,6 +429,13 @@ syn:bestCost rdf:type owl:DatatypeProperty ;
                                        )
                          ] ;
              rdfs:range xsd:float .
+
+
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#baseEncounterCost
+syn:baseEncounterCost rdf:type owl:DatatypeProperty ;
+                      rdfs:subPropertyOf syn:encounterDataProperty ;
+                      rdfs:domain syn:Encounter ;
+                      rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#birthdate
@@ -660,11 +660,11 @@ syn:deviceDataProperty rdf:type owl:DatatypeProperty ;
                        rdfs:subPropertyOf syn:syntheaDataProperty .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#dispenses
-syn:dispenses rdf:type owl:DatatypeProperty ;
-              rdfs:subPropertyOf syn:medicationDataProperty ;
-              rdfs:domain syn:Medication ;
-              rdfs:range xsd:float .
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#dispense
+syn:dispense rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf syn:medicationDataProperty ;
+             rdfs:domain syn:Medication ;
+             rdfs:range xsd:float .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#encounterClass

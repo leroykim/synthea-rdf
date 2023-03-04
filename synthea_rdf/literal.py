@@ -52,6 +52,10 @@ def udi_literal(string):
     return Literal(str(string), datatype=SYN["fda:UDI"])
 
 
+def umls_rxnorm_literal(string):
+    return Literal(str(string), datatype=SYN["umls:RxNorm"])
+
+
 def uuid_literal(string):
     # https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.namespace.html#rdflib.namespace.Namespace
     return Literal(str(string), datatype=SYN["urn:uuid"])

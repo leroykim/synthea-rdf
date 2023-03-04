@@ -15,6 +15,7 @@ from .resource import (
     Device,
     ImagingStudy,
     Immunization,
+    Medication,
 )
 from .settings import SYN  # , DUA
 
@@ -179,7 +180,11 @@ class GraphBuilder:
             print("immunization_df is not set.")
 
     def convert_medication(self, medication_df=None, graph=None):
-        ...
+        if medication_df is not None and graph is not None:
+            medication = Medication(medication_df)
+            medication.convert(graph)
+        else:
+            print("medication_df is not set.")
 
     def convert_payerTransition(self, payerTransition_df=None, graph=None):
         ...
