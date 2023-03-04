@@ -24,44 +24,59 @@ from .settings import SYN  # , DUA
 
 
 class GraphBuilder:
-    def __init__(self, model_path, persistence=None, include_dua: bool = False):
+    def __init__(self, model_path, persistence=None):  # , include_dua: bool = False):
         if persistence == "sqlite":
             self.__init_sqlite()
         else:
             self.graph = Graph()
         self.model_path = model_path
-        self.patient_df = None
-        self.encounter_df = None
-        self.observation_df = None
-        self.organization_df = None
-        self.provider_df = None
-        self.payer_df = None
         self.set_model(self.graph)
 
-        self.include_dua = include_dua
-        self.dua_class = None
-        self.dua_df = None
+        self.allergy_df = None
+        self.care_plan_df = None
+        self.claim_df = None
+        self.claim_transaction_df = None
+        self.condition_df = None
+        self.device_df = None
+        self.encounter_df = None
+        self.imaging_study_df = None
+        self.immunization_df = None
+        self.medication_df = None
+        self.observation_df = None
+        self.organization_df = None
+        self.patient_df = None
+        self.payer_df = None
+        self.payer_transition_df = None
+        self.procedure_df = None
+        self.provider_df = None
+        self.supply_df = None
+
+        # self.include_dua = include_dua
+        # self.dua_class = None
+        # self.dua_df = None
 
     def build(self):
-        # if model_path is not None:
-        #     self.__set_model(model_path)
-        # else:
-        #     print("Model path required!")
-        #     return
-
-        # if self.patient_df is None:
-        #     print("Patient data frame file must be provided!")
-        #     return
-
-        self.convert_patient(self.patient_df, self.graph)
+        self.convert_allergy(self.allergy_df, self.graph)
+        self.convert_carePlan(self.care_plan_df, self.graph)
+        self.convert_claim(self.claim_df, self.graph)
+        self.convert_claimTransaction(self.claim_transaction_df, self.graph)
+        self.convert_condition(self.condition_df, self.graph)
+        self.convert_device(self.device_df, self.graph)
         self.convert_encounter(self.encounter_df, self.graph)
+        self.convert_imagingStudy(self.imaging_study_df, self.graph)
+        self.convert_immunization(self.immunization_df, self.graph)
+        self.convert_medication(self.medication_df, self.graph)
         self.convert_observation(self.observation_df, self.graph)
         self.convert_organization(self.organization_df, self.graph)
-        self.convert_provider(self.provider_df, self.graph)
+        self.convert_patient(self.patient_df, self.graph)
         self.convert_payer(self.payer_df, self.graph)
+        self.convert_payerTransition(self.payer_transition_df, self.graph)
+        self.convert_procedure(self.procedure_df, self.graph)
+        self.convert_provider(self.provider_df, self.graph)
+        self.convert_supply(self.supply_df, self.graph)
 
-        if self.include_dua:
-            self.convert_dua()
+        # if self.include_dua:
+        #    self.convert_dua()
 
         return self.graph
 
@@ -84,48 +99,6 @@ class GraphBuilder:
 
         print(f"Model has {len(self.graph)} triples.")
 
-    def convert_patient(self, patient_df=None, graph=None):
-        if patient_df is not None and graph is not None:
-            patient = Patient(patient_df)
-            patient.convert(graph)
-        else:
-            print("patient_df is not set.")
-
-    def convert_encounter(self, encounter_df=None, graph=None):
-        if encounter_df is not None and graph is not None:
-            encounter = Encounter(encounter_df)
-            encounter.convert(graph)
-        else:
-            print("encounter_df is not set.")
-
-    def convert_observation(self, observation_df=None, graph=None):
-        if observation_df is not None and graph is not None:
-            observation = Observation(observation_df)
-            observation.convert(graph)
-        else:
-            print("observation_df is not set.")
-
-    def convert_organization(self, organization_df=None, graph=None):
-        if organization_df is not None and graph is not None:
-            organization = Organization(organization_df)
-            organization.convert(graph)
-        else:
-            print("organization_df is note set.")
-
-    def convert_provider(self, provider_df=None, graph=None):
-        if provider_df is not None and graph is not None:
-            provider = Provider(provider_df)
-            provider.convert(graph)
-        else:
-            print("provider_df is not set.")
-
-    def convert_payer(self, payer_df=None, graph=None):
-        if payer_df is not None and graph is not None:
-            payer = Payer(payer_df)
-            payer.convert(graph)
-        else:
-            print("payer_df is not set.")
-
     def convert_allergy(self, allergy_df=None, graph=None):
         if allergy_df is not None and graph is not None:
             allergy = Allergy(allergy_df)
@@ -133,7 +106,7 @@ class GraphBuilder:
         else:
             print("allergy_df is not set.")
 
-    def convert_careplan(self, careplan_df=None, graph=None):
+    def convert_carePlan(self, careplan_df=None, graph=None):
         if careplan_df is not None and graph is not None:
             careplan = CarePlan(careplan_df)
             careplan.convert(graph)
@@ -168,6 +141,13 @@ class GraphBuilder:
         else:
             print("device_df is not set.")
 
+    def convert_encounter(self, encounter_df=None, graph=None):
+        if encounter_df is not None and graph is not None:
+            encounter = Encounter(encounter_df)
+            encounter.convert(graph)
+        else:
+            print("encounter_df is not set.")
+
     def convert_imagingStudy(self, imagingStudy_df=None, graph=None):
         if imagingStudy_df is not None and graph is not None:
             imagingStudy = ImagingStudy(imagingStudy_df)
@@ -189,6 +169,34 @@ class GraphBuilder:
         else:
             print("medication_df is not set.")
 
+    def convert_observation(self, observation_df=None, graph=None):
+        if observation_df is not None and graph is not None:
+            observation = Observation(observation_df)
+            observation.convert(graph)
+        else:
+            print("observation_df is not set.")
+
+    def convert_organization(self, organization_df=None, graph=None):
+        if organization_df is not None and graph is not None:
+            organization = Organization(organization_df)
+            organization.convert(graph)
+        else:
+            print("organization_df is note set.")
+
+    def convert_patient(self, patient_df=None, graph=None):
+        if patient_df is not None and graph is not None:
+            patient = Patient(patient_df)
+            patient.convert(graph)
+        else:
+            print("patient_df is not set.")
+
+    def convert_payer(self, payer_df=None, graph=None):
+        if payer_df is not None and graph is not None:
+            payer = Payer(payer_df)
+            payer.convert(graph)
+        else:
+            print("payer_df is not set.")
+
     def convert_payerTransition(self, payerTransition_df=None, graph=None):
         if payerTransition_df is not None and graph is not None:
             payerTransition = PayerTransition(payerTransition_df)
@@ -202,6 +210,13 @@ class GraphBuilder:
             procedure.convert(graph)
         else:
             print("procedure_df is not set.")
+
+    def convert_provider(self, provider_df=None, graph=None):
+        if provider_df is not None and graph is not None:
+            provider = Provider(provider_df)
+            provider.convert(graph)
+        else:
+            print("provider_df is not set.")
 
     def convert_supply(self, supply_df=None, graph=None):
         if supply_df is not None and graph is not None:
