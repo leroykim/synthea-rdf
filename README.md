@@ -9,7 +9,28 @@ Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion
 > WIP minor fixes.
 
 ## Usage
+### Single CSV
 ```python
+import pandas as pd
+from rdflib import Graph
+from synthea_rdf.graph import GraphBuilder
+
+MODEL_PATH = "./synthea_ontology/synthea_ontology.ttl"
+DIR_PATH = "./csv"
+DEST_PATH = "./result"
+
+
+encounter_df = pd.read_csv(f"{DIR_PATH}/encounters.csv")
+graph = Graph()
+builder = GraphBuilder(MODEL_PATH)
+builder.set_model(graph)
+builder.convert_encounter(encounter_df, graph)
+graph.serialize(destination=f"{DEST_PATH}/encounter.ttl")
+```
+
+### All CSVs
+> WIP Documentation
+<!-- ```python
 import pandas as pd
 from synthea_rdf.graph import GraphBuilder
 
@@ -37,4 +58,4 @@ builder.payer_df = payer_df
 graph = builder.build(model_path="ontology/synthea_ontology.owl")
 
 graph.serialize(destination="ontology/test_result.owl")
-```
+``` -->
