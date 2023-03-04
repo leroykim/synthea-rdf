@@ -28,7 +28,7 @@ builder.convertEncounter(encounter_df, graph)
 graph.serialize(destination=f"{DEST_PATH}/encounter.ttl")
 ```
 
-### All CSVs
+### All CSV
 > WIP simplified version by read all CSVs in a directory (Synthea provides CSV files in one directory.)
 
 ```python
