@@ -5,7 +5,8 @@ Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion
 
 ![synthea_ontology](synthea_ontology/synthea_ontology.png)
 
-> Synthea ontology v1.0 is done, but conversion tool is under development.
+> Synthea ontology and conversion method v1.0 are done.
+> WIP minor fixes.
 
 ## Usage
 ```python
