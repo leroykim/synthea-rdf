@@ -10,7 +10,7 @@ from .literal import (
     date_literal,
     datetime_literal,
     plain_literal,
-    int_literal,
+    integer_literal,
     float_literal,
     udi_literal,
     dicom_uid_literal,
@@ -37,6 +37,7 @@ from .uri import (
     medication_uri,
     payertransition_uri,
     procedure_uri,
+    supply_uri,
 )
 
 # from .trust import generate_user_trust, generate_org_trust, generate_veracity
@@ -68,6 +69,8 @@ Issue:
         - syn:start
         - syn:startDate
         - syn:startDateTime
+        - syn:date
+        - syn:dateTime
 """
 
 
@@ -90,7 +93,7 @@ class Encounter(Resource):
                 - [x] syn:CarePlan
                 - [x] syn:Device
                 - [x] syn:Procedure
-                - [ ] syn:Supply
+                - [x] syn:Supply
                 - [x] syn:ImagingStudy
                 - [ ] syn:Observation
             - syn:hasDiagnosed
@@ -262,7 +265,7 @@ class Organization(Resource):
                 graph.add((organization, SYN.address, plain_literal(row["ADDRESS"])))
                 graph.add((organization, SYN.city, plain_literal(row["CITY"])))
                 graph.add((organization, SYN.revenue, float_literal(row["REVENUE"])))
-                graph.add((organization, SYN.utilization, int_literal(row["UTILIZATION"])))
+                graph.add((organization, SYN.utilization, integer_literal(row["UTILIZATION"])))
 
                 # Object Properties
 
@@ -301,7 +304,7 @@ class Patient(Resource):
                 - [x] syn:Medication
                 - [x] syn:Immunization
                 - [x] syn:ImagingStudy
-                - [ ] syn:Supply
+                - [x] syn:Supply
             - [x] syn:Patient syn:isMeasuredBy syn:Device
             - [x] syn:Patient syn:hasCarePlan syn:CarePlan
             - [ ] syn:Patient syn:hasEncounter syn:Encounter
@@ -332,7 +335,7 @@ class Patient(Resource):
                 graph.add((patient, SYN.state, plain_literal(row["STATE"])))
                 graph.add((patient, SYN.healthcareExpense, plain_literal(row["HEALTHCARE_EXPENSES"])))
                 graph.add((patient, SYN.healthcareCoverage, plain_literal(row["HEALTHCARE_COVERAGE"])))
-                graph.add((patient, SYN.income, int_literal(row["INCOME"])))
+                graph.add((patient, SYN.income, integer_literal(row["INCOME"])))
 
                 # User Trust
                 # graph.add(
@@ -389,7 +392,7 @@ class Provider(Resource):
                 graph.add((provider, SYN.speciality, plain_literal(row["SPECIALITY"])))
                 graph.add((provider, SYN.address, plain_literal(row["ADDRESS"])))
                 graph.add((provider, SYN.city, plain_literal(row["CITY"])))
-                graph.add((provider, SYN.utilization, int_literal(row["UTILIZATION"])))
+                graph.add((provider, SYN.utilization, integer_literal(row["UTILIZATION"])))
 
                 # Object Properties
                 graph.add((provider, SYN.isAffiliatedWith, organization_uri(row["ORGANIZATION"])))
@@ -447,17 +450,17 @@ class Payer(Resource):
                 graph.add((payer, SYN.amountCovered, float_literal(row["AMOUNT_COVERED"])))
                 graph.add((payer, SYN.amountUncovered, float_literal(row["AMOUNT_UNCOVERED"])))
                 graph.add((payer, SYN.revenue, float_literal(row["REVENUE"])))
-                graph.add((payer, SYN.coveredEncounters, int_literal(row["COVERED_ENCOUNTERS"])))
-                graph.add((payer, SYN.uncoveredEncounters, int_literal(row["UNCOVERED_ENCOUNTERS"])))
-                graph.add((payer, SYN.coveredMedications, int_literal(row["COVERED_MEDICATIONS"])))
-                graph.add((payer, SYN.uncoveredMedications, int_literal(row["UNCOVERED_MEDICATIONS"])))
-                graph.add((payer, SYN.coveredProcedures, int_literal(row["COVERED_PROCEDURES"])))
-                graph.add((payer, SYN.uncoveredProcedures, int_literal(row["UNCOVERED_PROCEDURES"])))
-                graph.add((payer, SYN.coveredImmunizations, int_literal(row["COVERED_IMMUNIZATIONS"])))
-                graph.add((payer, SYN.uncoveredImmunizations, int_literal(row["UNCOVERED_IMMUNIZATIONS"])))
-                graph.add((payer, SYN.uniqueCustomers, int_literal(row["UNIQUE_CUSTOMERS"])))
+                graph.add((payer, SYN.coveredEncounters, integer_literal(row["COVERED_ENCOUNTERS"])))
+                graph.add((payer, SYN.uncoveredEncounters, integer_literal(row["UNCOVERED_ENCOUNTERS"])))
+                graph.add((payer, SYN.coveredMedications, integer_literal(row["COVERED_MEDICATIONS"])))
+                graph.add((payer, SYN.uncoveredMedications, integer_literal(row["UNCOVERED_MEDICATIONS"])))
+                graph.add((payer, SYN.coveredProcedures, integer_literal(row["COVERED_PROCEDURES"])))
+                graph.add((payer, SYN.uncoveredProcedures, integer_literal(row["UNCOVERED_PROCEDURES"])))
+                graph.add((payer, SYN.coveredImmunizations, integer_literal(row["COVERED_IMMUNIZATIONS"])))
+                graph.add((payer, SYN.uncoveredImmunizations, integer_literal(row["UNCOVERED_IMMUNIZATIONS"])))
+                graph.add((payer, SYN.uniqueCustomers, integer_literal(row["UNIQUE_CUSTOMERS"])))
                 graph.add((payer, SYN.qolsAvg, float_literal(row["QOLS_AVG"])))
-                graph.add((payer, SYN.memberMonths, int_literal(row["MEMBER_MONTHS"])))
+                graph.add((payer, SYN.memberMonths, integer_literal(row["MEMBER_MONTHS"])))
 
                 # Object Properties
 
@@ -932,4 +935,38 @@ class Procedure(Resource):
 
 
 class Supply(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Supply Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the supply class individual
+                supply = supply_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((supply, SYN.date, date_literal(row["DATE"][:10])))
+                graph.add((supply, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((supply, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((supply, SYN.code, snomedct_literal(row["CODE"])))
+                graph.add((supply, SYN.description, plain_literal(row["DESCRIPTION"])))
+                graph.add((supply, SYN.quantity, integer_literal(row["QUANTITY"])))
+
+                # Object Properties
+                graph.add((supply, SYN.isOrderedFor, patient))
+                graph.add((patient, SYN.hasHistoryOf, supply))
+                graph.add((supply, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, supply))
+
+                bar()

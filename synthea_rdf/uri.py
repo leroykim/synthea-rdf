@@ -68,3 +68,7 @@ def procedure_uri(procedure_id):
 
 def provider_uri(provider_id):
     return URIRef(f"{SYN}provider_{provider_id}")
+
+
+def supply_uri(supply_id):
+    return URIRef(f"{SYN}supply_{supply_id}")

@@ -603,17 +603,22 @@ syn:currentIllnessDate rdf:type owl:DatatypeProperty ;
                        rdfs:range xsd:date .
 
 
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#date
+syn:date rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf syn:supplyDataProperty ;
+         rdfs:domain syn:Supply ;
+         rdfs:range xsd:date .
+
+
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#dateTime
 syn:dateTime rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf syn:imagingStudyDataProperty ,
                                 syn:immunizationDataProperty ,
-                                syn:observationDataProperty ,
-                                syn:supplyDataProperty ;
+                                syn:observationDataProperty ;
              rdfs:domain [ rdf:type owl:Class ;
                            owl:unionOf ( syn:ImagingStudy
                                          syn:Immunization
                                          syn:Observation
-                                         syn:Supply
                                        )
                          ] ;
              rdfs:range xsd:dateTimeStamp .

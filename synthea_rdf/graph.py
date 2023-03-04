@@ -18,6 +18,7 @@ from .resource import (
     Medication,
     PayerTransition,
     Procedure,
+    Supply,
 )
 from .settings import SYN  # , DUA
 
@@ -203,7 +204,11 @@ class GraphBuilder:
             print("procedure_df is not set.")
 
     def convert_supply(self, supply_df=None, graph=None):
-        ...
+        if supply_df is not None and graph is not None:
+            supply = Supply(supply_df)
+            supply.convert(graph)
+        else:
+            print("supply_df is not set.")
 
     # def convert_dua(self, dua_df=None, graph=None):
     #     if dua_df is not None and graph is not None:
