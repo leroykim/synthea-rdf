@@ -36,6 +36,7 @@ from .uri import (
     immunization_uri,
     medication_uri,
     payertransition_uri,
+    procedure_uri,
 )
 
 # from .trust import generate_user_trust, generate_org_trust, generate_veracity
@@ -61,6 +62,15 @@ class Resource(ABC):
         pass
 
 
+"""
+Issue:
+    - [ ] Confusing naming convention for the following data properties:
+        - syn:start
+        - syn:startDate
+        - syn:startDateTime
+"""
+
+
 class Encounter(Resource):
     def __init__(self, df):
         self.__resource_df = df
@@ -79,7 +89,7 @@ class Encounter(Resource):
             - syn:hasOrdered
                 - [x] syn:CarePlan
                 - [x] syn:Device
-                - [ ] syn:Procedure
+                - [x] syn:Procedure
                 - [ ] syn:Supply
                 - [x] syn:ImagingStudy
                 - [ ] syn:Observation
@@ -105,7 +115,7 @@ class Encounter(Resource):
                 # Data Properties
                 graph.add((encounter, RDF.type, SYN.Encounter))
                 graph.add((encounter, SYN.id, uuid_literal(row["Id"])))
-                graph.add((encounter, SYN.start, datetime_literal(row["START"])))
+                graph.add((encounter, SYN.startDateTime, datetime_literal(row["START"])))
                 graph.add((encounter, SYN.patientId, uuid_literal(row["PATIENT"])))
                 graph.add((encounter, SYN.organizationId, uuid_literal(row["ORGANIZATION"])))
                 graph.add((encounter, SYN.providerId, uuid_literal(row["PROVIDER"])))
@@ -287,7 +297,7 @@ class Patient(Resource):
             - syn:Patient syn:hasHistoryOf
                 - [ ] syn:Observation
                 - [x] syn:Condition
-                - [ ] syn:Procedure
+                - [x] syn:Procedure
                 - [x] syn:Medication
                 - [x] syn:Immunization
                 - [x] syn:ImagingStudy
@@ -297,7 +307,7 @@ class Patient(Resource):
             - [ ] syn:Patient syn:hasEncounter syn:Encounter
             - [x] syn:Patient syn:hasClaim syn:Claim
             - [x] syn:Patient syn:hasClaimTransaction syn:ClaimTransaction
-            - [ ] syn:Patient syn:hasPayerTransitionHistory syn:PayerTransition
+            - [x] syn:Patient syn:hasPayerTransitionHistory syn:PayerTransition
         """
         rows = self.__resource_df.shape[0]
         # user_trust = generate_user_trust(rows)
@@ -421,7 +431,7 @@ class Payer(Resource):
         Object properties covered by other resource conversion:
             - [ ] syn:Payer syn:hasCovered syn:Encounter
             - [x] syn:Payer syn:hasCovered syn:Medication
-            - [ ] syn:Payer syn:hasPayerTransitionHistory syn:PayerTransition
+            - [x] syn:Payer syn:hasPayerTransitionHistory syn:PayerTransition
         """
         rows = self.__resource_df.shape[0]
         # user_trust = generate_user_trust(rows)
@@ -884,7 +894,41 @@ class PayerTransition(Resource):
 
 
 class Procedure(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Procedure Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the procedure class individual
+                procedure = procedure_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((procedure, SYN.startDateTime, datetime_literal(row["START"])))
+                graph.add((procedure, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((procedure, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((procedure, SYN.code, snomedct_literal(row["CODE"])))
+                graph.add((procedure, SYN.description, plain_literal(row["DESCRIPTION"])))
+                graph.add((procedure, SYN.baseCost, float_literal(row["BASE_COST"])))
+
+                # Object Properties
+                graph.add((procedure, SYN.isOrderedFor, patient))
+                graph.add((patient, SYN.hasHistoryOf, procedure))
+                graph.add((procedure, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, procedure))
+
+                bar()
 
 
 class Supply(Resource):

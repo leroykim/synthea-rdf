@@ -62,5 +62,9 @@ def payertransition_uri(payertransition_id):
     return URIRef(f"{SYN}payerTransition_{payertransition_id}")
 
 
+def procedure_uri(procedure_id):
+    return URIRef(f"{SYN}procedure_{procedure_id}")
+
+
 def provider_uri(provider_id):
     return URIRef(f"{SYN}provider_{provider_id}")
