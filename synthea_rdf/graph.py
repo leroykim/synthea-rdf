@@ -1,5 +1,6 @@
 from pathlib import Path
-from rdflib import Graph, Literal
+from rdflib import Graph
+import pandas as pd
 from .resource import (
     Allergy,
     CarePlan,
@@ -24,13 +25,13 @@ from .settings import SYN  # , DUA
 
 
 class GraphBuilder:
-    def __init__(self, model_path, persistence=None):  # , include_dua: bool = False):
-        if persistence == "sqlite":
-            self.__init_sqlite()
-        else:
-            self.graph = Graph()
-        self.model_path = model_path
-        self.setModel(self.graph)
+    def __init__(self, csv_dir: str, model_path: str):  # , persistence=None):  # , include_dua: bool = False):
+        # if persistence == "sqlite":
+        #     self.__init_sqlite()
+        # else:
+        self.graph = Graph()
+        self.setModel(model_path)
+        self.csv_dir = Path(csv_dir)
 
         self.allergy_df = None
         self.carePlan_df = None
@@ -55,164 +56,152 @@ class GraphBuilder:
         # self.dua_class = None
         # self.dua_df = None
 
+    def serialize(self, destination: str):
+        return self.graph.serialize(destination=destination)
+
     def build(self):
-        self.convertAllergy(self.allergy_df, self.graph)
-        self.convertCarePlan(self.carePlan_df, self.graph)
-        self.convertClaim(self.claim_df, self.graph)
-        self.convertClaimTransaction(self.claimTransaction_df, self.graph)
-        self.convertCondition(self.condition_df, self.graph)
-        self.convertDevice(self.device_df, self.graph)
-        self.convertEncounter(self.encounter_df, self.graph)
-        self.convertImagingStudy(self.imagingStudy_df, self.graph)
-        self.convertImmunization(self.immunization_df, self.graph)
-        self.convertMedication(self.medication_df, self.graph)
-        self.convertObservation(self.observation_df, self.graph)
-        self.convertOrganization(self.organization_df, self.graph)
-        self.convertPatient(self.patient_df, self.graph)
-        self.convertPayer(self.payer_df, self.graph)
-        self.convertPayerTransition(self.payerTransition_df, self.graph)
-        self.convertProcedure(self.procedure_df, self.graph)
-        self.convertProvider(self.provider_df, self.graph)
-        self.convertSupply(self.supply_df, self.graph)
+        self.readAll()
+        self.convertAll()
 
         # if self.include_dua:
         #    self.convert_dua()
 
         return self.graph
 
-    def setModel(self, graph):
-        graph.parse(self.model_path, format="n3")
-        graph.bind("syn", SYN)
-        # self.graph.bind("", SYN)
-        # self.namespace_manager = self.graph.namespace_manager
+    def readAll(self):
+        self.allergy_df = pd.read_csv(self.csv_dir / "allergies.csv")
+        self.carePlan_df = pd.read_csv(self.csv_dir / "careplans.csv")
+        self.claim_df = pd.read_csv(self.csv_dir / "claims.csv")
+        self.claimTransaction_df = pd.read_csv(self.csv_dir / "claims_transactions.csv")
+        self.condition_df = pd.read_csv(self.csv_dir / "conditions.csv")
+        self.device_df = pd.read_csv(self.csv_dir / "devices.csv")
+        self.encounter_df = pd.read_csv(self.csv_dir / "encounters.csv")
+        self.imagingStudy_df = pd.read_csv(self.csv_dir / "imaging_studies.csv")
+        self.immunization_df = pd.read_csv(self.csv_dir / "immunizations.csv")
+        self.medication_df = pd.read_csv(self.csv_dir / "medications.csv")
+        self.observation_df = pd.read_csv(self.csv_dir / "observations.csv")
+        self.organization_df = pd.read_csv(self.csv_dir / "organizations.csv")
+        self.patient_df = pd.read_csv(self.csv_dir / "patients.csv")
+        self.payer_df = pd.read_csv(self.csv_dir / "payers.csv")
+        self.payerTransition_df = pd.read_csv(self.csv_dir / "payer_transitions.csv")
+        self.procedure_df = pd.read_csv(self.csv_dir / "procedures.csv")
+        self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
+        self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
 
+    def setModel(self, model_path):
+        self.graph.parse(model_path, format="n3")
+        self.graph.bind("syn", SYN)
         print(f"Model has {len(self.graph)} triples.")
 
-    def convertAllergy(self, allergy_df=None, graph=None):
-        if allergy_df is not None and graph is not None:
-            allergy = Allergy(allergy_df)
-            allergy.convert(graph)
-        else:
-            print("allergy_df is not set.")
+    def convertAll(self):
+        self.convertAllergy()
+        self.convertCarePlan()
+        self.convertClaim()
+        self.convertClaimTransaction()
+        self.convertCondition()
+        self.convertDevice()
+        self.convertEncounter()
+        self.convertImagingStudy()
+        self.convertImmunization()
+        self.convertMedication()
+        self.convertObservation()
+        self.convertOrganization()
+        self.convertPatient()
+        self.convertPayer()
+        self.convertPayerTransition()
+        self.convertProcedure()
+        self.convertProvider()
+        self.convertSupply()
 
-    def convertCarePlan(self, careplan_df=None, graph=None):
-        if careplan_df is not None and graph is not None:
-            careplan = CarePlan(careplan_df)
-            careplan.convert(graph)
-        else:
-            print("careplan_df is not set.")
+    def convertAllergy(self):
+        self.allergy_df = pd.read_csv(self.csv_dir / "allergies.csv")
+        allergy = Allergy(self.allergy_df)
+        allergy.convert(self.graph)
 
-    def convertClaim(self, claim_df=None, graph=None):
-        if claim_df is not None and graph is not None:
-            claim = Claim(claim_df)
-            claim.convert(graph)
-        else:
-            print("claim_df is not set.")
+    def convertCarePlan(self):
+        self.carePlan_df = pd.read_csv(self.csv_dir / "careplans.csv")
+        careplan = CarePlan(self.carePlan_df)
+        careplan.convert(self.graph)
 
-    def convertClaimTransaction(self, claimTransaction_df=None, graph=None):
-        if claimTransaction_df is not None and graph is not None:
-            claimTransaction = ClaimTransaction(claimTransaction_df)
-            claimTransaction.convert(graph)
-        else:
-            print("claimTransaction_df is not set.")
+    def convertClaim(self):
+        self.claim_df = pd.read_csv(self.csv_dir / "claims.csv")
+        claim = Claim(self.claim_df)
+        claim.convert(self.graph)
 
-    def convertCondition(self, condition_df=None, graph=None):
-        if condition_df is not None and graph is not None:
-            condition = Condition(condition_df)
-            condition.convert(graph)
-        else:
-            print("condition_df is not set.")
+    def convertClaimTransaction(self):
+        self.claimTransaction_df = pd.read_csv(self.csv_dir / "claims_transactions.csv")
+        claimTransaction = ClaimTransaction(self.claimTransaction_df)
+        claimTransaction.convert(self.graph)
 
-    def convertDevice(self, device_df=None, graph=None):
-        if device_df is not None and graph is not None:
-            device = Device(device_df)
-            device.convert(graph)
-        else:
-            print("device_df is not set.")
+    def convertCondition(self):
+        self.condition_df = pd.read_csv(self.csv_dir / "conditions.csv")
+        condition = Condition(self.condition_df)
+        condition.convert(self.graph)
 
-    def convertEncounter(self, encounter_df=None, graph=None):
-        if encounter_df is not None and graph is not None:
-            encounter = Encounter(encounter_df)
-            encounter.convert(graph)
-        else:
-            print("encounter_df is not set.")
+    def convertDevice(self):
+        self.device_df = pd.read_csv(self.csv_dir / "devices.csv")
+        device = Device(self.device_df)
+        device.convert(self.graph)
 
-    def convertImagingStudy(self, imagingStudy_df=None, graph=None):
-        if imagingStudy_df is not None and graph is not None:
-            imagingStudy = ImagingStudy(imagingStudy_df)
-            imagingStudy.convert(graph)
-        else:
-            print("imagingStudy_df is not set.")
+    def convertEncounter(self):
+        self.encounter_df = pd.read_csv(self.csv_dir / "encounters.csv")
+        encounter = Encounter(self.encounter_df)
+        encounter.convert(self.graph)
 
-    def convertImmunization(self, immunization_df=None, graph=None):
-        if immunization_df is not None and graph is not None:
-            immunization = Immunization(immunization_df)
-            immunization.convert(graph)
-        else:
-            print("immunization_df is not set.")
+    def convertImagingStudy(self):
+        self.imagingStudy_df = pd.read_csv(self.csv_dir / "imaging_studies.csv")
+        imagingStudy = ImagingStudy(self.imagingStudy_df)
+        imagingStudy.convert(self.graph)
 
-    def convertMedication(self, medication_df=None, graph=None):
-        if medication_df is not None and graph is not None:
-            medication = Medication(medication_df)
-            medication.convert(graph)
-        else:
-            print("medication_df is not set.")
+    def convertImmunization(self):
+        self.immunization_df = pd.read_csv(self.csv_dir / "immunizations.csv")
+        immunization = Immunization(self.immunization_df)
+        immunization.convert(self.graph)
 
-    def convertObservation(self, observation_df=None, graph=None):
-        if observation_df is not None and graph is not None:
-            observation = Observation(observation_df)
-            observation.convert(graph)
-        else:
-            print("observation_df is not set.")
+    def convertMedication(self):
+        self.medication_df = pd.read_csv(self.csv_dir / "medications.csv")
+        medication = Medication(self.medication_df)
+        medication.convert(self.graph)
 
-    def convertOrganization(self, organization_df=None, graph=None):
-        if organization_df is not None and graph is not None:
-            organization = Organization(organization_df)
-            organization.convert(graph)
-        else:
-            print("organization_df is note set.")
+    def convertObservation(self):
+        self.observation_df = pd.read_csv(self.csv_dir / "observations.csv")
+        observation = Observation(self.observation_df)
+        observation.convert(self.graph)
 
-    def convertPatient(self, patient_df=None, graph=None):
-        if patient_df is not None and graph is not None:
-            patient = Patient(patient_df)
-            patient.convert(graph)
-        else:
-            print("patient_df is not set.")
+    def convertOrganization(self):
+        self.organization_df = pd.read_csv(self.csv_dir / "organizations.csv")
+        organization = Organization(self.organization_df)
+        organization.convert(self.graph)
 
-    def convertPayer(self, payer_df=None, graph=None):
-        if payer_df is not None and graph is not None:
-            payer = Payer(payer_df)
-            payer.convert(graph)
-        else:
-            print("payer_df is not set.")
+    def convertPatient(self):
+        self.patient_df = pd.read_csv(self.csv_dir / "patients.csv")
+        patient = Patient(self.patient_df)
+        patient.convert(self.graph)
 
-    def convertPayerTransition(self, payerTransition_df=None, graph=None):
-        if payerTransition_df is not None and graph is not None:
-            payerTransition = PayerTransition(payerTransition_df)
-            payerTransition.convert(graph)
-        else:
-            print("payerTransition_df is not set.")
+    def convertPayer(self):
+        self.payer_df = pd.read_csv(self.csv_dir / "payers.csv")
+        payer = Payer(self.payer_df)
+        payer.convert(self.graph)
 
-    def convertProcedure(self, procedure_df=None, graph=None):
-        if procedure_df is not None and graph is not None:
-            procedure = Procedure(procedure_df)
-            procedure.convert(graph)
-        else:
-            print("procedure_df is not set.")
+    def convertPayerTransition(self):
+        self.payerTransition_df = pd.read_csv(self.csv_dir / "payer_transitions.csv")
+        payerTransition = PayerTransition(self.payerTransition_df)
+        payerTransition.convert(self.graph)
 
-    def convertProvider(self, provider_df=None, graph=None):
-        if provider_df is not None and graph is not None:
-            provider = Provider(provider_df)
-            provider.convert(graph)
-        else:
-            print("provider_df is not set.")
+    def convertProcedure(self):
+        self.procedure_df = pd.read_csv(self.csv_dir / "procedures.csv")
+        procedure = Procedure(self.procedure_df)
+        procedure.convert(self.graph)
 
-    def convertSupply(self, supply_df=None, graph=None):
-        if supply_df is not None and graph is not None:
-            supply = Supply(supply_df)
-            supply.convert(graph)
-        else:
-            print("supply_df is not set.")
+    def convertProvider(self):
+        self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
+        provider = Provider(self.provider_df)
+        provider.convert(self.graph)
+
+    def convertSupply(self):
+        self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
+        supply = Supply(self.supply_df)
+        supply.convert(self.graph)
 
     # def __init_sqlite(self):
     #     self.graph = Graph("SQLAlchemy", identifier="synthea_graph")

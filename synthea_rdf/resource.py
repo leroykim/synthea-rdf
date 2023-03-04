@@ -20,7 +20,7 @@ from .literal import (
     urnUuidLiteral,
 )
 from .uri import (
-    allergy_uri,
+    allergyUri,
     carePlanUri,
     claimUri,
     claimTransactionUri,
@@ -97,7 +97,7 @@ class Allergy(Resource):
         with alive_bar(rows, force_tty=True, title="Allergy Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the allergy class individual
-                allergy = allergy_uri(row["Id"])
+                allergy = allergyUri(row["Id"])
                 patient = patientUri(row["PATIENT"])
                 encounter = encounterUri(row["ENCOUNTER"])
 
