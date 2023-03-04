@@ -20,7 +20,7 @@ DEST_PATH = "./result"
 
 builder = GraphBuilder(CSV_DIR, MODEL_PATH)
 builder.convertEncounter()
-assert builder.serialize(destination=Path(DEST_PATH)/"encounter.ttl") == builder.graph
+builder.serialize(destination=Path(DEST_PATH)/"encounter.ttl")
 ```
 
 ### All CSV
