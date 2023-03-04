@@ -34,6 +34,10 @@ def imagingstudy_uri(imagingstudy_id):
     return URIRef(f"{SYN}imagingStudy_{imagingstudy_id}")
 
 
+def immunization_uri(id):
+    return URIRef(f"{SYN}immunization_{id}")
+
+
 def observation_uri(observation_id):
     return URIRef(f"{SYN}observation_{observation_id}")
 

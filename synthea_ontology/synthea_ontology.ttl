@@ -344,17 +344,6 @@ syn:isPerformedBy rdf:type owl:ObjectProperty ;
                   rdfs:range syn:Provider .
 
 
-###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isPrecribedFor
-syn:isPrecribedFor rdf:type owl:ObjectProperty ;
-                   rdfs:subPropertyOf owl:topObjectProperty ;
-                   rdfs:domain [ rdf:type owl:Class ;
-                                 owl:unionOf ( syn:Immunization
-                                               syn:Medication
-                                             )
-                               ] ;
-                   rdfs:range syn:Patient .
-
-
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isPrescribedDuring
 syn:isPrescribedDuring rdf:type owl:ObjectProperty ;
                        rdfs:subPropertyOf owl:topObjectProperty ;
@@ -364,6 +353,17 @@ syn:isPrescribedDuring rdf:type owl:ObjectProperty ;
                                                  )
                                    ] ;
                        rdfs:range syn:Encounter .
+
+
+###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isPrescribedFor
+syn:isPrescribedFor rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf owl:topObjectProperty ;
+                    rdfs:domain [ rdf:type owl:Class ;
+                                  owl:unionOf ( syn:Immunization
+                                                syn:Medication
+                                              )
+                                ] ;
+                    rdfs:range syn:Patient .
 
 
 ###  https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#isResponsibleFor

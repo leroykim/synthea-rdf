@@ -28,6 +28,10 @@ def float_literal(string):
     return Literal(str(string), datatype=XSD.float)
 
 
+def hl7_cvx_literal(string):
+    return Literal(str(string), datatype=SYN["hl7:CVX"])
+
+
 def int_literal(string):
     return Literal(str(string), datatype=XSD.int)
 

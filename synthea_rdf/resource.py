@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 from rdflib.namespace import RDF
 from alive_progress import alive_bar
 import pandas as pd
-from .settings import SYN, TST
-from .trust import generate_user_trust, generate_org_trust, generate_veracity
+from .settings import SYN  # , TST
 from .literal import (
     uuid_literal,
     snomedct_literal,
@@ -17,6 +16,7 @@ from .literal import (
     dicom_uid_literal,
     dicom_dcm_literal,
     dicom_sop_literal,
+    hl7_cvx_literal,
 )
 from .uri import (
     allergy_uri,
@@ -32,7 +32,10 @@ from .uri import (
     observation_uri,
     device_uri,
     imagingstudy_uri,
+    immunization_uri,
 )
+
+# from .trust import generate_user_trust, generate_org_trust, generate_veracity
 
 
 class Resource(ABC):
@@ -86,7 +89,7 @@ class Encounter(Resource):
 
         """
         rows = self.__resource_df.shape[0]
-        veracity = generate_veracity(rows)
+        # veracity = generate_veracity(rows)
         with alive_bar(rows, force_tty=True, title="Encounter Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the encounter class individual
@@ -164,7 +167,7 @@ class Observation(Resource):
 
     def convert(self, graph):
         rows = self.__resource_df.shape[0]
-        veracity = generate_veracity(rows)
+        # veracity = generate_veracity(rows)
         with alive_bar(rows, force_tty=True, title="Obvervation Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the observation class individual
@@ -233,7 +236,7 @@ class Organization(Resource):
             - [x] syn:Organization syn:hasEmployed syn:Provider
         """
         rows = self.__resource_df.shape[0]
-        reputation = generate_org_trust(rows)
+        # reputation = generate_org_trust(rows)
         with alive_bar(rows, force_tty=True, title="Organization Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the organization class individual
@@ -294,7 +297,7 @@ class Patient(Resource):
             - [ ] syn:Patient syn:hasPayerTransitionHistory syn:PayerTransition
         """
         rows = self.__resource_df.shape[0]
-        user_trust = generate_user_trust(rows)
+        # user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Patient Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the patient class individual
@@ -357,7 +360,7 @@ class Provider(Resource):
             - [x] syn:Provider syn:hasFiled syn:Claim
         """
         rows = self.__resource_df.shape[0]
-        user_trust = generate_user_trust(rows)
+        # user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Provider Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the provider class individual
@@ -418,7 +421,7 @@ class Payer(Resource):
             - [ ] syn:Payer syn:hasPayerTransitionHistory syn:PayerTransition
         """
         rows = self.__resource_df.shape[0]
-        user_trust = generate_user_trust(rows)
+        # user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Payer Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the payer class individual
@@ -759,7 +762,41 @@ class ImagingStudy(Resource):
 
 
 class Immunization(Resource):
-    ...
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Immunization Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the immunization class individual
+                immunization = immunization_uri(index)
+                patient = patient_uri(row["PATIENT"])
+                encounter = encounter_uri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((immunization, SYN.dateTime, datetime_literal(row["DATE"])))
+                graph.add((immunization, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((immunization, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
+                graph.add((immunization, SYN.code, hl7_cvx_literal(row["CODE"])))
+                graph.add((immunization, SYN.description, plain_literal(row["DESCRIPTION"])))
+                graph.add((immunization, SYN.cost, float_literal(row["BASE_COST"])))
+
+                # Object Properties
+                graph.add((immunization, SYN.isPrescribedFor, patient))
+                graph.add((patient, SYN.hasHistoryOf, immunization))
+                graph.add((immunization, SYN.isPrescribedDuring, encounter))
+                graph.add((encounter, SYN.hasPrescribed, immunization))
+
+                bar()
 
 
 class Medication(Resource):
