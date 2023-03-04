@@ -33,20 +33,20 @@ class GraphBuilder:
         self.set_model(self.graph)
 
         self.allergy_df = None
-        self.care_plan_df = None
+        self.carePlan_df = None
         self.claim_df = None
-        self.claim_transaction_df = None
+        self.claimTransaction_df = None
         self.condition_df = None
         self.device_df = None
         self.encounter_df = None
-        self.imaging_study_df = None
+        self.imagingStudy_df = None
         self.immunization_df = None
         self.medication_df = None
         self.observation_df = None
         self.organization_df = None
         self.patient_df = None
         self.payer_df = None
-        self.payer_transition_df = None
+        self.payerTransition_df = None
         self.procedure_df = None
         self.provider_df = None
         self.supply_df = None
@@ -57,20 +57,20 @@ class GraphBuilder:
 
     def build(self):
         self.convert_allergy(self.allergy_df, self.graph)
-        self.convert_carePlan(self.care_plan_df, self.graph)
+        self.convert_carePlan(self.carePlan_df, self.graph)
         self.convert_claim(self.claim_df, self.graph)
-        self.convert_claimTransaction(self.claim_transaction_df, self.graph)
+        self.convert_claimTransaction(self.claimTransaction_df, self.graph)
         self.convert_condition(self.condition_df, self.graph)
         self.convert_device(self.device_df, self.graph)
         self.convert_encounter(self.encounter_df, self.graph)
-        self.convert_imagingStudy(self.imaging_study_df, self.graph)
+        self.convert_imagingStudy(self.imagingStudy_df, self.graph)
         self.convert_immunization(self.immunization_df, self.graph)
         self.convert_medication(self.medication_df, self.graph)
         self.convert_observation(self.observation_df, self.graph)
         self.convert_organization(self.organization_df, self.graph)
         self.convert_patient(self.patient_df, self.graph)
         self.convert_payer(self.payer_df, self.graph)
-        self.convert_payerTransition(self.payer_transition_df, self.graph)
+        self.convert_payerTransition(self.payerTransition_df, self.graph)
         self.convert_procedure(self.procedure_df, self.graph)
         self.convert_provider(self.provider_df, self.graph)
         self.convert_supply(self.supply_df, self.graph)
