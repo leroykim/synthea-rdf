@@ -23,6 +23,26 @@ builder.convertEncounter()
 builder.serialize(destination=Path(DEST_PATH)/"encounter.ttl")
 ```
 
+Convert method list:
+- convertAllergy()
+- convertCarePlan()
+- convertClaim()
+- convertClaimTransaction()
+- convertCondition()
+- convertDevice()
+- convertEncounter()
+- convertImagingStudy()
+- convertImmunization()
+- convertMedication()
+- convertObservation()
+- convertOrganization()
+- convertPatient()
+- convertPayer()
+- convertPayerTransition()
+- convertProcedure()
+- convertProvider()
+- convertSupply()
+
 ### All CSV
 ```python
 from pathlib import Path
