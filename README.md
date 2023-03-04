@@ -24,8 +24,6 @@ builder.serialize(destination=Path(DEST_PATH)/"encounter.ttl")
 ```
 
 ### All CSV
-> WIP simplified version by reading all CSV in a `DIR_PATH` directory (Synthea provides [CSV files](https://github.com/synthetichealth/synthea/wiki/CSV-File-Data-Dictionary) in one directory.)
-
 ```python
 from pathlib import Path
 from synthea_rdf.graph import GraphBuilder
