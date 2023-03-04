@@ -4,40 +4,40 @@ from alive_progress import alive_bar
 import pandas as pd
 from .settings import SYN  # , TST
 from .literal import (
-    uuid_literal,
-    snomedct_literal,
-    loinc_literal,
-    date_literal,
-    datetime_literal,
-    plain_literal,
-    integer_literal,
-    float_literal,
-    udi_literal,
-    dicom_uid_literal,
-    dicom_dcm_literal,
-    dicom_sop_literal,
-    hl7_cvx_literal,
-    umls_rxnorm_literal,
+    dateLiteral,
+    dateTimeLiteral,
+    dicomUidLiteral,
+    dicomDcmLiteral,
+    dicomSopLiteral,
+    fdaUdiLiteral,
+    floatLiteral,
+    hl7CvxLiteral,
+    integerLiteral,
+    loincLiteral,
+    plainLiteral,
+    snomedCtLiteral,
+    umlsRxnormLiteral,
+    urnUuidLiteral,
 )
 from .uri import (
     allergy_uri,
-    careplan_uri,
-    claim_uri,
-    claimtransaction_uri,
-    condition_uri,
-    patient_uri,
-    encounter_uri,
-    organization_uri,
-    provider_uri,
-    payer_uri,
-    observation_uri,
-    device_uri,
-    imagingstudy_uri,
-    immunization_uri,
-    medication_uri,
-    payertransition_uri,
-    procedure_uri,
-    supply_uri,
+    carePlanUri,
+    claimUri,
+    claimTransactionUri,
+    conditionUri,
+    deviceUri,
+    encounterUri,
+    imagingStudyUri,
+    immunizationUri,
+    medicationUri,
+    observationUri,
+    organizationUri,
+    patientUri,
+    payerUri,
+    payertransitionUri,
+    procedureUri,
+    providerUri,
+    supplyUri,
 )
 
 # from .trust import generate_user_trust, generate_org_trust, generate_veracity
@@ -72,6 +72,250 @@ Issue:
         - syn:date
         - syn:dateTime
 """
+
+
+class Allergy(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        """
+        Issue:
+            - [ ] There are no allergy data in the dataset (10 patients)
+                  so I should test this conversion with a larger dataset.
+            - [ ] syn:code should be decided by the syn:system
+        """
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Allergy Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the allergy class individual
+                allergy = allergy_uri(row["Id"])
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((allergy, SYN.start, dateLiteral(row["START"])))
+                graph.add((allergy, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((allergy, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((allergy, SYN.system, plainLiteral(row["SYSTEM"])))
+                graph.add((allergy, SYN.description, plainLiteral(row["DESCRIPTION"])))
+
+                # Object Properties
+                graph.add((allergy, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasAllergy, allergy))
+                graph.add((allergy, SYN.isDiagnosedDuring, encounter))
+                graph.add((encounter, SYN.hasDiagnosed, allergy))
+
+                bar()
+
+
+class CarePlan(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="CarePlan Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the careplan class individual
+                careplan = carePlanUri(row["Id"])
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((careplan, SYN.start, dateLiteral(row["START"])))
+                graph.add((careplan, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((careplan, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((careplan, SYN.code, snomedCtLiteral(row["CODE"])))
+                graph.add((careplan, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((careplan, SYN.reasonCode, snomedCtLiteral(row["REASONCODE"])))
+                graph.add((careplan, SYN.reasonDescription, plainLiteral(row["REASONDESCRIPTION"])))
+
+                # Object Properties
+                graph.add((careplan, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasCarePlan, careplan))
+                graph.add((careplan, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, careplan))
+
+                bar()
+
+
+class Claim(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        """
+        Object properties covered by other resource conversion:
+            - [x] syn:Claim syn:hasTransaction syn:ClaimTransaction
+        """
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Claim Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the claim class individual
+                claim = claimUri(row["Id"])
+                patient = patientUri(row["PATIENTID"])
+                provider = providerUri(row["PROVIDERID"])
+
+                # Data Properties
+                graph.add((claim, SYN.id, urnUuidLiteral(row["Id"])))
+                graph.add((claim, SYN.patientId, urnUuidLiteral(row["PATIENTID"])))
+                graph.add((claim, SYN.providerId, urnUuidLiteral(row["PROVIDERID"])))
+                graph.add((claim, SYN.departmentId, urnUuidLiteral(row["DEPARTMENTID"])))
+                graph.add((claim, SYN.patientDepartmentId, urnUuidLiteral(row["PATIENTDEPARTMENTID"])))
+                graph.add((claim, SYN.currentIllnessDate, dateTimeLiteral(row["CURRENTILLNESSDATE"])))
+                graph.add((claim, SYN.serviceDate, dateTimeLiteral(row["SERVICEDATE"])))
+
+                # Object Properties
+                graph.add((claim, SYN.isAssociatedWith, patient))
+                graph.add((patient, SYN.hasClaim, claim))
+                graph.add((claim, SYN.isFiledBy, provider))
+                graph.add((provider, SYN.hasFiled, claim))
+
+
+class ClaimTransaction(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="ClaimTransaction Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the claimtransaction class individual
+                claimtransaction = claimTransactionUri(row["ID"])
+                claim = claimUri(row["CLAIMID"])
+                patient = patientUri(row["PATIENTID"])
+                provider = providerUri(row["PROVIDERID"])
+                organization = organizationUri(row["PLACEOFSERVICE"])
+
+                # Data Properties
+                graph.add((claimtransaction, SYN.id, urnUuidLiteral(row["ID"])))
+                graph.add((claimtransaction, SYN.claimId, urnUuidLiteral(row["CLAIMID"])))
+                graph.add((claimtransaction, SYN.chargeId, urnUuidLiteral(row["CHARGEID"])))
+                graph.add((claimtransaction, SYN.patientId, urnUuidLiteral(row["PATIENTID"])))
+                graph.add((claimtransaction, SYN.type, plainLiteral(row["TYPE"])))
+                graph.add((claimtransaction, SYN.placeOfService, urnUuidLiteral(row["PLACEOFSERVICE"])))
+                graph.add((claimtransaction, SYN.procedureCode, snomedCtLiteral(row["PROCEDURECODE"])))
+                graph.add((claimtransaction, SYN.providerId, urnUuidLiteral(row["PROVIDERID"])))
+
+                # Object Properties
+                graph.add((claimtransaction, SYN.isTransactionFor, claim))
+                graph.add((claim, SYN.hasTransaction, claimtransaction))
+                graph.add((claimtransaction, SYN.isAssociatedWith, patient))
+                graph.add((patient, SYN.hasClaimTransaction, claimtransaction))
+                graph.add((claimtransaction, SYN.isAssociatedWith, provider))
+                graph.add((provider, SYN.hasClaimTransaction, claimtransaction))
+                graph.add((claimtransaction, SYN.hasPlaceOfService, organization))
+                graph.add((organization, SYN.hasClaimTransaction, claimtransaction))
+
+                bar()
+
+
+class Condition(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Condition Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the condition class individual
+                condition = conditionUri(index)
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((condition, SYN.startDate, dateLiteral(row["START"])))
+                graph.add((condition, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((condition, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((condition, SYN.code, snomedCtLiteral(row["CODE"])))
+                graph.add((condition, SYN.description, plainLiteral(row["DESCRIPTION"])))
+
+                # Object Properties
+                graph.add((condition, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasHistoryOf, condition))
+                graph.add((condition, SYN.isDiagnosedDuring, encounter))
+                graph.add((encounter, SYN.hasDiagnosed, condition))
+
+                bar()
+
+
+class Device(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Device Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the device class individual
+                device = deviceUri(index)
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((device, SYN.startDateTime, dateTimeLiteral(row["START"])))
+                graph.add((device, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((device, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((device, SYN.code, snomedCtLiteral(row["CODE"])))
+                graph.add((device, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((device, SYN.udi, fdaUdiLiteral(row["UDI"])))
+
+                # Object Properties
+                graph.add((device, SYN.hasMeasured, patient))
+                graph.add((patient, SYN.isMeasuredBy, device))
+                graph.add((device, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, device))
+
+                bar()
 
 
 class Encounter(Resource):
@@ -109,26 +353,26 @@ class Encounter(Resource):
         with alive_bar(rows, force_tty=True, title="Encounter Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the encounter class individual
-                encounter = encounter_uri(row["Id"])
-                organization = organization_uri(row["ORGANIZATION"])
-                patient = patient_uri(row["PATIENT"])
-                provider = provider_uri(row["PROVIDER"])
-                payer = payer_uri(row["PAYER"])
+                encounter = encounterUri(row["Id"])
+                organization = organizationUri(row["ORGANIZATION"])
+                patient = patientUri(row["PATIENT"])
+                provider = providerUri(row["PROVIDER"])
+                payer = payerUri(row["PAYER"])
 
                 # Data Properties
                 graph.add((encounter, RDF.type, SYN.Encounter))
-                graph.add((encounter, SYN.id, uuid_literal(row["Id"])))
-                graph.add((encounter, SYN.startDateTime, datetime_literal(row["START"])))
-                graph.add((encounter, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((encounter, SYN.organizationId, uuid_literal(row["ORGANIZATION"])))
-                graph.add((encounter, SYN.providerId, uuid_literal(row["PROVIDER"])))
-                graph.add((encounter, SYN.payerId, uuid_literal(row["PAYER"])))
-                graph.add((encounter, SYN.encounterClass, plain_literal(row["ENCOUNTERCLASS"])))
-                graph.add((encounter, SYN.code, snomedct_literal(row["CODE"])))
-                graph.add((encounter, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((encounter, SYN.baseEncounterCost, float_literal(row["BASE_ENCOUNTER_COST"])))
-                graph.add((encounter, SYN.totalClaimCost, float_literal(row["TOTAL_CLAIM_COST"])))
-                graph.add((encounter, SYN.payerCoverage, float_literal(row["PAYER_COVERAGE"])))
+                graph.add((encounter, SYN.id, urnUuidLiteral(row["Id"])))
+                graph.add((encounter, SYN.startDateTime, dateTimeLiteral(row["START"])))
+                graph.add((encounter, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((encounter, SYN.organizationId, urnUuidLiteral(row["ORGANIZATION"])))
+                graph.add((encounter, SYN.providerId, urnUuidLiteral(row["PROVIDER"])))
+                graph.add((encounter, SYN.payerId, urnUuidLiteral(row["PAYER"])))
+                graph.add((encounter, SYN.encounterClass, plainLiteral(row["ENCOUNTERCLASS"])))
+                graph.add((encounter, SYN.code, snomedCtLiteral(row["CODE"])))
+                graph.add((encounter, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((encounter, SYN.baseEncounterCost, floatLiteral(row["BASE_ENCOUNTER_COST"])))
+                graph.add((encounter, SYN.totalClaimCost, floatLiteral(row["TOTAL_CLAIM_COST"])))
+                graph.add((encounter, SYN.payerCoverage, floatLiteral(row["PAYER_COVERAGE"])))
 
                 # Object Properties
                 graph.add((encounter, SYN.hasPatient, patient))
@@ -163,6 +407,139 @@ class Encounter(Resource):
                 bar()
 
 
+class ImagingStudy(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        """
+        Issue:
+            - [ ] There are no ImagingStudy data in the dataset (10 patients)
+                  so I should test this conversion with a larger dataset.
+        """
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="ImagingStudy Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the imagingstudy class individual
+                imagingstudy = imagingStudyUri(index)
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((imagingstudy, SYN.id, urnUuidLiteral(row["Id"])))
+                graph.add((imagingstudy, SYN.dateTime, dateTimeLiteral(row["DATE"])))
+                graph.add((imagingstudy, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((imagingstudy, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((imagingstudy, SYN.seriesUid, dicomUidLiteral(row["SERIES_UID"])))
+                graph.add((imagingstudy, SYN.bodySiteCode, snomedCtLiteral(row["BODYSITE_CODE"])))
+                graph.add((imagingstudy, SYN.bodySiteDescription, plainLiteral(row["BODYSITE_DESCRIPTION"])))
+                graph.add((imagingstudy, SYN.modalityCode, dicomDcmLiteral(row["MODALITY_CODE"])))
+                graph.add((imagingstudy, SYN.modalityDescription, plainLiteral(row["MODALITY_DESCRIPTION"])))
+                graph.add((imagingstudy, SYN.instanceUid, dicomUidLiteral(row["INSTANCE_UID"])))
+                graph.add((imagingstudy, SYN.sopCode, dicomSopLiteral(row["SOP_CODE"])))
+                graph.add((imagingstudy, SYN.sopDescription, plainLiteral(row["SOP_DESCRIPTION"])))
+                graph.add((imagingstudy, SYN.procedureCode, snomedCtLiteral(row["PROCEDURE_CODE"])))
+
+                # Object Properties
+                graph.add((imagingstudy, SYN.isAbout, patient))
+                graph.add((patient, SYN.hasHistoryOf, imagingstudy))
+                graph.add((imagingstudy, SYN.isOrderedDuring, encounter))
+                graph.add((encounter, SYN.hasOrdered, imagingstudy))
+
+                bar()
+
+
+class Immunization(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Immunization Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the immunization class individual
+                immunization = immunizationUri(index)
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
+
+                # Data Properties
+                graph.add((immunization, SYN.dateTime, dateTimeLiteral(row["DATE"])))
+                graph.add((immunization, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((immunization, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((immunization, SYN.code, hl7CvxLiteral(row["CODE"])))
+                graph.add((immunization, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((immunization, SYN.cost, floatLiteral(row["BASE_COST"])))
+
+                # Object Properties
+                graph.add((immunization, SYN.isPrescribedFor, patient))
+                graph.add((patient, SYN.hasHistoryOf, immunization))
+                graph.add((immunization, SYN.isPrescribedDuring, encounter))
+                graph.add((encounter, SYN.hasPrescribed, immunization))
+
+                bar()
+
+
+class Medication(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        rows = self.__resource_df.shape[0]
+        with alive_bar(rows, force_tty=True, title="Medication Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the medication class individual
+                medication = medicationUri(index)
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
+                payer = payerUri(row["PAYER"])
+
+                # Data Properties
+                graph.add((medication, SYN.startDateTime, dateTimeLiteral(row["START"])))
+                graph.add((medication, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((medication, SYN.payerId, urnUuidLiteral(row["PAYER"])))
+                graph.add((medication, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((medication, SYN.code, umlsRxnormLiteral(row["CODE"])))
+                graph.add((medication, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((medication, SYN.baseCost, floatLiteral(row["BASE_COST"])))
+                graph.add((medication, SYN.payerCoverage, floatLiteral(row["PAYER_COVERAGE"])))
+                graph.add((medication, SYN.dispense, floatLiteral(row["DISPENSES"])))
+                graph.add((medication, SYN.totalCost, floatLiteral(row["TOTALCOST"])))
+
+                # Object Properties
+                graph.add((medication, SYN.isPrescribedFor, patient))
+                graph.add((patient, SYN.hasHistoryOf, medication))
+                graph.add((medication, SYN.isPrescribedDuring, encounter))
+                graph.add((encounter, SYN.hasPrescribed, medication))
+                graph.add((payer, SYN.hasCovered, medication))
+                graph.add((medication, SYN.isCoveredBy, payer))
+
+                bar()
+
+
 class Observation(Resource):
     """
     Object properties covered by other resource conversion:
@@ -187,23 +564,23 @@ class Observation(Resource):
         with alive_bar(rows, force_tty=True, title="Obvervation Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the observation class individual
-                observation = observation_uri(index)
+                observation = observationUri(index)
 
                 # Data Properties
                 graph.add((observation, RDF.type, SYN.Observation))
-                graph.add((observation, SYN.dateTime, datetime_literal(row["DATE"])))
-                graph.add((observation, SYN.patientId, uuid_literal(row["PATIENT"])))
+                graph.add((observation, SYN.dateTime, dateTimeLiteral(row["DATE"])))
+                graph.add((observation, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
                 if pd.notnull(row["ENCOUNTER"]):
-                    graph.add((observation, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((observation, SYN.code, loinc_literal(row["CODE"])))
-                graph.add((observation, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((observation, SYN.value, plain_literal(row["VALUE"])))
-                graph.add((observation, SYN.type, plain_literal(row["TYPE"])))
+                    graph.add((observation, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((observation, SYN.code, loincLiteral(row["CODE"])))
+                graph.add((observation, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((observation, SYN.value, plainLiteral(row["VALUE"])))
+                graph.add((observation, SYN.type, plainLiteral(row["TYPE"])))
 
                 # Object Properties
                 if pd.notnull(row["ENCOUNTER"]):
-                    graph.add((observation, SYN.isOrderedDuring, encounter_uri(row["ENCOUNTER"])))
-                graph.add((observation, SYN.isAbout, patient_uri(row["PATIENT"])))
+                    graph.add((observation, SYN.isOrderedDuring, encounterUri(row["ENCOUNTER"])))
+                graph.add((observation, SYN.isAbout, patientUri(row["PATIENT"])))
 
                 # Veracity
                 # graph.add(
@@ -256,16 +633,16 @@ class Organization(Resource):
         with alive_bar(rows, force_tty=True, title="Organization Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the organization class individual
-                organization = organization_uri(row["Id"])
+                organization = organizationUri(row["Id"])
 
                 # Data Properties
                 graph.add((organization, RDF.type, SYN.Organization))
-                graph.add((organization, SYN.id, uuid_literal(row["Id"])))
-                graph.add((organization, SYN.name, plain_literal(row["NAME"])))
-                graph.add((organization, SYN.address, plain_literal(row["ADDRESS"])))
-                graph.add((organization, SYN.city, plain_literal(row["CITY"])))
-                graph.add((organization, SYN.revenue, float_literal(row["REVENUE"])))
-                graph.add((organization, SYN.utilization, integer_literal(row["UTILIZATION"])))
+                graph.add((organization, SYN.id, urnUuidLiteral(row["Id"])))
+                graph.add((organization, SYN.name, plainLiteral(row["NAME"])))
+                graph.add((organization, SYN.address, plainLiteral(row["ADDRESS"])))
+                graph.add((organization, SYN.city, plainLiteral(row["CITY"])))
+                graph.add((organization, SYN.revenue, floatLiteral(row["REVENUE"])))
+                graph.add((organization, SYN.utilization, integerLiteral(row["UTILIZATION"])))
 
                 # Object Properties
 
@@ -317,25 +694,25 @@ class Patient(Resource):
         with alive_bar(rows, force_tty=True, title="Patient Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the patient class individual
-                patient = patient_uri(row["Id"])
+                patient = patientUri(row["Id"])
 
                 # Data Properties
                 # graph.add((patient, RDF.type, SYN.Patient))  # type
-                graph.add((patient, SYN.id, uuid_literal(row["Id"])))  # id
-                graph.add((patient, SYN.birthdate, date_literal(row["BIRTHDATE"])))  # birthdate
-                graph.add((patient, SYN.ssn, plain_literal(row["SSN"])))  # ssn
-                graph.add((patient, SYN.first, plain_literal(row["FIRST"])))
-                graph.add((patient, SYN.last, plain_literal(row["LAST"])))
-                graph.add((patient, SYN.race, plain_literal(row["RACE"])))
-                graph.add((patient, SYN.ethnicity, plain_literal(row["ETHNICITY"])))
-                graph.add((patient, SYN.gender, plain_literal(row["GENDER"])))
-                graph.add((patient, SYN.birthplace, plain_literal(row["BIRTHPLACE"])))
-                graph.add((patient, SYN.address, plain_literal(row["ADDRESS"])))
-                graph.add((patient, SYN.city, plain_literal(row["CITY"])))
-                graph.add((patient, SYN.state, plain_literal(row["STATE"])))
-                graph.add((patient, SYN.healthcareExpense, plain_literal(row["HEALTHCARE_EXPENSES"])))
-                graph.add((patient, SYN.healthcareCoverage, plain_literal(row["HEALTHCARE_COVERAGE"])))
-                graph.add((patient, SYN.income, integer_literal(row["INCOME"])))
+                graph.add((patient, SYN.id, urnUuidLiteral(row["Id"])))  # id
+                graph.add((patient, SYN.birthdate, dateLiteral(row["BIRTHDATE"])))  # birthdate
+                graph.add((patient, SYN.ssn, plainLiteral(row["SSN"])))  # ssn
+                graph.add((patient, SYN.first, plainLiteral(row["FIRST"])))
+                graph.add((patient, SYN.last, plainLiteral(row["LAST"])))
+                graph.add((patient, SYN.race, plainLiteral(row["RACE"])))
+                graph.add((patient, SYN.ethnicity, plainLiteral(row["ETHNICITY"])))
+                graph.add((patient, SYN.gender, plainLiteral(row["GENDER"])))
+                graph.add((patient, SYN.birthplace, plainLiteral(row["BIRTHPLACE"])))
+                graph.add((patient, SYN.address, plainLiteral(row["ADDRESS"])))
+                graph.add((patient, SYN.city, plainLiteral(row["CITY"])))
+                graph.add((patient, SYN.state, plainLiteral(row["STATE"])))
+                graph.add((patient, SYN.healthcareExpense, plainLiteral(row["HEALTHCARE_EXPENSES"])))
+                graph.add((patient, SYN.healthcareCoverage, plainLiteral(row["HEALTHCARE_COVERAGE"])))
+                graph.add((patient, SYN.income, integerLiteral(row["INCOME"])))
 
                 # User Trust
                 # graph.add(
@@ -348,67 +725,6 @@ class Patient(Resource):
                 # graph.add(
                 #     (
                 #         patient,
-                #         TST.identity,
-                #         float_literal(user_trust.iloc[index]["identity_trust"]),
-                #     )
-                # )
-
-                bar()
-
-
-class Provider(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        """
-        Object properties covered by other resource conversion:
-            - [x] syn:Provider syn:hasPerformed syn:Encounter
-            - [x] syn:Provider syn:hasClaimTransaction syn:ClaimTransaction
-            - [x] syn:Provider syn:hasFiled syn:Claim
-        """
-        rows = self.__resource_df.shape[0]
-        # user_trust = generate_user_trust(rows)
-        with alive_bar(rows, force_tty=True, title="Provider Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the provider class individual
-                provider = provider_uri(row["Id"])
-                organization = organization_uri(row["ORGANIZATION"])  # for object property
-
-                # Data Properties
-                graph.add((provider, RDF.type, SYN.Provider))
-                graph.add((provider, SYN.id, uuid_literal(row["Id"])))
-                graph.add((provider, SYN.organizationId, uuid_literal(row["ORGANIZATION"])))
-                graph.add((provider, SYN.name, plain_literal(row["NAME"])))
-                graph.add((provider, SYN.gender, plain_literal(row["GENDER"])))
-                graph.add((provider, SYN.speciality, plain_literal(row["SPECIALITY"])))
-                graph.add((provider, SYN.address, plain_literal(row["ADDRESS"])))
-                graph.add((provider, SYN.city, plain_literal(row["CITY"])))
-                graph.add((provider, SYN.utilization, integer_literal(row["UTILIZATION"])))
-
-                # Object Properties
-                graph.add((provider, SYN.isAffiliatedWith, organization_uri(row["ORGANIZATION"])))
-                graph.add((organization, SYN.hasEmployed, provider))
-
-                # User Trust
-                # graph.add(
-                #     (
-                #         provider,
-                #         TST.behavior,
-                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         provider,
                 #         TST.identity,
                 #         float_literal(user_trust.iloc[index]["identity_trust"]),
                 #     )
@@ -441,26 +757,26 @@ class Payer(Resource):
         with alive_bar(rows, force_tty=True, title="Payer Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the payer class individual
-                payer = payer_uri(row["Id"])
+                payer = payerUri(row["Id"])
 
                 # Data Properties
                 # graph.add((payer, RDF.type, SYN.Payer))  # type
-                graph.add((payer, SYN.id, uuid_literal(row["Id"])))  # id
-                graph.add((payer, SYN.name, plain_literal(row["NAME"])))
-                graph.add((payer, SYN.amountCovered, float_literal(row["AMOUNT_COVERED"])))
-                graph.add((payer, SYN.amountUncovered, float_literal(row["AMOUNT_UNCOVERED"])))
-                graph.add((payer, SYN.revenue, float_literal(row["REVENUE"])))
-                graph.add((payer, SYN.coveredEncounters, integer_literal(row["COVERED_ENCOUNTERS"])))
-                graph.add((payer, SYN.uncoveredEncounters, integer_literal(row["UNCOVERED_ENCOUNTERS"])))
-                graph.add((payer, SYN.coveredMedications, integer_literal(row["COVERED_MEDICATIONS"])))
-                graph.add((payer, SYN.uncoveredMedications, integer_literal(row["UNCOVERED_MEDICATIONS"])))
-                graph.add((payer, SYN.coveredProcedures, integer_literal(row["COVERED_PROCEDURES"])))
-                graph.add((payer, SYN.uncoveredProcedures, integer_literal(row["UNCOVERED_PROCEDURES"])))
-                graph.add((payer, SYN.coveredImmunizations, integer_literal(row["COVERED_IMMUNIZATIONS"])))
-                graph.add((payer, SYN.uncoveredImmunizations, integer_literal(row["UNCOVERED_IMMUNIZATIONS"])))
-                graph.add((payer, SYN.uniqueCustomers, integer_literal(row["UNIQUE_CUSTOMERS"])))
-                graph.add((payer, SYN.qolsAvg, float_literal(row["QOLS_AVG"])))
-                graph.add((payer, SYN.memberMonths, integer_literal(row["MEMBER_MONTHS"])))
+                graph.add((payer, SYN.id, urnUuidLiteral(row["Id"])))  # id
+                graph.add((payer, SYN.name, plainLiteral(row["NAME"])))
+                graph.add((payer, SYN.amountCovered, floatLiteral(row["AMOUNT_COVERED"])))
+                graph.add((payer, SYN.amountUncovered, floatLiteral(row["AMOUNT_UNCOVERED"])))
+                graph.add((payer, SYN.revenue, floatLiteral(row["REVENUE"])))
+                graph.add((payer, SYN.coveredEncounters, integerLiteral(row["COVERED_ENCOUNTERS"])))
+                graph.add((payer, SYN.uncoveredEncounters, integerLiteral(row["UNCOVERED_ENCOUNTERS"])))
+                graph.add((payer, SYN.coveredMedications, integerLiteral(row["COVERED_MEDICATIONS"])))
+                graph.add((payer, SYN.uncoveredMedications, integerLiteral(row["UNCOVERED_MEDICATIONS"])))
+                graph.add((payer, SYN.coveredProcedures, integerLiteral(row["COVERED_PROCEDURES"])))
+                graph.add((payer, SYN.uncoveredProcedures, integerLiteral(row["UNCOVERED_PROCEDURES"])))
+                graph.add((payer, SYN.coveredImmunizations, integerLiteral(row["COVERED_IMMUNIZATIONS"])))
+                graph.add((payer, SYN.uncoveredImmunizations, integerLiteral(row["UNCOVERED_IMMUNIZATIONS"])))
+                graph.add((payer, SYN.uniqueCustomers, integerLiteral(row["UNIQUE_CUSTOMERS"])))
+                graph.add((payer, SYN.qolsAvg, floatLiteral(row["QOLS_AVG"])))
+                graph.add((payer, SYN.memberMonths, integerLiteral(row["MEMBER_MONTHS"])))
 
                 # Object Properties
 
@@ -483,383 +799,6 @@ class Payer(Resource):
                 bar()
 
 
-class Allergy(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        """
-        Issue:
-            - [ ] There are no allergy data in the dataset (10 patients)
-                  so I should test this conversion with a larger dataset.
-            - [ ] syn:code should be decided by the syn:system
-        """
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="Allergy Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the allergy class individual
-                allergy = allergy_uri(row["Id"])
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
-
-                # Data Properties
-                graph.add((allergy, SYN.start, date_literal(row["START"])))
-                graph.add((allergy, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((allergy, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((allergy, SYN.system, plain_literal(row["SYSTEM"])))
-                graph.add((allergy, SYN.description, plain_literal(row["DESCRIPTION"])))
-
-                # Object Properties
-                graph.add((allergy, SYN.isAbout, patient))
-                graph.add((patient, SYN.hasAllergy, allergy))
-                graph.add((allergy, SYN.isDiagnosedDuring, encounter))
-                graph.add((encounter, SYN.hasDiagnosed, allergy))
-
-                bar()
-
-
-class CarePlan(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="CarePlan Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the careplan class individual
-                careplan = careplan_uri(row["Id"])
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
-
-                # Data Properties
-                graph.add((careplan, SYN.start, date_literal(row["START"])))
-                graph.add((careplan, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((careplan, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((careplan, SYN.code, snomedct_literal(row["CODE"])))
-                graph.add((careplan, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((careplan, SYN.reasonCode, snomedct_literal(row["REASONCODE"])))
-                graph.add((careplan, SYN.reasonDescription, plain_literal(row["REASONDESCRIPTION"])))
-
-                # Object Properties
-                graph.add((careplan, SYN.isAbout, patient))
-                graph.add((patient, SYN.hasCarePlan, careplan))
-                graph.add((careplan, SYN.isOrderedDuring, encounter))
-                graph.add((encounter, SYN.hasOrdered, careplan))
-
-                bar()
-
-
-class Claim(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        """
-        Object properties covered by other resource conversion:
-            - [x] syn:Claim syn:hasTransaction syn:ClaimTransaction
-        """
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="Claim Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the claim class individual
-                claim = claim_uri(row["Id"])
-                patient = patient_uri(row["PATIENTID"])
-                provider = provider_uri(row["PROVIDERID"])
-
-                # Data Properties
-                graph.add((claim, SYN.id, uuid_literal(row["Id"])))
-                graph.add((claim, SYN.patientId, uuid_literal(row["PATIENTID"])))
-                graph.add((claim, SYN.providerId, uuid_literal(row["PROVIDERID"])))
-                graph.add((claim, SYN.departmentId, uuid_literal(row["DEPARTMENTID"])))
-                graph.add((claim, SYN.patientDepartmentId, uuid_literal(row["PATIENTDEPARTMENTID"])))
-                graph.add((claim, SYN.currentIllnessDate, datetime_literal(row["CURRENTILLNESSDATE"])))
-                graph.add((claim, SYN.serviceDate, datetime_literal(row["SERVICEDATE"])))
-
-                # Object Properties
-                graph.add((claim, SYN.isAssociatedWith, patient))
-                graph.add((patient, SYN.hasClaim, claim))
-                graph.add((claim, SYN.isFiledBy, provider))
-                graph.add((provider, SYN.hasFiled, claim))
-
-
-class ClaimTransaction(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="ClaimTransaction Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the claimtransaction class individual
-                claimtransaction = claimtransaction_uri(row["ID"])
-                claim = claim_uri(row["CLAIMID"])
-                patient = patient_uri(row["PATIENTID"])
-                provider = provider_uri(row["PROVIDERID"])
-                organization = organization_uri(row["PLACEOFSERVICE"])
-
-                # Data Properties
-                graph.add((claimtransaction, SYN.id, uuid_literal(row["ID"])))
-                graph.add((claimtransaction, SYN.claimId, uuid_literal(row["CLAIMID"])))
-                graph.add((claimtransaction, SYN.chargeId, uuid_literal(row["CHARGEID"])))
-                graph.add((claimtransaction, SYN.patientId, uuid_literal(row["PATIENTID"])))
-                graph.add((claimtransaction, SYN.type, plain_literal(row["TYPE"])))
-                graph.add((claimtransaction, SYN.placeOfService, uuid_literal(row["PLACEOFSERVICE"])))
-                graph.add((claimtransaction, SYN.procedureCode, snomedct_literal(row["PROCEDURECODE"])))
-                graph.add((claimtransaction, SYN.providerId, uuid_literal(row["PROVIDERID"])))
-
-                # Object Properties
-                graph.add((claimtransaction, SYN.isTransactionFor, claim))
-                graph.add((claim, SYN.hasTransaction, claimtransaction))
-                graph.add((claimtransaction, SYN.isAssociatedWith, patient))
-                graph.add((patient, SYN.hasClaimTransaction, claimtransaction))
-                graph.add((claimtransaction, SYN.isAssociatedWith, provider))
-                graph.add((provider, SYN.hasClaimTransaction, claimtransaction))
-                graph.add((claimtransaction, SYN.hasPlaceOfService, organization))
-                graph.add((organization, SYN.hasClaimTransaction, claimtransaction))
-
-                bar()
-
-
-class Condition(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="Condition Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the condition class individual
-                condition = condition_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
-
-                # Data Properties
-                graph.add((condition, SYN.startDate, date_literal(row["START"])))
-                graph.add((condition, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((condition, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((condition, SYN.code, snomedct_literal(row["CODE"])))
-                graph.add((condition, SYN.description, plain_literal(row["DESCRIPTION"])))
-
-                # Object Properties
-                graph.add((condition, SYN.isAbout, patient))
-                graph.add((patient, SYN.hasHistoryOf, condition))
-                graph.add((condition, SYN.isDiagnosedDuring, encounter))
-                graph.add((encounter, SYN.hasDiagnosed, condition))
-
-                bar()
-
-
-class Device(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="Device Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the device class individual
-                device = device_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
-
-                # Data Properties
-                graph.add((device, SYN.startDateTime, datetime_literal(row["START"])))
-                graph.add((device, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((device, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((device, SYN.code, snomedct_literal(row["CODE"])))
-                graph.add((device, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((device, SYN.udi, udi_literal(row["UDI"])))
-
-                # Object Properties
-                graph.add((device, SYN.hasMeasured, patient))
-                graph.add((patient, SYN.isMeasuredBy, device))
-                graph.add((device, SYN.isOrderedDuring, encounter))
-                graph.add((encounter, SYN.hasOrdered, device))
-
-                bar()
-
-
-class ImagingStudy(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        """
-        Issue:
-            - [ ] There are no ImagingStudy data in the dataset (10 patients)
-                  so I should test this conversion with a larger dataset.
-        """
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="ImagingStudy Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the imagingstudy class individual
-                imagingstudy = imagingstudy_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
-
-                # Data Properties
-                graph.add((imagingstudy, SYN.id, uuid_literal(row["Id"])))
-                graph.add((imagingstudy, SYN.dateTime, datetime_literal(row["DATE"])))
-                graph.add((imagingstudy, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((imagingstudy, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((imagingstudy, SYN.seriesUid, dicom_uid_literal(row["SERIES_UID"])))
-                graph.add((imagingstudy, SYN.bodySiteCode, snomedct_literal(row["BODYSITE_CODE"])))
-                graph.add((imagingstudy, SYN.bodySiteDescription, plain_literal(row["BODYSITE_DESCRIPTION"])))
-                graph.add((imagingstudy, SYN.modalityCode, dicom_dcm_literal(row["MODALITY_CODE"])))
-                graph.add((imagingstudy, SYN.modalityDescription, plain_literal(row["MODALITY_DESCRIPTION"])))
-                graph.add((imagingstudy, SYN.instanceUid, dicom_uid_literal(row["INSTANCE_UID"])))
-                graph.add((imagingstudy, SYN.sopCode, dicom_sop_literal(row["SOP_CODE"])))
-                graph.add((imagingstudy, SYN.sopDescription, plain_literal(row["SOP_DESCRIPTION"])))
-                graph.add((imagingstudy, SYN.procedureCode, snomedct_literal(row["PROCEDURE_CODE"])))
-
-                # Object Properties
-                graph.add((imagingstudy, SYN.isAbout, patient))
-                graph.add((patient, SYN.hasHistoryOf, imagingstudy))
-                graph.add((imagingstudy, SYN.isOrderedDuring, encounter))
-                graph.add((encounter, SYN.hasOrdered, imagingstudy))
-
-                bar()
-
-
-class Immunization(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="Immunization Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the immunization class individual
-                immunization = immunization_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
-
-                # Data Properties
-                graph.add((immunization, SYN.dateTime, datetime_literal(row["DATE"])))
-                graph.add((immunization, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((immunization, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((immunization, SYN.code, hl7_cvx_literal(row["CODE"])))
-                graph.add((immunization, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((immunization, SYN.cost, float_literal(row["BASE_COST"])))
-
-                # Object Properties
-                graph.add((immunization, SYN.isPrescribedFor, patient))
-                graph.add((patient, SYN.hasHistoryOf, immunization))
-                graph.add((immunization, SYN.isPrescribedDuring, encounter))
-                graph.add((encounter, SYN.hasPrescribed, immunization))
-
-                bar()
-
-
-class Medication(Resource):
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    def resource_df(self):
-        return self.__resource_df
-
-    @resource_df.setter
-    def resource_df(self, value):
-        self.__resource_df = value
-
-    def convert(self, graph):
-        rows = self.__resource_df.shape[0]
-        with alive_bar(rows, force_tty=True, title="Medication Conversion") as bar:
-            for index, row in self.__resource_df.iterrows():
-                # Create name of the medication class individual
-                medication = medication_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
-                payer = payer_uri(row["PAYER"])
-
-                # Data Properties
-                graph.add((medication, SYN.startDateTime, datetime_literal(row["START"])))
-                graph.add((medication, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((medication, SYN.payerId, uuid_literal(row["PAYER"])))
-                graph.add((medication, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((medication, SYN.code, umls_rxnorm_literal(row["CODE"])))
-                graph.add((medication, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((medication, SYN.baseCost, float_literal(row["BASE_COST"])))
-                graph.add((medication, SYN.payerCoverage, float_literal(row["PAYER_COVERAGE"])))
-                graph.add((medication, SYN.dispense, float_literal(row["DISPENSES"])))
-                graph.add((medication, SYN.totalCost, float_literal(row["TOTALCOST"])))
-
-                # Object Properties
-                graph.add((medication, SYN.isPrescribedFor, patient))
-                graph.add((patient, SYN.hasHistoryOf, medication))
-                graph.add((medication, SYN.isPrescribedDuring, encounter))
-                graph.add((encounter, SYN.hasPrescribed, medication))
-                graph.add((payer, SYN.hasCovered, medication))
-                graph.add((medication, SYN.isCoveredBy, payer))
-
-                bar()
-
-
 class PayerTransition(Resource):
     def __init__(self, df):
         self.__resource_df = df
@@ -877,15 +816,15 @@ class PayerTransition(Resource):
         with alive_bar(rows, force_tty=True, title="Payer Transition Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the payertransition class individual
-                payertransition = payertransition_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                payer = payer_uri(row["PAYER"])
+                payertransition = payertransitionUri(index)
+                patient = patientUri(row["PATIENT"])
+                payer = payerUri(row["PAYER"])
 
                 # Data Properties
-                graph.add((payertransition, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((payertransition, SYN.startYear, date_literal(row["START_YEAR"][:10])))
-                graph.add((payertransition, SYN.endYear, date_literal(row["END_YEAR"][:10])))
-                graph.add((payertransition, SYN.payerId, uuid_literal(row["PAYER"])))
+                graph.add((payertransition, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((payertransition, SYN.startYear, dateLiteral(row["START_YEAR"][:10])))
+                graph.add((payertransition, SYN.endYear, dateLiteral(row["END_YEAR"][:10])))
+                graph.add((payertransition, SYN.payerId, urnUuidLiteral(row["PAYER"])))
 
                 # Object Properties
                 graph.add((payertransition, SYN.hasPatientRecord, patient))
@@ -913,23 +852,84 @@ class Procedure(Resource):
         with alive_bar(rows, force_tty=True, title="Procedure Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the procedure class individual
-                procedure = procedure_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
+                procedure = procedureUri(index)
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
 
                 # Data Properties
-                graph.add((procedure, SYN.startDateTime, datetime_literal(row["START"])))
-                graph.add((procedure, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((procedure, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((procedure, SYN.code, snomedct_literal(row["CODE"])))
-                graph.add((procedure, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((procedure, SYN.baseCost, float_literal(row["BASE_COST"])))
+                graph.add((procedure, SYN.startDateTime, dateTimeLiteral(row["START"])))
+                graph.add((procedure, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((procedure, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((procedure, SYN.code, snomedCtLiteral(row["CODE"])))
+                graph.add((procedure, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((procedure, SYN.baseCost, floatLiteral(row["BASE_COST"])))
 
                 # Object Properties
                 graph.add((procedure, SYN.isOrderedFor, patient))
                 graph.add((patient, SYN.hasHistoryOf, procedure))
                 graph.add((procedure, SYN.isOrderedDuring, encounter))
                 graph.add((encounter, SYN.hasOrdered, procedure))
+
+                bar()
+
+
+class Provider(Resource):
+    def __init__(self, df):
+        self.__resource_df = df
+
+    @property
+    def resource_df(self):
+        return self.__resource_df
+
+    @resource_df.setter
+    def resource_df(self, value):
+        self.__resource_df = value
+
+    def convert(self, graph):
+        """
+        Object properties covered by other resource conversion:
+            - [x] syn:Provider syn:hasPerformed syn:Encounter
+            - [x] syn:Provider syn:hasClaimTransaction syn:ClaimTransaction
+            - [x] syn:Provider syn:hasFiled syn:Claim
+        """
+        rows = self.__resource_df.shape[0]
+        # user_trust = generate_user_trust(rows)
+        with alive_bar(rows, force_tty=True, title="Provider Conversion") as bar:
+            for index, row in self.__resource_df.iterrows():
+                # Create name of the provider class individual
+                provider = providerUri(row["Id"])
+                organization = organizationUri(row["ORGANIZATION"])  # for object property
+
+                # Data Properties
+                graph.add((provider, RDF.type, SYN.Provider))
+                graph.add((provider, SYN.id, urnUuidLiteral(row["Id"])))
+                graph.add((provider, SYN.organizationId, urnUuidLiteral(row["ORGANIZATION"])))
+                graph.add((provider, SYN.name, plainLiteral(row["NAME"])))
+                graph.add((provider, SYN.gender, plainLiteral(row["GENDER"])))
+                graph.add((provider, SYN.speciality, plainLiteral(row["SPECIALITY"])))
+                graph.add((provider, SYN.address, plainLiteral(row["ADDRESS"])))
+                graph.add((provider, SYN.city, plainLiteral(row["CITY"])))
+                graph.add((provider, SYN.utilization, integerLiteral(row["UTILIZATION"])))
+
+                # Object Properties
+                graph.add((provider, SYN.isAffiliatedWith, organizationUri(row["ORGANIZATION"])))
+                graph.add((organization, SYN.hasEmployed, provider))
+
+                # User Trust
+                # graph.add(
+                #     (
+                #         provider,
+                #         TST.behavior,
+                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
+                #     )
+                # )
+                # graph.add(
+                #     (
+                #         provider,
+                #         TST.identity,
+                #         float_literal(user_trust.iloc[index]["identity_trust"]),
+                #     )
+                # )
 
                 bar()
 
@@ -951,17 +951,17 @@ class Supply(Resource):
         with alive_bar(rows, force_tty=True, title="Supply Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the supply class individual
-                supply = supply_uri(index)
-                patient = patient_uri(row["PATIENT"])
-                encounter = encounter_uri(row["ENCOUNTER"])
+                supply = supplyUri(index)
+                patient = patientUri(row["PATIENT"])
+                encounter = encounterUri(row["ENCOUNTER"])
 
                 # Data Properties
-                graph.add((supply, SYN.date, date_literal(row["DATE"][:10])))
-                graph.add((supply, SYN.patientId, uuid_literal(row["PATIENT"])))
-                graph.add((supply, SYN.encounterId, uuid_literal(row["ENCOUNTER"])))
-                graph.add((supply, SYN.code, snomedct_literal(row["CODE"])))
-                graph.add((supply, SYN.description, plain_literal(row["DESCRIPTION"])))
-                graph.add((supply, SYN.quantity, integer_literal(row["QUANTITY"])))
+                graph.add((supply, SYN.date, dateLiteral(row["DATE"][:10])))
+                graph.add((supply, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
+                graph.add((supply, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
+                graph.add((supply, SYN.code, snomedCtLiteral(row["CODE"])))
+                graph.add((supply, SYN.description, plainLiteral(row["DESCRIPTION"])))
+                graph.add((supply, SYN.quantity, integerLiteral(row["QUANTITY"])))
 
                 # Object Properties
                 graph.add((supply, SYN.isOrderedFor, patient))

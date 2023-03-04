@@ -6,69 +6,69 @@ def allergy_uri(id):
     return URIRef(f"{SYN}allergy_{id}")
 
 
-def careplan_uri(id):
+def carePlanUri(id):
     return URIRef(f"{SYN}carePlan_{id}")
 
 
-def claim_uri(id):
+def claimUri(id):
     return URIRef(f"{SYN}claim_{id}")
 
 
-def claimtransaction_uri(id):
+def claimTransactionUri(id):
     return URIRef(f"{SYN}claimTransaction_{id}")
 
 
-def condition_uri(id):
+def conditionUri(id):
     return URIRef(f"{SYN}condition_{id}")
 
 
-def device_uri(id):
+def deviceUri(id):
     return URIRef(f"{SYN}device_{id}")
 
 
-def encounter_uri(encounter_id):
+def encounterUri(encounter_id):
     return URIRef(f"{SYN}encounter_{encounter_id}")
 
 
-def imagingstudy_uri(imagingstudy_id):
+def imagingStudyUri(imagingstudy_id):
     return URIRef(f"{SYN}imagingStudy_{imagingstudy_id}")
 
 
-def immunization_uri(id):
+def immunizationUri(id):
     return URIRef(f"{SYN}immunization_{id}")
 
 
-def medication_uri(id):
+def medicationUri(id):
     return URIRef(f"{SYN}medication_{id}")
 
 
-def observation_uri(observation_id):
+def observationUri(observation_id):
     return URIRef(f"{SYN}observation_{observation_id}")
 
 
-def organization_uri(organization_id):
+def organizationUri(organization_id):
     return URIRef(f"{SYN}organization_{organization_id}")
 
 
-def patient_uri(id):
+def patientUri(id):
     return URIRef(f"{SYN}patient_{id}")
 
 
-def payer_uri(payer_id):
+def payerUri(payer_id):
     return URIRef(f"{SYN}payer_{payer_id}")
 
 
-def payertransition_uri(payertransition_id):
+def payertransitionUri(payertransition_id):
     return URIRef(f"{SYN}payerTransition_{payertransition_id}")
 
 
-def procedure_uri(procedure_id):
+def procedureUri(procedure_id):
     return URIRef(f"{SYN}procedure_{procedure_id}")
 
 
-def provider_uri(provider_id):
+def providerUri(provider_id):
     return URIRef(f"{SYN}provider_{provider_id}")
 
 
-def supply_uri(supply_id):
+def supplyUri(supply_id):
     return URIRef(f"{SYN}supply_{supply_id}")
