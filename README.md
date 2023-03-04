@@ -1,7 +1,7 @@
 # 🕸️ SYNTHEA RDF
 [![KnAcc Lab](https://tinyurl.com/knacclogo)](https://knacc.umbc.edu/) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
 
-Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion tool.
+Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/synthetichealth/synthea) and CSVs to Turtle (.ttl) conversion tool.
 
 ![synthea_ontology](synthea_ontology/synthea_ontology.png)
 
@@ -19,7 +19,6 @@ MODEL_PATH = "./synthea_ontology/synthea_ontology.ttl"
 DIR_PATH = "./csv"
 DEST_PATH = "./result"
 
-
 encounter_df = pd.read_csv(f"{DIR_PATH}/encounters.csv")
 graph = Graph()
 builder = GraphBuilder(MODEL_PATH)
@@ -29,7 +28,7 @@ graph.serialize(destination=f"{DEST_PATH}/encounter.ttl")
 ```
 
 ### All CSV
-> WIP simplified version by reading all CSV in a `DIR_PATH` directory (Synthea provides CSV files in one directory.)
+> WIP simplified version by reading all CSV in a `DIR_PATH` directory (Synthea provides [CSV files](https://github.com/synthetichealth/synthea/wiki/CSV-File-Data-Dictionary) in one directory.)
 
 ```python
 import pandas as pd
