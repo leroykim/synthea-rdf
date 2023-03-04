@@ -81,3 +81,16 @@ builder.supply_df = supply_df
 graph = builder.build()
 graph.serialize(destination=f"{DEST_PATH}/synthea.ttl")
 ```
+
+## Issues
+- [ ] Confusing naming convention for the following data properties:
+
+        - `syn:start`
+        - `syn:startDate`
+        - `syn:startDateTime`
+        - `syn:date`
+        - `syn:dateTime`
+
+- [ ] There are no `Allergy` and `ImagingStudy` data in the test dataset. Testing required with a larger dataset.
+    - [ ] Test `Allergy`
+    - [ ] Test `ImagingStudy`
