@@ -1,4 +1,4 @@
-# SYNTHEA RDF
+# 🕸️ SYNTHEA RDF
 [![KnAcc Lab](https://tinyurl.com/knacclogo)](https://knacc.umbc.edu/) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
 
 Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion tool.
@@ -8,7 +8,7 @@ Semantic web representation for the Synthea and CSVs to Turtle (.ttl) conversion
 > Synthea ontology and conversion method v1.0 are done.
 > WIP minor fixes.
 
-## Usage
+## :hammer: Usage
 ### Single CSV
 ```python
 import pandas as pd
@@ -82,14 +82,14 @@ graph = builder.build()
 graph.serialize(destination=f"{DEST_PATH}/synthea.ttl")
 ```
 
-## Issues
+## :warning: Issues
 - [ ] Confusing naming convention for the following data properties:
 
-        - `syn:start`
-        - `syn:startDate`
-        - `syn:startDateTime`
-        - `syn:date`
-        - `syn:dateTime`
+        - syn:start
+        - syn:startDate
+        - syn:startDateTime
+        - syn:date
+        - syn:dateTime
 
 - [ ] There are no `Allergy` and `ImagingStudy` data in the test dataset. Testing required with a larger dataset.
     - [ ] Test `Allergy`
