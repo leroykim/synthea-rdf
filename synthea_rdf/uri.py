@@ -2,7 +2,7 @@ from rdflib import URIRef
 from .settings import SYN
 
 
-def allergy_uri(id):
+def allergyUri(id):
     return URIRef(f"{SYN}allergy_{id}")
 
 
