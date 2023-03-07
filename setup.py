@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="synthea_rdf",
-    version="0.1.1",
+    version="0.1.2",
     description="Semantic web representation for the Synthea.",
     author="Dae-young Kim",
     author_email="leroy.kim@umbc.edu",
