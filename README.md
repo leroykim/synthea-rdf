@@ -5,9 +5,6 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 
 ![synthea_ontology](synthea_ontology/synthea_ontology.png)
 
-> Synthea ontology and conversion method v1.0 are done.
-> WIP minor fixes.
-
 ## :hammer: Usage
 ### Installation
 ```bash
