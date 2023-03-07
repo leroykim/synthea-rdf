@@ -8,7 +8,7 @@ setup(
     author_email="leroy.kim@umbc.edu",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    project_urls={"Source Code": "https://github.com/leroykim/synthea_rdf"},
+    project_urls={"Source Code": "https://github.com/leroykim/synthea-rdf"},
     license="GPLv3",
     packages=["synthea_rdf"],
     classifiers=[
