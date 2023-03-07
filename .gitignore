@@ -11,6 +11,7 @@ data_usage_agreement/
 **/*_dev.*
 *.owl
 *.sh
+synthea_rdf/trust.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
