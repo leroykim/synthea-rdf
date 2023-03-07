@@ -9,6 +9,11 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 > WIP minor fixes.
 
 ## :hammer: Usage
+### Installation
+```bash
+pip install synthea-rdf
+```
+
 ### Single CSV
 ```python
 from from pathlib import Path
