@@ -196,6 +196,8 @@ class Claim(Resource):
                 graph.add((claim, SYN.isFiledBy, provider))
                 graph.add((provider, SYN.hasFiled, claim))
 
+                bar()
+
 
 class ClaimTransaction(Resource):
     def __init__(self, df):
