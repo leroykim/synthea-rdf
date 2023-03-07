@@ -1,0 +1,2 @@
+include synthea_ontology/*.png
+include synthea_ontology/*.ttl

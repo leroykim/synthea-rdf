@@ -3,7 +3,7 @@ csv/
 dev/
 result/
 data_usage_agreement/
-**/test_*
+#**/test_*
 /test_result/
 /persistence/
 **/dev_*.*
@@ -11,7 +11,7 @@ data_usage_agreement/
 **/*_dev.*
 *.owl
 *.sh
-synthea_rdf/trust.py
+trust.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -149,3 +149,4 @@ ontology/dir_test.ipynb
 .gitignore
 .gitignore
 ontology/file_manager.ipynb
+.gitignore
