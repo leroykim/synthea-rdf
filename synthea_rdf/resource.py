@@ -97,7 +97,7 @@ class Allergy(Resource):
         with alive_bar(rows, force_tty=True, title="Allergy Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
                 # Create name of the allergy class individual
-                allergy = allergyUri(row["Id"])
+                allergy = allergyUri(index)
                 patient = patientUri(row["PATIENT"])
                 encounter = encounterUri(row["ENCOUNTER"])
 
