@@ -58,12 +58,3 @@ builder = GraphBuilder(CSV_DIR, MODEL_PATH)
 graph = builder.build()
 graph.serialize(destination=Path(DEST_PATH) / "all.ttl")
 ```
-
-## :warning: Issues
-- [ ] Confusing naming convention for the following data properties:
-
-        - syn:start
-        - syn:startDate
-        - syn:startDateTime
-        - syn:date
-        - syn:dateTime
