@@ -67,7 +67,3 @@ graph.serialize(destination=Path(DEST_PATH) / "all.ttl")
         - syn:startDateTime
         - syn:date
         - syn:dateTime
-
-- [ ] There are no `Allergy` and `ImagingStudy` data in the test dataset. Testing required with a larger dataset.
-    - [x] Test `Allergy`
-    - [ ] Test `ImagingStudy`
