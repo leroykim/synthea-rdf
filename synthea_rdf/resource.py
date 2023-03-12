@@ -102,7 +102,7 @@ class Allergy(Resource):
                 encounter = encounterUri(row["ENCOUNTER"])
 
                 # Data Properties
-                graph.add((allergy, SYN.start, dateLiteral(row["START"])))
+                graph.add((allergy, SYN.startDate, dateLiteral(row["START"])))
                 graph.add((allergy, SYN.patientId, urnUuidLiteral(row["PATIENT"])))
                 graph.add((allergy, SYN.encounterId, urnUuidLiteral(row["ENCOUNTER"])))
                 graph.add((allergy, SYN.system, plainLiteral(row["SYSTEM"])))
