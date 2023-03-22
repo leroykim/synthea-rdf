@@ -13,7 +13,7 @@ pip install synthea-rdf
 
 ### Single CSV
 ```python
-from from pathlib import Path
+from pathlib import Path
 from synthea_rdf.graph import GraphBuilder
 
 MODEL_PATH = "./synthea_ontology/synthea_ontology.ttl"
