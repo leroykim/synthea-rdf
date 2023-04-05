@@ -461,6 +461,17 @@ class Encounter(Resource):
                 graph.add((provider, SYN.hasPerformed, encounter))
                 graph.add((encounter, SYN.isCoveredBy, payer))
 
+                graph.add( 
+                    (encounter, SYN.reasonCode, snomedCtLiteral(row["REASONCODE"]))
+                )
+                graph.add(
+                    (
+                        encounter,
+                        SYN.reasonDescription,
+                        plainLiteral(row["REASONDESCRIPTION"]),
+                    )
+                )
+
                 # Veracity
                 # graph.add(
                 #     (
