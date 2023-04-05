@@ -1,6 +1,7 @@
 from pathlib import Path
 from rdflib import Graph
 import pandas as pd
+from dua import resource as dua_resource
 from .resource import (
     Allergy,
     CarePlan,
@@ -25,7 +26,9 @@ from .settings import SYN  # , DUA
 
 
 class GraphBuilder:
-    def __init__(self, csv_dir: str, model_path: str):  # , persistence=None):  # , include_dua: bool = False):
+    def __init__(
+        self, csv_dir: str, model_path: str, include_dua: bool = False
+    ):  # , persistence=None):
         # if persistence == "sqlite":
         #     self.__init_sqlite()
         # else:
@@ -33,6 +36,7 @@ class GraphBuilder:
         self.setModel(model_path)
         self.csv_dir = Path(csv_dir)
 
+        # Default Synthea resources
         self.allergy_df = None
         self.carePlan_df = None
         self.claim_df = None
@@ -52,9 +56,9 @@ class GraphBuilder:
         self.provider_df = None
         self.supply_df = None
 
-        # self.include_dua = include_dua
-        # self.dua_class = None
-        # self.dua_df = None
+        # Optional DUA resources
+        self.include_dua = include_dua
+        self.dua_df = None
 
     def serialize(self, destination: str):
         return self.graph.serialize(destination=destination)
@@ -88,6 +92,9 @@ class GraphBuilder:
         self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
         self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
 
+        if self.include_dua:
+            self.dua_df = pd.read_csv(self.csv_dir / "dua.csv")
+
     def setModel(self, model_path):
         self.graph.parse(model_path, format="n3")
         self.graph.bind("syn", SYN)
@@ -113,95 +120,126 @@ class GraphBuilder:
         self.convertProvider()
         self.convertSupply()
 
+        if self.include_dua:
+            self.convert_dua()
+
     def convertAllergy(self):
-        self.allergy_df = pd.read_csv(self.csv_dir / "allergies.csv")
+        if self.allergy_df is None:
+            self.allergy_df = pd.read_csv(self.csv_dir / "allergies.csv")
         allergy = Allergy(self.allergy_df)
         allergy.convert(self.graph)
 
     def convertCarePlan(self):
-        self.carePlan_df = pd.read_csv(self.csv_dir / "careplans.csv")
+        if self.carePlan_df is None:
+            self.carePlan_df = pd.read_csv(self.csv_dir / "careplans.csv")
         careplan = CarePlan(self.carePlan_df)
         careplan.convert(self.graph)
 
     def convertClaim(self):
-        self.claim_df = pd.read_csv(self.csv_dir / "claims.csv")
+        if self.claim_df is None:
+            self.claim_df = pd.read_csv(self.csv_dir / "claims.csv")
         claim = Claim(self.claim_df)
         claim.convert(self.graph)
 
     def convertClaimTransaction(self):
-        self.claimTransaction_df = pd.read_csv(self.csv_dir / "claims_transactions.csv")
+        if self.claimTransaction_df is None:
+            self.claimTransaction_df = pd.read_csv(
+                self.csv_dir / "claims_transactions.csv"
+            )
         claimTransaction = ClaimTransaction(self.claimTransaction_df)
         claimTransaction.convert(self.graph)
 
     def convertCondition(self):
-        self.condition_df = pd.read_csv(self.csv_dir / "conditions.csv")
+        if self.condition_df is None:
+            self.condition_df = pd.read_csv(self.csv_dir / "conditions.csv")
         condition = Condition(self.condition_df)
         condition.convert(self.graph)
 
     def convertDevice(self):
-        self.device_df = pd.read_csv(self.csv_dir / "devices.csv")
+        if self.device_df is None:
+            self.device_df = pd.read_csv(self.csv_dir / "devices.csv")
         device = Device(self.device_df)
         device.convert(self.graph)
 
     def convertEncounter(self):
-        self.encounter_df = pd.read_csv(self.csv_dir / "encounters.csv")
+        if self.encounter_df is None:
+            self.encounter_df = pd.read_csv(self.csv_dir / "encounters.csv")
         encounter = Encounter(self.encounter_df)
         encounter.convert(self.graph)
 
     def convertImagingStudy(self):
-        self.imagingStudy_df = pd.read_csv(self.csv_dir / "imaging_studies.csv")
+        if self.imagingStudy_df is None:
+            self.imagingStudy_df = pd.read_csv(self.csv_dir / "imaging_studies.csv")
         imagingStudy = ImagingStudy(self.imagingStudy_df)
         imagingStudy.convert(self.graph)
 
     def convertImmunization(self):
-        self.immunization_df = pd.read_csv(self.csv_dir / "immunizations.csv")
+        if self.immunization_df is None:
+            self.immunization_df = pd.read_csv(self.csv_dir / "immunizations.csv")
         immunization = Immunization(self.immunization_df)
         immunization.convert(self.graph)
 
     def convertMedication(self):
-        self.medication_df = pd.read_csv(self.csv_dir / "medications.csv")
+        if self.medication_df is None:
+            self.medication_df = pd.read_csv(self.csv_dir / "medications.csv")
         medication = Medication(self.medication_df)
         medication.convert(self.graph)
 
     def convertObservation(self):
-        self.observation_df = pd.read_csv(self.csv_dir / "observations.csv")
+        if self.observation_df is None:
+            self.observation_df = pd.read_csv(self.csv_dir / "observations.csv")
         observation = Observation(self.observation_df)
         observation.convert(self.graph)
 
     def convertOrganization(self):
-        self.organization_df = pd.read_csv(self.csv_dir / "organizations.csv")
+        if self.organization_df is None:
+            self.organization_df = pd.read_csv(self.csv_dir / "organizations.csv")
         organization = Organization(self.organization_df)
         organization.convert(self.graph)
 
     def convertPatient(self):
-        self.patient_df = pd.read_csv(self.csv_dir / "patients.csv")
+        if self.patient_df is None:
+            self.patient_df = pd.read_csv(self.csv_dir / "patients.csv")
         patient = Patient(self.patient_df)
         patient.convert(self.graph)
 
     def convertPayer(self):
-        self.payer_df = pd.read_csv(self.csv_dir / "payers.csv")
+        if self.payer_df is None:
+            self.payer_df = pd.read_csv(self.csv_dir / "payers.csv")
         payer = Payer(self.payer_df)
         payer.convert(self.graph)
 
     def convertPayerTransition(self):
-        self.payerTransition_df = pd.read_csv(self.csv_dir / "payer_transitions.csv")
+        if self.payerTransition_df is None:
+            self.payerTransition_df = pd.read_csv(
+                self.csv_dir / "payer_transitions.csv"
+            )
         payerTransition = PayerTransition(self.payerTransition_df)
         payerTransition.convert(self.graph)
 
     def convertProcedure(self):
-        self.procedure_df = pd.read_csv(self.csv_dir / "procedures.csv")
+        if self.procedure_df is None:
+            self.procedure_df = pd.read_csv(self.csv_dir / "procedures.csv")
         procedure = Procedure(self.procedure_df)
         procedure.convert(self.graph)
 
     def convertProvider(self):
-        self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
+        if self.provider_df is None:
+            self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
         provider = Provider(self.provider_df)
         provider.convert(self.graph)
 
     def convertSupply(self):
-        self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
+        if self.supply_df is None:
+            self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
         supply = Supply(self.supply_df)
         supply.convert(self.graph)
+
+    def convert_dua(self):
+        if self.dua_df is None:
+            self.dua_df = pd.read_csv(self.csv_dir / "dua.csv")
+        dua = dua_resource.DataUsageAgreement(self.dua_df)
+        dua.convert(self.graph)
 
     # def __init_sqlite(self):
     #     self.graph = Graph("SQLAlchemy", identifier="synthea_graph")
@@ -213,10 +251,3 @@ class GraphBuilder:
     #         self.graph.open(dburi, create=True)
     #     else:
     #         self.graph.open(dburi)
-
-    # def convert_dua(self, dua_df=None, graph=None):
-    #     if dua_df is not None and graph is not None:
-    #         dua = self.dua_class(self.dua_df)
-    #         dua.convert(self.graph)
-    #     else:
-    #         print("DUA_df is not set.")

@@ -1,7 +1,7 @@
 from rdflib import Namespace
 
-DUA_IRI = "https://knacc.umbc.edu/leroy/ontologies/data-usage-agreement#"
-SYNTHEA_IRI = "https://knacc.umbc.edu/leroy/ontologies/synthea#"
+DUA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/data-usage-agreement#"
+SYNTHEA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#"
 
 DUA = Namespace(DUA_IRI)
 SYN = Namespace(SYNTHEA_IRI)

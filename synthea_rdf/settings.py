@@ -1,9 +1,9 @@
 from rdflib import Namespace
 
 SYNTHEA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#"
-TRUST_IRI = "https://knacc.umbc.edu/leroy/ontologies/trust#"
-DATA_EXCHANGE_IRI = "https://knacc.umbc.edu/leroy/ontologies/data-exchange#"
-DUA_IRI = "https://knacc.umbc.edu/leroy/ontologies/data-usage-agreement#"
+TRUST_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/trust#"
+DATA_EXCHANGE_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/data-exchange#"
+DUA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/data-usage-agreement#"
 
 SYN = Namespace(SYNTHEA_IRI)
 TST = Namespace(TRUST_IRI)
