@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
 from rdflib.namespace import RDF
 from alive_progress import alive_bar
 import pandas as pd
+from abstract import Resource
 from .settings import SYN  # , TST
 from .literal import (
     dateLiteral,
@@ -41,26 +41,6 @@ from .uri import (
 )
 
 # from .trust import generate_user_trust, generate_org_trust, generate_veracity
-
-
-class Resource(ABC):
-    @abstractmethod
-    def __init__(self, df):
-        self.__resource_df = df
-
-    @property
-    @abstractmethod
-    def resource_df(self):
-        pass
-
-    @resource_df.setter
-    @abstractmethod
-    def resource_df(self, value):
-        pass
-
-    @abstractmethod
-    def convert(self, graph):
-        pass
 
 
 """
@@ -461,7 +441,7 @@ class Encounter(Resource):
                 graph.add((provider, SYN.hasPerformed, encounter))
                 graph.add((encounter, SYN.isCoveredBy, payer))
 
-                graph.add( 
+                graph.add(
                     (encounter, SYN.reasonCode, snomedCtLiteral(row["REASONCODE"]))
                 )
                 graph.add(

@@ -1,11 +1,3 @@
-from rdflib import Namespace
-
-DUA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/data-usage-agreement#"
-SYNTHEA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#"
-
-DUA = Namespace(DUA_IRI)
-SYN = Namespace(SYNTHEA_IRI)
-
 DUA_COLS = [
     "dataCustodian",
     "recipient",
@@ -41,6 +33,3 @@ DATA_CLASSES = [
     "Procedure",
     "Provider",
 ]
-DATA_CLASS_SAMPLE_SIZE = 3
-
-RANDOM_SEED = 7

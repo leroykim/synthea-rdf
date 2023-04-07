@@ -2,6 +2,7 @@ from pathlib import Path
 from rdflib import Graph
 import pandas as pd
 from dua import resource as dua_resource
+from trustscore import resource as trust_resource
 from .resource import (
     Allergy,
     CarePlan,
@@ -22,12 +23,16 @@ from .resource import (
     Provider,
     Supply,
 )
-from .settings import SYN  # , DUA
+from .settings import SYN, DUA, TST
 
 
 class GraphBuilder:
     def __init__(
-        self, csv_dir: str, model_path: str, include_dua: bool = False
+        self,
+        csv_dir: str,
+        model_path: str,
+        include_dua: bool = False,
+        include_trustscore: bool = False,
     ):  # , persistence=None):
         # if persistence == "sqlite":
         #     self.__init_sqlite()
@@ -60,16 +65,16 @@ class GraphBuilder:
         self.include_dua = include_dua
         self.dua_df = None
 
+        # Optional TrustScore resources
+        self.include_trustscore = include_trustscore
+        self.trustscore_df = None
+
     def serialize(self, destination: str):
         return self.graph.serialize(destination=destination)
 
     def build(self):
         self.readAll()
         self.convertAll()
-
-        # if self.include_dua:
-        #    self.convert_dua()
-
         return self.graph
 
     def readAll(self):
@@ -95,9 +100,16 @@ class GraphBuilder:
         if self.include_dua:
             self.dua_df = pd.read_csv(self.csv_dir / "dua.csv")
 
+        if self.include_trustscore:
+            self.trustscore_df = pd.read_csv(self.csv_dir / "trustscore.csv")
+
     def setModel(self, model_path):
         self.graph.parse(model_path, format="n3")
         self.graph.bind("syn", SYN)
+        if self.include_dua:
+            self.graph.bind("dua", DUA)
+        if self.include_trustscore:
+            self.graph.bind("tst", TST)
         print(f"Model has {len(self.graph)} triples.")
 
     def convertAll(self):
@@ -122,6 +134,9 @@ class GraphBuilder:
 
         if self.include_dua:
             self.convert_dua()
+
+        if self.include_trustscore:
+            self.convert_trustscore()
 
     def convertAllergy(self):
         if self.allergy_df is None:
@@ -240,6 +255,12 @@ class GraphBuilder:
             self.dua_df = pd.read_csv(self.csv_dir / "dua.csv")
         dua = dua_resource.DataUsageAgreement(self.dua_df)
         dua.convert(self.graph)
+
+    def convert_trustscore(self):
+        if self.trustscore_df is None:
+            self.trustscore_df = pd.read_csv(self.csv_dir / "trustscore.csv")
+        trust = trust_resource.Trust(self.trustscore_df)
+        trust.convert(self.graph)
 
     # def __init_sqlite(self):
     #     self.graph = Graph("SQLAlchemy", identifier="synthea_graph")
