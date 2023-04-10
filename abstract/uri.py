@@ -1,7 +1,8 @@
 from rdflib import URIRef
-from .settings import SYN
+from .namespace import SYN, DUA, TST
 
 
+# Synthea URIs
 def allergyUri(id):
     return URIRef(f"{SYN}allergy_{id}")
 
@@ -72,3 +73,39 @@ def providerUri(provider_id):
 
 def supplyUri(supply_id):
     return URIRef(f"{SYN}supply_{supply_id}")
+
+
+# DUA URIs
+def syntheaUri(name):
+    return URIRef(f"{SYN}{name}")
+
+
+def duaUri(dua_id):
+    return URIRef(f"{DUA}dua_{dua_id}")
+
+
+def permittedUseOrDisclosureUri(dua_id):
+    return URIRef(f"{DUA}{dua_id}")
+
+
+def dataSecurityPlanUri(dua_id):
+    # Permitted Usage or Disclosure
+    return URIRef(f"{DUA}data_security_plan_{dua_id}")
+
+
+def termAndTerminationUri(dua_id):
+    # Permitted Usage or Disclosure
+    return URIRef(f"{DUA}term_and_termination_{dua_id}")
+
+
+def duaOrganizationUri(organization_id):
+    return URIRef(f"{SYN}organization_{organization_id}")
+
+
+# TrustScore URIs
+def trustscoreUserUri(id):
+    return URIRef(f"{TST}user_{id}")
+
+
+def trustscoreOrganizationUri(id):
+    return URIRef(f"{TST}org_{id}")

@@ -2,9 +2,9 @@ from alive_progress import alive_bar
 from rdflib import Namespace, URIRef, Literal
 from rdflib.namespace import XSD, RDF
 from abstract import Resource
-
-TRUST_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/trust#"
-TRUST = Namespace(TRUST_IRI)
+from abstract.namespace import TST
+from abstract.uri import trustscoreUserUri, trustscoreOrganizationUri
+from abstract.literal import floatLiteral
 
 
 class TrustScore(Resource):
@@ -31,31 +31,36 @@ class TrustScore(Resource):
         rows = self.__resource_df.shape[0]
         with alive_bar(rows, force_tty=True, title="Trust score conversion") as bar:
             for index, row in self.__resource_df.iterrows():
-                user = self.__userUri(index)
-                graph.add((user, RDF.type, TRUST.User))
+                user = trustscoreUserUri(index)
+                graph.add((user, RDF.type, TST.User))
                 graph.add(
                     (
                         user,
-                        TRUST.identityTrust,
-                        self.__floatLiteral(row["identity_trust"]),
+                        TST.identityTrust,
+                        floatLiteral(row["identity_trust"]),
                     )
                 )
                 graph.add(
                     (
                         user,
-                        TRUST.behaviorTrust,
-                        self.__floatLiteral(row["behavior_trust"]),
+                        TST.behaviorTrust,
+                        floatLiteral(row["behavior_trust"]),
                     )
                 )
-                graph.add((user, TRUST.isAffiliatedWith, self.__organizationUri("x")))
-                graph.add((self.__organizationUri("x"), TRUST.hasEmployed, user))
+                graph.add(
+                    (
+                        user,
+                        TST.isAffiliatedWith,
+                        trustscoreOrganizationUri(row["organization"]),
+                    )
+                )
+                graph.add(
+                    (
+                        trustscoreOrganizationUri(row["organization"]),
+                        TST.hasEmployed,
+                        user,
+                    )
+                )
                 bar()
 
-    def __userUri(self, id):
-        return URIRef(f"{TRUST}user_{id}")
-
-    def __organizationUri(self, id):
-        return URIRef(f"{TRUST}org_{id}")
-
-    def __floatLiteral(self, value):
-        return Literal(value, datatype=XSD.float)
+        return graph

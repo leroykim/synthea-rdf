@@ -2,8 +2,8 @@ from rdflib.namespace import RDF
 from alive_progress import alive_bar
 import pandas as pd
 from abstract import Resource
-from .settings import SYN  # , TST
-from .literal import (
+from abstract.namespace import SYN
+from abstract.literal import (
     dateLiteral,
     dateTimeLiteral,
     dicomUidLiteral,
@@ -19,7 +19,7 @@ from .literal import (
     umlsRxnormLiteral,
     urnUuidLiteral,
 )
-from .uri import (
+from abstract.uri import (
     allergyUri,
     carePlanUri,
     claimUri,

@@ -23,7 +23,7 @@ from .resource import (
     Provider,
     Supply,
 )
-from .settings import SYN, DUA, TST
+from abstract.namespace import SYN, DUA, TST
 
 
 class GraphBuilder:
@@ -33,13 +33,14 @@ class GraphBuilder:
         model_path: str,
         include_dua: bool = False,
         include_trustscore: bool = False,
-    ):  # , persistence=None):
-        # if persistence == "sqlite":
-        #     self.__init_sqlite()
-        # else:
-        self.graph = Graph()
-        self.setModel(model_path)
-        self.csv_dir = Path(csv_dir)
+    ):
+        # Optional DUA resources
+        self.include_dua = include_dua
+        self.dua_df = None
+
+        # Optional TrustScore resources
+        self.include_trustscore = include_trustscore
+        self.trustscore_df = None
 
         # Default Synthea resources
         self.allergy_df = None
@@ -61,13 +62,14 @@ class GraphBuilder:
         self.provider_df = None
         self.supply_df = None
 
-        # Optional DUA resources
-        self.include_dua = include_dua
-        self.dua_df = None
+        self.graph = Graph()
+        self.csv_dir = Path(csv_dir)
+        self.setModel(model_path)
 
-        # Optional TrustScore resources
-        self.include_trustscore = include_trustscore
-        self.trustscore_df = None
+        # , persistence=None):
+        # if persistence == "sqlite":
+        #     self.__init_sqlite()
+        # else:
 
     def serialize(self, destination: str):
         return self.graph.serialize(destination=destination)
@@ -259,7 +261,7 @@ class GraphBuilder:
     def convert_trustscore(self):
         if self.trustscore_df is None:
             self.trustscore_df = pd.read_csv(self.csv_dir / "trustscore.csv")
-        trust = trust_resource.Trust(self.trustscore_df)
+        trust = trust_resource.TrustScore(self.trustscore_df)
         trust.convert(self.graph)
 
     # def __init_sqlite(self):

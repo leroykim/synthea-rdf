@@ -1,9 +1,10 @@
 from rdflib import Literal
 from rdflib.namespace import RDF, XSD
 from datetime import datetime
-from .settings import SYN
+from abstract.namespace import SYN
 
 
+# Synthea Literals
 def dateLiteral(date):
     return Literal(datetime.strptime(date, "%Y-%m-%d"), datatype=XSD.dateTime)
 

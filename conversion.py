@@ -11,9 +11,13 @@ def main():
     dest_path = Path(args.dest_path).resolve()
     recursive = args.recursive
     include_dua = args.include_dua
+    include_trustscore = args.include_trustscore
 
     builder = GraphBuilder(
-        csv_dir=csv_path, model_path=model_path, include_dua=include_dua
+        csv_dir=csv_path,
+        model_path=model_path,
+        include_dua=include_dua,
+        include_trustscore=include_trustscore,
     )
 
     if recursive:
@@ -78,6 +82,16 @@ def parse_argument():
         required=False,
         help="Include Data Usage Agreement in the conversion.",
     )
+    parser.add_argument(
+        "-trustscore",
+        "--include-trustscore",
+        dest="include_trustscore",
+        action="store_true",
+        default=False,
+        required=False,
+        help="Include Trust Score in the conversion.",
+    )
+
     return parser.parse_args()
 
 
@@ -86,4 +100,4 @@ if __name__ == "__main__":
 
 # python3 conversion.py --ontology ./ontology/synthea_ontology --dir ./csv -r
 # python3 conversion.py --ontology synthea-rdf/synthea_ontology/synthea_ontology.ttl --csv-dir /home/k163/synthea-rdf/csv/500
-# python3 conversion.py --include-dua --ontology synthea_ontology/synthea_ontology.ttl --csv-dir csv/500
+# python3 conversion.py --include-dua --include-trustscore --ontology synthea_ontology/synthea_ontology.ttl --csv-dir csv/500
