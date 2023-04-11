@@ -35,10 +35,11 @@ class TrustScoreGenerator:
             "organization": affiliated_org,
             "organization_trust": org_identity_trust,
         }
+
+        print("Generating trust score...")
         print(f"Number of rows of user_id: {len(user_id)}")
         print(f"Number of rows of identity_trust: {len(user_identity_trust)}")
         print(f"Number of rows of behavior_trust: {len(user_behavior_trust)}")
-        print(f"Number of rows of affiliated_org: {len(affiliated_org)}")
         print(f"Number of rows of org_identity_trust: {len(org_identity_trust)}")
 
         save_path = Path(save_path).resolve()

@@ -98,14 +98,14 @@ def termAndTerminationUri(dua_id):
     return URIRef(f"{DUA}term_and_termination_{dua_id}")
 
 
-def duaOrganizationUri(organization_id):
-    return URIRef(f"{SYN}organization_{organization_id}")
+# def duaOrganizationUri(organization_id):
+#     return URIRef(f"{DUA}organization_{organization_id}")
 
 
 # TrustScore URIs
-def trustscoreUserUri(id):
-    return URIRef(f"{TST}user_{id}")
+def trustscoreUserUri(user_id):
+    return URIRef(f"{TST}user_{user_id}")
 
 
-def trustscoreOrganizationUri(id):
-    return URIRef(f"{TST}org_{id}")
+# def trustscoreOrganizationUri(organization_id):
+#     return URIRef(f"{TST}organization_{organization_id}")

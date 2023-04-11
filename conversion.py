@@ -2,6 +2,7 @@ from synthea_rdf.graph import GraphBuilder
 from alive_progress import alive_bar
 from argparse import ArgumentParser
 from pathlib import PurePath, Path
+import time
 
 
 def main():
@@ -13,6 +14,7 @@ def main():
     include_dua = args.include_dua
     include_trustscore = args.include_trustscore
 
+    st = time.time()
     builder = GraphBuilder(
         csv_dir=csv_path,
         model_path=model_path,
@@ -26,6 +28,9 @@ def main():
                 convert(path, dest_path, builder)
     else:
         convert(csv_path, dest_path, builder)
+    et = time.time()
+    elapsed_time = et - st
+    print(f"Elapsed time: {elapsed_time} seconds")
 
 
 def convert(csv_path, dest_path, builder):

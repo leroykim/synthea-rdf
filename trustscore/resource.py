@@ -1,9 +1,8 @@
 from alive_progress import alive_bar
-from rdflib import Namespace, URIRef, Literal
-from rdflib.namespace import XSD, RDF
+from rdflib.namespace import RDF
 from abstract import Resource
-from abstract.namespace import TST
-from abstract.uri import trustscoreUserUri, trustscoreOrganizationUri
+from abstract.namespace import TST, SYN
+from abstract.uri import trustscoreUserUri, organizationUri
 from abstract.literal import floatLiteral
 
 
@@ -50,14 +49,14 @@ class TrustScore(Resource):
                 graph.add(
                     (
                         user,
-                        TST.isAffiliatedWith,
-                        trustscoreOrganizationUri(row["organization"]),
+                        SYN.isAffiliatedWith,
+                        organizationUri(row["organization"]),
                     )
                 )
                 graph.add(
                     (
-                        trustscoreOrganizationUri(row["organization"]),
-                        TST.hasEmployed,
+                        organizationUri(row["organization"]),
+                        SYN.hasEmployed,
                         user,
                     )
                 )
