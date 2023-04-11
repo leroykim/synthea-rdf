@@ -1,9 +1,9 @@
 from alive_progress import alive_bar
-from rdflib.namespace import RDF
+from rdflib.namespace import RDF, RDFS
 from abstract import Resource
 from abstract.namespace import TST, SYN
 from abstract.uri import trustscoreUserUri, organizationUri
-from abstract.literal import floatLiteral
+from abstract.literal import floatLiteral, plainLiteral
 
 
 class TrustScore(Resource):
@@ -32,6 +32,7 @@ class TrustScore(Resource):
             for index, row in self.__resource_df.iterrows():
                 user = trustscoreUserUri(index)
                 graph.add((user, RDF.type, TST.User))
+                graph.add((user, RDFS.label, plainLiteral(f"User_{index}")))
                 graph.add(
                     (
                         user,

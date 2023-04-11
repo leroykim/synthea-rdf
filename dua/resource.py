@@ -1,6 +1,5 @@
 from alive_progress import alive_bar
-from rdflib import Literal, URIRef, Namespace
-from rdflib.namespace import RDF
+from rdflib.namespace import RDF, RDFS
 from abstract import Resource
 from abstract.namespace import DUA, SYN
 from abstract.literal import plainLiteral
@@ -34,10 +33,17 @@ class DataUsageAgreement(Resource):
         """
         # Data Custodian Organization
         data_custodian = organizationUri("dataCustodian")
-        graph.add((data_custodian, RDF.type, SYN.Organization))
+        graph.add((data_custodian, RDF.type, DUA.DataCustodian))
+        graph.add((data_custodian, RDFS.label, plainLiteral("DataCustodian")))
 
         # Organizations
         rows = self.__resource_df.shape[0]
+        for index, row in self.__resource_df.iterrows():
+            organization = organizationUri(row["recipient"])
+            graph.add((organization, RDF.type, SYN.Organization))
+            graph.add((organization, RDFS.label, plainLiteral(f"Organization_{index}")))
+
+        # Data Usage Agreement
         with alive_bar(
             rows, force_tty=True, title="Data Usage Agreement Conversion"
         ) as bar:
@@ -47,6 +53,7 @@ class DataUsageAgreement(Resource):
                 term_and_termination = termAndTerminationUri(index)
 
                 graph.add((dua, RDF.type, DUA.DataUsageAgreement))
+                graph.add((dua, RDFS.label, plainLiteral(f"DUA_{index}")))
                 graph.add(
                     (
                         dua,
