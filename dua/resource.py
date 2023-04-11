@@ -33,7 +33,7 @@ class DataUsageAgreement(Resource):
         """
         # Data Custodian Organization
         data_custodian = organizationUri("dataCustodian")
-        graph.add((data_custodian, RDF.type, DUA.DataCustodian))
+        graph.add((data_custodian, RDF.type, SYN.Organization))
         graph.add((data_custodian, RDFS.label, plainLiteral("DataCustodian")))
 
         # Organizations
