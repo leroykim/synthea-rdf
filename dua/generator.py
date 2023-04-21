@@ -39,6 +39,7 @@ class DUAGenerator:
         self,
         num_organization: int,
         save_path: str,
+        num_dua_org: int = 3,
         num_requested_data: int = 3,
         seed: int = 7,
     ):
@@ -49,27 +50,27 @@ class DUAGenerator:
 
         print("Generating DUA...")
         print("Number of organizations: ", num_organization)
+        print("Number of DUA organizations: ", num_dua_org)
         print("Number of requested data: ", num_requested_data)
         print("Random seed: ", seed)
 
-        data_custodian_id = "data_custodian"
-        data_custodian_dummy = [data_custodian_id for i in range(num_organization)]
-        data_recipients_id = list(range(num_organization))
         random.seed(seed)
+        data_custodian_id = "data_custodian"
+        data_custodian_dummy = [data_custodian_id for i in range(num_dua_org)]
+        data_recipients_id = random.sample(list(range(num_organization)), num_dua_org)
         permittedUseOrDisclosure = [
-            random.choice(PERMITTED_USE_OR_DISCLOSURE) for i in range(num_organization)
+            random.choice(PERMITTED_USE_OR_DISCLOSURE) for i in range(num_dua_org)
         ]
         requested_data = [
-            self.__get_requested_data(num_requested_data)
-            for i in range(num_organization)
+            self.__get_requested_data(num_requested_data) for i in range(num_dua_org)
         ]
 
-        term = [lorem.sentence() for i in range(num_organization)]
-        terminationEffect = [lorem.sentence() for i in range(num_organization)]
-        terminationCause = [lorem.sentence() for i in range(num_organization)]
-        storage = [lorem.sentence() for i in range(num_organization)]
-        access = [lorem.sentence() for i in range(num_organization)]
-        protection = [lorem.sentence() for i in range(num_organization)]
+        term = [lorem.sentence() for i in range(num_dua_org)]
+        terminationEffect = [lorem.sentence() for i in range(num_dua_org)]
+        terminationCause = [lorem.sentence() for i in range(num_dua_org)]
+        storage = [lorem.sentence() for i in range(num_dua_org)]
+        access = [lorem.sentence() for i in range(num_dua_org)]
+        protection = [lorem.sentence() for i in range(num_dua_org)]
 
         dua_df = DataFrame(
             list(

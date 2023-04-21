@@ -80,24 +80,60 @@ class GraphBuilder:
         return self.graph
 
     def readAll(self):
-        self.allergy_df = pd.read_csv(self.csv_dir / "allergies.csv")
-        self.carePlan_df = pd.read_csv(self.csv_dir / "careplans.csv")
-        self.claim_df = pd.read_csv(self.csv_dir / "claims.csv")
-        self.claimTransaction_df = pd.read_csv(self.csv_dir / "claims_transactions.csv")
-        self.condition_df = pd.read_csv(self.csv_dir / "conditions.csv")
-        self.device_df = pd.read_csv(self.csv_dir / "devices.csv")
-        self.encounter_df = pd.read_csv(self.csv_dir / "encounters.csv")
-        self.imagingStudy_df = pd.read_csv(self.csv_dir / "imaging_studies.csv")
-        self.immunization_df = pd.read_csv(self.csv_dir / "immunizations.csv")
-        self.medication_df = pd.read_csv(self.csv_dir / "medications.csv")
-        self.observation_df = pd.read_csv(self.csv_dir / "observations.csv")
-        self.organization_df = pd.read_csv(self.csv_dir / "organizations.csv")
-        self.patient_df = pd.read_csv(self.csv_dir / "patients.csv")
-        self.payer_df = pd.read_csv(self.csv_dir / "payers.csv")
-        self.payerTransition_df = pd.read_csv(self.csv_dir / "payer_transitions.csv")
-        self.procedure_df = pd.read_csv(self.csv_dir / "procedures.csv")
-        self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
-        self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
+        if Path(self.csv_dir / "allergies.csv").exists():
+            self.allergy_df = pd.read_csv(self.csv_dir / "allergies.csv")
+        if Path(self.csv_dir / "careplans.csv").exists():
+            self.carePlan_df = pd.read_csv(self.csv_dir / "careplans.csv")
+        if Path(self.csv_dir / "claims.csv").exists():
+            self.claim_df = pd.read_csv(self.csv_dir / "claims.csv")
+        if Path(self.csv_dir / "claims_transactions.csv").exists():
+            self.claimTransaction_df = pd.read_csv(self.csv_dir / "claims_transactions.csv")
+        if Path(self.csv_dir / "conditions.csv").exists():
+            self.condition_df = pd.read_csv(self.csv_dir / "conditions.csv")
+        if Path(self.csv_dir / "devices.csv").exists():
+            self.device_df = pd.read_csv(self.csv_dir / "devices.csv")
+        if Path(self.csv_dir / "encounters.csv").exists():
+            self.encounter_df = pd.read_csv(self.csv_dir / "encounters.csv")
+        if Path(self.csv_dir / "imaging_studies.csv").exists():
+            self.imagingStudy_df = pd.read_csv(self.csv_dir / "imaging_studies.csv")
+        if Path(self.csv_dir / "immunizations.csv").exists():
+            self.immunization_df = pd.read_csv(self.csv_dir / "immunizations.csv")
+        if Path(self.csv_dir / "medications.csv").exists():
+            self.medication_df = pd.read_csv(self.csv_dir / "medications.csv")
+        if Path(self.csv_dir / "observations.csv").exists():
+            self.observation_df = pd.read_csv(self.csv_dir / "observations.csv")
+        if Path(self.csv_dir / "organizations.csv").exists():
+            self.organization_df = pd.read_csv(self.csv_dir / "organizations.csv")
+        if Path(self.csv_dir / "patients.csv").exists():
+            self.patient_df = pd.read_csv(self.csv_dir / "patients.csv")
+        if Path(self.csv_dir / "payers.csv").exists():
+            self.payer_df = pd.read_csv(self.csv_dir / "payers.csv")
+        if Path(self.csv_dir / "payer_transitions.csv").exists():
+            self.payerTransition_df = pd.read_csv(self.csv_dir / "payer_transitions.csv")
+        if Path(self.csv_dir / "procedures.csv").exists():
+            self.procedure_df = pd.read_csv(self.csv_dir / "procedures.csv")
+        if Path(self.csv_dir / "providers.csv").exists():
+            self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
+        if Path(self.csv_dir / "supplies.csv").exists():
+            self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
+
+        # self.carePlan_df = pd.read_csv(self.csv_dir / "careplans.csv")
+        # self.claim_df = pd.read_csv(self.csv_dir / "claims.csv")
+        # self.claimTransaction_df = pd.read_csv(self.csv_dir / "claims_transactions.csv")
+        # self.condition_df = pd.read_csv(self.csv_dir / "conditions.csv")
+        # self.device_df = pd.read_csv(self.csv_dir / "devices.csv")
+        # self.encounter_df = pd.read_csv(self.csv_dir / "encounters.csv")
+        # self.imagingStudy_df = pd.read_csv(self.csv_dir / "imaging_studies.csv")
+        # self.immunization_df = pd.read_csv(self.csv_dir / "immunizations.csv")
+        # self.medication_df = pd.read_csv(self.csv_dir / "medications.csv")
+        # self.observation_df = pd.read_csv(self.csv_dir / "observations.csv")
+        # self.organization_df = pd.read_csv(self.csv_dir / "organizations.csv")
+        # self.patient_df = pd.read_csv(self.csv_dir / "patients.csv")
+        # self.payer_df = pd.read_csv(self.csv_dir / "payers.csv")
+        # self.payerTransition_df = pd.read_csv(self.csv_dir / "payer_transitions.csv")
+        # self.procedure_df = pd.read_csv(self.csv_dir / "procedures.csv")
+        # self.provider_df = pd.read_csv(self.csv_dir / "providers.csv")
+        # self.supply_df = pd.read_csv(self.csv_dir / "supplies.csv")
 
         if self.include_dua:
             self.dua_df = pd.read_csv(self.csv_dir / "dua.csv")
@@ -115,24 +151,61 @@ class GraphBuilder:
         print(f"Model has {len(self.graph)} triples.")
 
     def convertAll(self):
-        self.convertAllergy()
-        self.convertCarePlan()
-        self.convertClaim()
-        self.convertClaimTransaction()
-        self.convertCondition()
-        self.convertDevice()
-        self.convertEncounter()
-        self.convertImagingStudy()
-        self.convertImmunization()
-        self.convertMedication()
-        self.convertObservation()
-        self.convertOrganization()
-        self.convertPatient()
-        self.convertPayer()
-        self.convertPayerTransition()
-        self.convertProcedure()
-        self.convertProvider()
-        self.convertSupply()
+        if self.allergy_df is not None:
+            self.convertAllergy()
+        if self.carePlan_df is not None:
+            self.convertCarePlan()
+        if self.claim_df is not None:
+            self.convertClaim()
+        if self.claimTransaction_df is not None:
+            self.convertClaimTransaction()
+        if self.condition_df is not None:
+            self.convertCondition()
+        if self.device_df is not None:
+            self.convertDevice()
+        if self.encounter_df is not None:
+            self.convertEncounter()
+        if self.imagingStudy_df is not None:
+            self.convertImagingStudy()
+        if self.immunization_df is not None:
+            self.convertImmunization()
+        if self.medication_df is not None:
+            self.convertMedication()
+        if self.observation_df is not None:
+            self.convertObservation()
+        if self.organization_df is not None:
+            self.convertOrganization()
+        if self.patient_df is not None:
+            self.convertPatient()
+        if self.payer_df is not None:
+            self.convertPayer()
+        if self.payerTransition_df is not None:
+            self.convertPayerTransition()
+        if self.procedure_df is not None:
+            self.convertProcedure()
+        if self.provider_df is not None:
+            self.convertProvider()
+        if self.supply_df is not None:
+            self.convertSupply()
+
+        # self.convertAllergy()
+        # self.convertCarePlan()
+        # self.convertClaim()
+        # self.convertClaimTransaction()
+        # self.convertCondition()
+        # self.convertDevice()
+        # self.convertEncounter()
+        # self.convertImagingStudy()
+        # self.convertImmunization()
+        # self.convertMedication()
+        # self.convertObservation()
+        # self.convertOrganization()
+        # self.convertPatient()
+        # self.convertPayer()
+        # self.convertPayerTransition()
+        # self.convertProcedure()
+        # self.convertProvider()
+        # self.convertSupply()
 
         if self.include_dua:
             self.convert_dua()

@@ -3,6 +3,11 @@ from trustscore.generator import TrustScoreGenerator
 from argparse import ArgumentParser
 from pathlib import Path
 
+'''
+Use vim command for easy copy and paste:
+python3 dua_and_trustscore_generation.py -trustscore --num-org 10 --user-per-org 10 --trustscore-save-path csv/500 --generate-dua --num-dua-org 5 --num-requested-data 1 --dua-save-path csv/500python3 dua_and_trustscore_generation.py -trustscore --num-org 10 --user-per-org 10 --trustscore-save-path csv/500 --generate-dua --num-dua-org 5 --num-requested-data 1 --dua-save-path csv/500
+python3 dua_and_trustscore_generation.py -trustscore --num-org 10 --user-per-org 10 --trustscore-save-path csv/500-veracity --generate-dua --num-dua-org 5 --num-requested-data 1 --dua-save-path csv/500-veracity
+'''
 
 def main():
     args = parse_argument()
@@ -15,6 +20,7 @@ def main():
     user_per_org = args.user_per_org
     trustscore_save_path = args.trustscore_save_path
     dua_save_path = args.dua_save_path
+    num_dua_org = args.num_dua_org
     num_requested_data = args.num_requested_data
 
     if generate_trustscore:
@@ -24,7 +30,12 @@ def main():
             )
             return
     if generate_dua:
-        if not num_org or not dua_save_path or not num_requested_data:
+        if (
+            not num_org
+            or not dua_save_path
+            or not num_requested_data
+            or not num_dua_org
+        ):
             print(
                 "Please provide all required parameters: --num-org, --num-requested-data, --dua-save-path"
             )
@@ -39,11 +50,12 @@ def main():
         num_organization=num_org,
         save_path=dua_save_path,
         num_requested_data=num_requested_data,
+        num_dua_org=num_dua_org,
     )
 
 
 def parse_argument():
-    # python3 dua_and_trustscore_generation.py -trustscore -o 10 -u 10 -tsp csv/500 -dua -nrd 10 -dsp csv/500
+    # python3 dua_and_trustscore_generation.py -trustscore -o 10 -u 10 -tsp csv/500 -dua -ndo 5 -nrd 1 -dsp csv/500
     parser = ArgumentParser()
     parser.add_argument(
         "-trustscore",
@@ -86,6 +98,14 @@ def parse_argument():
         default=False,
         required=False,
         help="Generate Data Usage Agreement.",
+    )
+    parser.add_argument(
+        "-ndo",
+        "--num-dua-org",
+        dest="num_dua_org",
+        type=int,
+        required=True,
+        help="Provide the number of organization that has data usage agreement.",
     )
     parser.add_argument(
         "-nrd",
