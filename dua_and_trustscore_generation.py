@@ -5,7 +5,9 @@ from pathlib import Path
 
 '''
 Use vim command for easy copy and paste:
+without veracity:
 python3 dua_and_trustscore_generation.py -trustscore --num-org 10 --user-per-org 10 --trustscore-save-path csv/500 --generate-dua --num-dua-org 5 --num-requested-data 1 --dua-save-path csv/500python3 dua_and_trustscore_generation.py -trustscore --num-org 10 --user-per-org 10 --trustscore-save-path csv/500 --generate-dua --num-dua-org 5 --num-requested-data 1 --dua-save-path csv/500
+with veracity:
 python3 dua_and_trustscore_generation.py -trustscore --num-org 10 --user-per-org 10 --trustscore-save-path csv/500-veracity --generate-dua --num-dua-org 5 --num-requested-data 1 --dua-save-path csv/500-veracity
 '''
 

@@ -371,23 +371,6 @@ class Encounter(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        """
-        Object properties covered by other resource conversion:
-            - syn:hasOrdered
-                - [x] syn:CarePlan
-                - [x] syn:Device
-                - [x] syn:Procedure
-                - [x] syn:Supply
-                - [x] syn:ImagingStudy
-                - [ ] syn:Observation
-            - syn:hasDiagnosed
-                - [x] syn:Condition
-                - [x] syn:Allergy
-            - syn:hasPrescribed
-                - [x] syn:Immunization
-                - [x] syn:Medication
-
-        """
         rows = self.__resource_df.shape[0]
         # veracity = generate_veracity(rows)
         with alive_bar(rows, force_tty=True, title="Encounter Conversion") as bar:
@@ -451,29 +434,6 @@ class Encounter(Resource):
                         plainLiteral(row["REASONDESCRIPTION"]),
                     )
                 )
-
-                # Veracity
-                # graph.add(
-                #     (
-                #         encounter,
-                #         TST.credibility,
-                #         float_literal(veracity.iloc[index]["credibility"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         encounter,
-                #         TST.objectivity,
-                #         float_literal(veracity.iloc[index]["objectivity"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         encounter,
-                #         TST.trustfulness,
-                #         float_literal(veracity.iloc[index]["trustfulness"]),
-                #     )
-                # )
 
                 bar()
 
@@ -673,12 +633,6 @@ class Medication(Resource):
 
 
 class Observation(Resource):
-    """
-    Object properties covered by other resource conversion:
-        - [ ] syn:Patient syn:hasHistoryOf syn:Observation
-        - [ ] syn:Encounter syn:hasOrdered syn:Observation
-    """
-
     def __init__(self, df):
         self.__resource_df = df
 
@@ -724,29 +678,6 @@ class Observation(Resource):
                     )
                 graph.add((observation, SYN.isAbout, patientUri(row["PATIENT"])))
 
-                # Veracity
-                # graph.add(
-                #     (
-                #         observation,
-                #         TST.credibility,
-                #         float_literal(veracity.iloc[index]["credibility"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         observation,
-                #         TST.objectivity,
-                #         float_literal(veracity.iloc[index]["objectivity"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         observation,
-                #         TST.trustfulness,
-                #         float_literal(veracity.iloc[index]["trustfulness"]),
-                #     )
-                # )
-
                 bar()
 
 
@@ -788,17 +719,6 @@ class Organization(Resource):
                     (organization, SYN.utilization, integerLiteral(row["UTILIZATION"]))
                 )
 
-                # Object Properties
-
-                # Reputation
-                # graph.add(
-                #     (
-                #         organization,
-                #         TST.reputation,
-                #         float_literal(reputation.iloc[index]["reputation"]),
-                #     )
-                # )
-
                 bar()
 
 
@@ -815,24 +735,6 @@ class Patient(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        """
-        Object properties covered by other resource conversion:
-            - [x] syn:Patient syn:hasAllergy syn:Allergy
-            - syn:Patient syn:hasHistoryOf
-                - [ ] syn:Observation
-                - [x] syn:Condition
-                - [x] syn:Procedure
-                - [x] syn:Medication
-                - [x] syn:Immunization
-                - [x] syn:ImagingStudy
-                - [x] syn:Supply
-            - [x] syn:Patient syn:isMeasuredBy syn:Device
-            - [x] syn:Patient syn:hasCarePlan syn:CarePlan
-            - [ ] syn:Patient syn:hasEncounter syn:Encounter
-            - [x] syn:Patient syn:hasClaim syn:Claim
-            - [x] syn:Patient syn:hasClaimTransaction syn:ClaimTransaction
-            - [x] syn:Patient syn:hasPayerTransitionHistory syn:PayerTransition
-        """
         rows = self.__resource_df.shape[0]
         # user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Patient Conversion") as bar:
@@ -871,22 +773,6 @@ class Patient(Resource):
                     )
                 )
                 graph.add((patient, SYN.income, integerLiteral(row["INCOME"])))
-
-                # User Trust
-                # graph.add(
-                #     (
-                #         patient,
-                #         TST.behavior,
-                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         patient,
-                #         TST.identity,
-                #         float_literal(user_trust.iloc[index]["identity_trust"]),
-                #     )
-                # )
 
                 bar()
 
@@ -996,24 +882,6 @@ class Payer(Resource):
                     (payer, SYN.memberMonths, integerLiteral(row["MEMBER_MONTHS"]))
                 )
 
-                # Object Properties
-
-                # User Trust
-                # graph.add(
-                #     (
-                #         payer,
-                #         TST.behavior,
-                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         payer,
-                #         TST.identity,
-                #         float_literal(user_trust.iloc[index]["identity_trust"]),
-                #     )
-                # )
-
                 bar()
 
 
@@ -1122,12 +990,6 @@ class Provider(Resource):
         self.__resource_df = value
 
     def convert(self, graph):
-        """
-        Object properties covered by other resource conversion:
-            - [x] syn:Provider syn:hasPerformed syn:Encounter
-            - [x] syn:Provider syn:hasClaimTransaction syn:ClaimTransaction
-            - [x] syn:Provider syn:hasFiled syn:Claim
-        """
         rows = self.__resource_df.shape[0]
         # user_trust = generate_user_trust(rows)
         with alive_bar(rows, force_tty=True, title="Provider Conversion") as bar:
@@ -1162,22 +1024,6 @@ class Provider(Resource):
                     )
                 )
                 graph.add((organization, SYN.hasEmployed, provider))
-
-                # User Trust
-                # graph.add(
-                #     (
-                #         provider,
-                #         TST.behavior,
-                #         float_literal(user_trust.iloc[index]["behavioral_trust"]),
-                #     )
-                # )
-                # graph.add(
-                #     (
-                #         provider,
-                #         TST.identity,
-                #         float_literal(user_trust.iloc[index]["identity_trust"]),
-                #     )
-                # )
 
                 bar()
 
