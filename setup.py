@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="synthea-rdf",
-    version="0.1.4",
+    version="0.1.5",
     description="Semantic web representation for the Synthea.",
     author="Dae-young Kim",
     author_email="leroy.kim@umbc.edu",
@@ -15,7 +15,7 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
-    ],  # Optional
+    ],
     install_requires=[
         "rdflib",
         "pandas",

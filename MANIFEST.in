@@ -1,3 +1,4 @@
 include synthea_ontology/*.png
 include synthea_ontology/*.ttl
-include generator_gui/dua_generator.py
+include gui/trustscore_dua_generator.py
+include gui/synthea_converter.py
