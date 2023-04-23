@@ -30,7 +30,7 @@ class TrustScore(Resource):
         # Data custodian
         data_custodian = trustscoreUserUri("data_custodian")
         graph.add((data_custodian, RDF.type, TST.User))
-        graph.add((data_custodian, RDFS.label, plainLiteral("User_data_custodian")))
+        graph.add((data_custodian, RDFS.label, plainLiteral("user_data_custodian")))
         graph.add((data_custodian, TST.credibility, floatLiteral(1.0)))
         graph.add((data_custodian, TST.objectivity, floatLiteral(1.0)))
         graph.add((data_custodian, TST.trustfulness, floatLiteral(1.0)))
@@ -40,7 +40,7 @@ class TrustScore(Resource):
             for index, row in self.__resource_df.iterrows():
                 user = trustscoreUserUri(index)
                 graph.add((user, RDF.type, TST.User))
-                graph.add((user, RDFS.label, plainLiteral(f"User_{index}")))
+                graph.add((user, RDFS.label, plainLiteral(f"user_{index}")))
                 graph.add(
                     (
                         user,

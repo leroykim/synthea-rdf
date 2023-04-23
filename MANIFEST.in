@@ -1,2 +1,3 @@
 include synthea_ontology/*.png
 include synthea_ontology/*.ttl
+include generator_gui/dua_generator.py

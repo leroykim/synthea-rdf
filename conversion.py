@@ -105,4 +105,4 @@ if __name__ == "__main__":
 
 # python3 conversion.py --ontology ./ontology/synthea_ontology --dir ./csv -r
 # python3 conversion.py --ontology synthea-rdf/synthea_ontology/synthea_ontology.ttl --csv-dir /home/k163/synthea-rdf/csv/500
-# python3 conversion.py --include-dua --include-trustscore --ontology synthea_ontology/synthea_ontology.ttl --csv-dir csv/500
+# python3 conversion.py --include-dua --include-trustscore --ontology synthea_ontology/synthea_ontology.ttl --csv-dir csv/500-veracity
