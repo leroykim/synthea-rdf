@@ -11,50 +11,17 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 pip install synthea-rdf
 ```
 
-### Single CSV
-```python
-from pathlib import Path
-from synthea_rdf.graph import GraphBuilder
+### Graphical User Interface
+There are user interfaces in the `gui` directory:
+- [Synthea CSV to RDF converter](gui/synthea_converter.py)
+- [Trust score and Data Usage Agreement (DUA) generator](gui/trustscore_dua_generator.py)
 
-MODEL_PATH = "./synthea_ontology/synthea_ontology.ttl"
-CSV_DIR = "./csv"
-DEST_PATH = "./result"
-
-builder = GraphBuilder(CSV_DIR, MODEL_PATH)
-builder.convertEncounter()
-builder.serialize(destination=Path(DEST_PATH)/"encounter.ttl")
+```bash
+python3 synthea_converter.py
 ```
+![synthea_converter](synthea_ontology/synthea_converter.png)
 
-Convert method list:
-- convertAllergy()
-- convertCarePlan()
-- convertClaim()
-- convertClaimTransaction()
-- convertCondition()
-- convertDevice()
-- convertEncounter()
-- convertImagingStudy()
-- convertImmunization()
-- convertMedication()
-- convertObservation()
-- convertOrganization()
-- convertPatient()
-- convertPayer()
-- convertPayerTransition()
-- convertProcedure()
-- convertProvider()
-- convertSupply()
-
-### All CSV
-```python
-from pathlib import Path
-from synthea_rdf.graph import GraphBuilder
-
-MODEL_PATH = "./synthea_ontology/synthea_ontology.ttl"
-CSV_DIR = "./csv"
-DEST_PATH = "./result"
-
-builder = GraphBuilder(CSV_DIR, MODEL_PATH)
-graph = builder.build()
-graph.serialize(destination=Path(DEST_PATH) / "all.ttl")
+```bash
+python3 trustscore_dua_generator.py
 ```
+![trustscore_dua_generator](synthea_ontology/trustscore_dua_generator.png)
