@@ -42,10 +42,6 @@ def main():
         finally:
             sys.stdout = old_stdout
 
-    def show_alert(message, alert_type="primary"):
-        alert = pn.Alert(message, alert_type=alert_type, width=300)
-        alert.show()
-
     # Method to be run on button click
     def generate_dataset(
         synthea_ontology_path_input,
@@ -81,7 +77,6 @@ def main():
             bar()
 
         print("Dataset generation complete!")
-        show_alert("Dataset generation complete!", alert_type="success")
 
     # Input widgets
     str_input1 = pn.widgets.TextInput(
