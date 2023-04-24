@@ -103,7 +103,9 @@ def main():
     save_path_input = pn.widgets.TextInput(name="Save path:", value="../csv")
 
     # Main data class selection
-    dataclass_select = pn.widgets.Select(name="Main Data class", options=DATA_CLASSES)
+    dataclass_select = pn.widgets.Select(
+        name="Main Data class", options=DATA_CLASSES, value="Patient"
+    )
 
     # Main data class portion
     dataclass_portion_slider = pn.widgets.IntSlider(
@@ -121,7 +123,7 @@ def main():
     )
 
     # Create the button widget and callback function
-    button = pn.widgets.Button(name="Generate Dashboard")
+    button = pn.widgets.Button(name="Generate Data", button_type="primary")
     output_text = pn.pane.Str()
 
     def button_callback(event):
