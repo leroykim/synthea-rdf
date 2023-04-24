@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 import panel as pn
 from dua.generator import DUAGenerator
 from trustscore.generator import TrustScoreGenerator
@@ -90,9 +92,16 @@ def main():
 
     # Create the input widgets
     num_orgs_input = pn.widgets.IntInput(name="Number of organizations:", value=10)
-    num_orgs_dua_input = pn.widgets.IntInput(
-        name="Number of organizations with DUA:", value=5
+    num_orgs_dua_slider = pn.widgets.IntSlider(
+        name="Percentage of organizations with DUA",
+        start=0,
+        end=100,
+        value=70,
+        step=10,
     )
+    # num_orgs_dua_input = pn.widgets.IntInput(
+    #     name="Number of organizations with DUA:", value=5
+    # )
     num_user_per_org_input = pn.widgets.IntInput(
         name="User per organization:", value=10
     )
@@ -100,7 +109,7 @@ def main():
     #     name="Number of requested data:", value=3
     # )
     random_seed_input = pn.widgets.IntInput(name="Random seed:", value=7)
-    save_path_input = pn.widgets.TextInput(name="Save path:", value="../csv")
+    save_path_input = pn.widgets.TextInput(name="Save path:", value="csv")
 
     # Main data class selection
     dataclass_select = pn.widgets.Select(
@@ -116,6 +125,7 @@ def main():
     permitted_use_or_disclosure_select = pn.widgets.Select(
         name="Main permitted use or disclosure",
         options=PERMITTED_USE_OR_DISCLOSURE,
+        value="public_health",
     )
     # Main permitted use or disclosure portion
     usage_portion_slider = pn.widgets.IntSlider(
@@ -127,9 +137,19 @@ def main():
     output_text = pn.pane.Str()
 
     def button_callback(event):
+        pwd = Path(os.getcwd())
+        print(pwd)
+        save_path = (
+            pwd
+            / Path(save_path_input.value).resolve()
+            / str(num_orgs_input.value * num_user_per_org_input.value)
+        )
+        if not save_path.exists():
+            save_path.mkdir(parents=True)
+        num_orgs_dua = int(num_orgs_input.value * num_orgs_dua_slider.value / 100)
         input_text, output_text_value = generate_dashboard(
             num_orgs_input.value,
-            num_orgs_dua_input.value,
+            num_orgs_dua,
             num_user_per_org_input.value,
             # num_requested_data_input.value,
             dataclass_select.value,
@@ -137,7 +157,7 @@ def main():
             permitted_use_or_disclosure_select.value,
             usage_portion_slider.value,
             random_seed_input.value,
-            save_path_input.value,
+            save_path,
         )
         # Set the output text value and update the widget
         output_text.object = input_text + output_text_value
@@ -149,7 +169,7 @@ def main():
     dashboard = pn.Column(
         "# DUA and Trust Score Generator",
         num_orgs_input,
-        num_orgs_dua_input,
+        num_orgs_dua_slider,
         num_user_per_org_input,
         # num_requested_data_input,
         random_seed_input,

@@ -21,5 +21,6 @@ setup(
         "pandas",
         "alive_progress",
         "panel",
+        "psutil",
     ],
 )

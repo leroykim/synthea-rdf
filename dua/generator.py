@@ -67,26 +67,19 @@ class DUAGenerator:
             )
         )
 
-        print("Generating DUA...")
-        print("Number of organizations: ", self.num_organization)
-        print("Number of DUA organizations: ", self.num_dua_org)
-        # print("Number of requested data: ", self.num_requested_data)
-        print("Main data class: ", self.main_dataclass)
-        print("Main data class portion: ", self.main_dataclass_portion)
-        print("Number of main data class organizations: ", num_org_main_dataclass)
-        print(
-            "Main permitted use or disclosure: ", self.main_permitted_use_or_disclosure
+        output_string = (
+            "Generating DUA...\n"
+            + f"Number of organizations: {self.num_organization}\n"
+            + f"Number of DUA organizations: {self.num_dua_org}\n"
+            + f"Main data class: {self.main_dataclass}\n"
+            + f"Main data class portion: {self.main_dataclass_portion}\n"
+            + f"Number of main data class organizations: {num_org_main_dataclass}\n"
+            + f"Main permitted use or disclosure: {self.main_permitted_use_or_disclosure}\n"
+            + f"Main permitted use or disclosure portion: {self.main_permitted_use_or_disclosure_portion}\n"
+            + f"Number of main permitted use or disclosure organizations: {num_org_main_permitted_use_or_disclosure}\n"
+            + f"Random seed: {self.seed}\n"
         )
-        print(
-            "Main permitted use or disclosure portion: ",
-            self.main_permitted_use_or_disclosure_portion,
-        )
-        print(
-            "Number of main permitted use or disclosure organizations: ",
-            num_org_main_permitted_use_or_disclosure,
-        )
-        print("Random seed: ", self.seed)
-        print("\n")
+        print(output_string)
 
         random.seed(self.seed)
         data_custodian_id = "data_custodian"
@@ -137,8 +130,10 @@ class DUAGenerator:
             ),
             columns=DUA_COLS,
         )
-        save_path = Path(self.save_path).resolve()
-        dua_df.to_csv(f"{save_path}/dua.csv")
+
+        dua_df.to_csv(f"{self.save_path}/dua.csv")
+        with open(f"{self.save_path}/detail.txt", "w") as f:
+            f.write(output_string)
 
         return dua_df
 
