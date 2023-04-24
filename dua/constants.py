@@ -22,14 +22,22 @@ PERMITTED_USE_OR_DISCLOSURE = [
 
 
 DATA_CLASSES = [
+    "Allergy",
+    "CarePlan",
+    "Claim",
+    "ClaimTransaction",
     "Condition",
+    "Device",
     "Encounter",
+    "ImagingStudy",
     "Immunization",
     "Medication",
     "Observation",
     "Organization",
     "Patient",
+    "PayerTransition",
     "Payer",
     "Procedure",
     "Provider",
+    "Supply",
 ]
