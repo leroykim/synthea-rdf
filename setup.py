@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="synthea-rdf",
-    version="0.1.5",
+    version="0.1.6",
     description="Semantic web representation for the Synthea.",
     author="Dae-young Kim",
     author_email="leroy.kim@umbc.edu",
@@ -22,5 +22,6 @@ setup(
         "alive_progress",
         "panel",
         "psutil",
+        "lorem_text"
     ],
 )
