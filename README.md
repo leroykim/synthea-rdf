@@ -12,9 +12,9 @@ pip install synthea-rdf
 ```
 
 ### Graphical User Interface
-There are user interfaces in the `gui` directory:
-- [Synthea CSV to RDF converter](gui/synthea_converter.py)
-- [Trust score and Data Usage Agreement (DUA) generator](gui/trustscore_dua_generator.py)
+There are user interfaces that ends with `_gui.py`.
+- [Synthea CSV to RDF converter](synthea_converter_gui.py)
+- [Trust score and Data Usage Agreement (DUA) generator](trustscore_dua_generator_gui.py)
 
 ```bash
 python3 synthea_converter.py
