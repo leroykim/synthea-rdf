@@ -150,3 +150,4 @@ ontology/dir_test.ipynb
 .gitignore
 ontology/file_manager.ipynb
 .gitignore
+.vscode/settings.json

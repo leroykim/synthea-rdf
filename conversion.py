@@ -3,6 +3,7 @@ from alive_progress import alive_bar
 from argparse import ArgumentParser
 from pathlib import PurePath, Path
 import time
+import os
 
 
 def main():
@@ -13,6 +14,7 @@ def main():
     recursive = args.recursive
     include_dua = args.include_dua
     include_trustscore = args.include_trustscore
+    do_shutdown = args.do_shutdown
 
     st = time.time()
     builder = GraphBuilder(
@@ -20,6 +22,7 @@ def main():
         model_path=model_path,
         include_dua=include_dua,
         include_trustscore=include_trustscore,
+        destination_dir=dest_path,
     )
 
     if recursive:
@@ -32,6 +35,9 @@ def main():
     elapsed_time = et - st
     print(f"Elapsed time: {elapsed_time} seconds")
 
+    if do_shutdown:
+        os.system("shutdown now -h")
+
 
 def convert(csv_path, dest_path, builder):
     print(f"CSV file directory: {csv_path}")
@@ -40,12 +46,12 @@ def convert(csv_path, dest_path, builder):
 
     file_name = PurePath(csv_path).name
     graph = builder.build()
-    with alive_bar(
-        title="Graph Serialization",
-        unknown="waves2",
-    ) as bar:
-        graph.serialize(destination=f"{dest_path}/{file_name}.ttl")
-        bar()
+    # with alive_bar(
+    #     title="Graph Serialization",
+    #     unknown="waves2",
+    # ) as bar:
+    #     graph.serialize(destination=f"{dest_path}/{file_name}.ttl")
+    #     bar()
 
 
 def parse_argument():
@@ -95,6 +101,15 @@ def parse_argument():
         default=False,
         required=False,
         help="Include Trust Score in the conversion.",
+    )
+    parser.add_argument(
+        "-sd",
+        "--shutdown",
+        dest="do_shutdown",
+        action="store_true",
+        default=False,
+        required=False,
+        help="Set if shutdown machine after conversion.",
     )
 
     return parser.parse_args()

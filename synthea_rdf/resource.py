@@ -917,11 +917,11 @@ class PayerTransition(Resource):
                     (
                         payertransition,
                         SYN.startYear,
-                        dateLiteral(row["START_YEAR"][:10]),
+                        dateLiteral(row["START_DATE"][:10]),
                     )
                 )
                 graph.add(
-                    (payertransition, SYN.endYear, dateLiteral(row["END_YEAR"][:10]))
+                    (payertransition, SYN.endYear, dateLiteral(row["END_DATE"][:10]))
                 )
                 graph.add((payertransition, SYN.payerId, urnUuidLiteral(row["PAYER"])))
 
@@ -1011,9 +1011,10 @@ class Provider(Resource):
                 graph.add((provider, SYN.speciality, plainLiteral(row["SPECIALITY"])))
                 graph.add((provider, SYN.address, plainLiteral(row["ADDRESS"])))
                 graph.add((provider, SYN.city, plainLiteral(row["CITY"])))
-                graph.add(
-                    (provider, SYN.utilization, integerLiteral(row["UTILIZATION"]))
-                )
+                if "UTILIZATION" in self.__resource_df.columns:
+                    graph.add(
+                        (provider, SYN.utilization, integerLiteral(row["UTILIZATION"]))
+                    )
 
                 # Object Properties
                 graph.add(

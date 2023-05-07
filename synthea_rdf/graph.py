@@ -1,4 +1,5 @@
 from pathlib import Path
+import copy
 from rdflib import Graph
 import pandas as pd
 from dua import resource as dua_resource
@@ -32,6 +33,7 @@ class GraphBuilder:
         self,
         csv_dir: str,
         model_path: str,
+        destination_dir: Path,
         include_dua: bool = False,
         include_trustscore: bool = False,
     ):
@@ -61,6 +63,7 @@ class GraphBuilder:
 
         self.graph = Graph()
         self.csv_dir = Path(csv_dir)
+        self.destination_dir = destination_dir
         self.setModel(model_path)
 
     def serialize(self, destination: str):
@@ -103,81 +106,197 @@ class GraphBuilder:
         print(f"Model has {len(self.graph)} triples.")
 
     def convertAllergy(self, allergy_df=None):
+        graph = copy.deepcopy(self.graph)
         allergy = Allergy(allergy_df)
-        allergy.convert(self.graph)
+        allergy.convert(graph)
+        graph.serialize(destination=self.destination_dir / "allergy.ttl")
 
     def convertCarePlan(self, carePlan_df=None):
+        graph = copy.deepcopy(self.graph)
         careplan = CarePlan(carePlan_df)
-        careplan.convert(self.graph)
+        careplan.convert(graph)
+        graph.serialize(destination=self.destination_dir / "careplan.ttl")
 
     def convertClaim(self, claim_df=None):
+        graph = copy.deepcopy(self.graph)
         claim = Claim(claim_df)
-        claim.convert(self.graph)
+        claim.convert(graph)
+        graph.serialize(destination=self.destination_dir / "claim.ttl")
 
     def convertClaimTransaction(self, claimTransaction_df=None):
+        graph = copy.deepcopy(self.graph)
         claimTransaction = ClaimTransaction(claimTransaction_df)
-        claimTransaction.convert(self.graph)
+        claimTransaction.convert(graph)
+        graph.serialize(destination=self.destination_dir / "claim_transaction.ttl")
 
     def convertCondition(self, condition_df=None):
+        graph = copy.deepcopy(self.graph)
         condition = Condition(condition_df)
-        condition.convert(self.graph)
+        condition.convert(graph)
+        graph.serialize(destination=self.destination_dir / "condition.ttl")
 
     def convertDevice(self, device_df=None):
+        graph = copy.deepcopy(self.graph)
         device = Device(device_df)
-        device.convert(self.graph)
+        device.convert(graph)
+        graph.serialize(destination=self.destination_dir / "device.ttl")
 
     def convertEncounter(self, encounter_df=None):
+        graph = copy.deepcopy(self.graph)
         encounter = Encounter(encounter_df)
-        encounter.convert(self.graph)
+        encounter.convert(graph)
+        graph.serialize(destination=self.destination_dir / "encounter.ttl")
 
     def convertImagingStudy(self, imagingStudy_df=None):
+        graph = copy.deepcopy(self.graph)
         imagingStudy = ImagingStudy(imagingStudy_df)
-        imagingStudy.convert(self.graph)
+        imagingStudy.convert(graph)
+        graph.serialize(destination=self.destination_dir / "imaging_study.ttl")
 
     def convertImmunization(self, immunization_df=None):
+        graph = copy.deepcopy(self.graph)
         immunization = Immunization(immunization_df)
-        immunization.convert(self.graph)
+        immunization.convert(graph)
+        graph.serialize(destination=self.destination_dir / "immunization.ttl")
 
     def convertMedication(self, medication_df=None):
+        graph = copy.deepcopy(self.graph)
         medication = Medication(medication_df)
-        medication.convert(self.graph)
+        medication.convert(graph)
+        graph.serialize(destination=self.destination_dir / "medication.ttl")
 
     def convertObservation(self, observation_df=None):
+        graph = copy.deepcopy(self.graph)
         observation = Observation(observation_df)
-        observation.convert(self.graph)
+        observation.convert(graph)
+        graph.serialize(destination=self.destination_dir / "observation.ttl")
 
     def convertOrganization(self, organization_df=None):
+        graph = copy.deepcopy(self.graph)
         organization = Organization(organization_df)
-        organization.convert(self.graph)
+        organization.convert(graph)
+        graph.serialize(destination=self.destination_dir / "organization.ttl")
 
     def convertPatient(self, patient_df=None):
+        graph = copy.deepcopy(self.graph)
         patient = Patient(patient_df)
-        patient.convert(self.graph)
+        patient.convert(graph)
+        graph.serialize(destination=self.destination_dir / "patient.ttl")
 
     def convertPayer(self, payer_df=None):
+        graph = copy.deepcopy(self.graph)
         payer = Payer(payer_df)
-        payer.convert(self.graph)
+        payer.convert(graph)
+        graph.serialize(destination=self.destination_dir / "payer.ttl")
 
     def convertPayerTransition(self, payerTransition_df=None):
+        graph = copy.deepcopy(self.graph)
         payerTransition = PayerTransition(payerTransition_df)
-        payerTransition.convert(self.graph)
+        payerTransition.convert(graph)
+        graph.serialize(destination=self.destination_dir / "payer_transition.ttl")
 
     def convertProcedure(self, procedure_df=None):
+        graph = copy.deepcopy(self.graph)
         procedure = Procedure(procedure_df)
-        procedure.convert(self.graph)
+        procedure.convert(graph)
+        graph.serialize(destination=self.destination_dir / "procedure.ttl")
 
     def convertProvider(self, provider_df=None):
+        graph = copy.deepcopy(self.graph)
         provider = Provider(provider_df)
-        provider.convert(self.graph)
+        provider.convert(graph)
+        graph.serialize(destination=self.destination_dir / "provider.ttl")
 
     def convertSupply(self, supply_df=None):
+        graph = copy.deepcopy(self.graph)
         supply = Supply(supply_df)
-        supply.convert(self.graph)
+        supply.convert(graph)
+        graph.serialize(destination=self.destination_dir / "supply.ttl")
 
-    def convertDUA(self, dua_df):
+    def converDUA(self, dua_df=None):
+        graph = copy.deepcopy(self.graph)
         dua = dua_resource.DataUsageAgreement(dua_df)
-        dua.convert(self.graph)
+        dua.convert(graph)
+        graph.serialize(destination=self.destination_dir / "dua.ttl")
 
-    def convertTrustscore(self, trustscore_df):
-        trust = trust_resource.TrustScore(trustscore_df)
-        trust.convert(self.graph)
+    def convertTrustscore(self, trustscore_df=None):
+        graph = copy.deepcopy(self.graph)
+        trustscore = trust_resource.TrustScore(trustscore_df)
+        trustscore.convert(graph)
+        graph.serialize(destination=self.destination_dir / "trustscore.ttl")
+
+    # def convertCarePlan(self, carePlan_df=None):
+    #     careplan = CarePlan(carePlan_df)
+    #     careplan.convert(self.graph)
+
+    # def convertClaim(self, claim_df=None):
+    #     claim = Claim(claim_df)
+    #     claim.convert(self.graph)
+
+    # def convertClaimTransaction(self, claimTransaction_df=None):
+    #     claimTransaction = ClaimTransaction(claimTransaction_df)
+    #     claimTransaction.convert(self.graph)
+
+    # def convertCondition(self, condition_df=None):
+    #     condition = Condition(condition_df)
+    #     condition.convert(self.graph)
+
+    # def convertDevice(self, device_df=None):
+    #     device = Device(device_df)
+    #     device.convert(self.graph)
+
+    # def convertEncounter(self, encounter_df=None):
+    #     encounter = Encounter(encounter_df)
+    #     encounter.convert(self.graph)
+
+    # def convertImagingStudy(self, imagingStudy_df=None):
+    #     imagingStudy = ImagingStudy(imagingStudy_df)
+    #     imagingStudy.convert(self.graph)
+
+    # def convertImmunization(self, immunization_df=None):
+    #     immunization = Immunization(immunization_df)
+    #     immunization.convert(self.graph)
+
+    # def convertMedication(self, medication_df=None):
+    #     medication = Medication(medication_df)
+    #     medication.convert(self.graph)
+
+    # def convertObservation(self, observation_df=None):
+    #     observation = Observation(observation_df)
+    #     observation.convert(self.graph)
+
+    # def convertOrganization(self, organization_df=None):
+    #     organization = Organization(organization_df)
+    #     organization.convert(self.graph)
+
+    # def convertPatient(self, patient_df=None):
+    #     patient = Patient(patient_df)
+    #     patient.convert(self.graph)
+
+    # def convertPayer(self, payer_df=None):
+    #     payer = Payer(payer_df)
+    #     payer.convert(self.graph)
+
+    # def convertPayerTransition(self, payerTransition_df=None):
+    #     payerTransition = PayerTransition(payerTransition_df)
+    #     payerTransition.convert(self.graph)
+
+    # def convertProcedure(self, procedure_df=None):
+    #     procedure = Procedure(procedure_df)
+    #     procedure.convert(self.graph)
+
+    # def convertProvider(self, provider_df=None):
+    #     provider = Provider(provider_df)
+    #     provider.convert(self.graph)
+
+    # def convertSupply(self, supply_df=None):
+    #     supply = Supply(supply_df)
+    #     supply.convert(self.graph)
+
+    # def convertDUA(self, dua_df):
+    #     dua = dua_resource.DataUsageAgreement(dua_df)
+    #     dua.convert(self.graph)
+
+    # def convertTrustscore(self, trustscore_df):
+    #     trust = trust_resource.TrustScore(trustscore_df)
+    #     trust.convert(self.graph)
