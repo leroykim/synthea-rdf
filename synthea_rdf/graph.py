@@ -26,6 +26,7 @@ from .resource import (
 )
 from abstract.namespace import SYN, DUA, TST
 from .memory import usage
+from alive_progress import alive_bar
 
 
 class GraphBuilder:
@@ -109,121 +110,221 @@ class GraphBuilder:
         graph = copy.deepcopy(self.graph)
         allergy = Allergy(allergy_df)
         allergy.convert(graph)
-        graph.serialize(destination=self.destination_dir / "allergy.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "allergy.ttl")
+            bar()
 
     def convertCarePlan(self, carePlan_df=None):
         graph = copy.deepcopy(self.graph)
         careplan = CarePlan(carePlan_df)
         careplan.convert(graph)
-        graph.serialize(destination=self.destination_dir / "careplan.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "careplan.ttl")
+            bar()
 
     def convertClaim(self, claim_df=None):
         graph = copy.deepcopy(self.graph)
         claim = Claim(claim_df)
         claim.convert(graph)
-        graph.serialize(destination=self.destination_dir / "claim.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "claim.ttl")
+            bar()
 
     def convertClaimTransaction(self, claimTransaction_df=None):
         graph = copy.deepcopy(self.graph)
         claimTransaction = ClaimTransaction(claimTransaction_df)
         claimTransaction.convert(graph)
-        graph.serialize(destination=self.destination_dir / "claim_transaction.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "claim_transaction.ttl")
+            bar()
 
     def convertCondition(self, condition_df=None):
         graph = copy.deepcopy(self.graph)
         condition = Condition(condition_df)
         condition.convert(graph)
-        graph.serialize(destination=self.destination_dir / "condition.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "condition.ttl")
+            bar()
 
     def convertDevice(self, device_df=None):
         graph = copy.deepcopy(self.graph)
         device = Device(device_df)
         device.convert(graph)
-        graph.serialize(destination=self.destination_dir / "device.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "device.ttl")
+            bar()
 
     def convertEncounter(self, encounter_df=None):
         graph = copy.deepcopy(self.graph)
         encounter = Encounter(encounter_df)
         encounter.convert(graph)
-        graph.serialize(destination=self.destination_dir / "encounter.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "encounter.ttl")
+            bar()
 
     def convertImagingStudy(self, imagingStudy_df=None):
         graph = copy.deepcopy(self.graph)
         imagingStudy = ImagingStudy(imagingStudy_df)
         imagingStudy.convert(graph)
-        graph.serialize(destination=self.destination_dir / "imaging_study.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "imaging_study.ttl")
+            bar()
 
     def convertImmunization(self, immunization_df=None):
         graph = copy.deepcopy(self.graph)
         immunization = Immunization(immunization_df)
         immunization.convert(graph)
-        graph.serialize(destination=self.destination_dir / "immunization.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "immunization.ttl")
+            bar()
 
     def convertMedication(self, medication_df=None):
         graph = copy.deepcopy(self.graph)
         medication = Medication(medication_df)
         medication.convert(graph)
-        graph.serialize(destination=self.destination_dir / "medication.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "medication.ttl")
+            bar()
 
     def convertObservation(self, observation_df=None):
         graph = copy.deepcopy(self.graph)
         observation = Observation(observation_df)
         observation.convert(graph)
-        graph.serialize(destination=self.destination_dir / "observation.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "observation.ttl")
+            bar()
 
     def convertOrganization(self, organization_df=None):
         graph = copy.deepcopy(self.graph)
         organization = Organization(organization_df)
         organization.convert(graph)
-        graph.serialize(destination=self.destination_dir / "organization.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "organization.ttl")
+            bar()
 
     def convertPatient(self, patient_df=None):
         graph = copy.deepcopy(self.graph)
         patient = Patient(patient_df)
         patient.convert(graph)
-        graph.serialize(destination=self.destination_dir / "patient.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "patient.ttl")
+            bar()
 
     def convertPayer(self, payer_df=None):
         graph = copy.deepcopy(self.graph)
         payer = Payer(payer_df)
         payer.convert(graph)
-        graph.serialize(destination=self.destination_dir / "payer.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "payer.ttl")
+            bar()
 
     def convertPayerTransition(self, payerTransition_df=None):
         graph = copy.deepcopy(self.graph)
         payerTransition = PayerTransition(payerTransition_df)
         payerTransition.convert(graph)
-        graph.serialize(destination=self.destination_dir / "payer_transition.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "payer_transition.ttl")
+            bar()
 
     def convertProcedure(self, procedure_df=None):
         graph = copy.deepcopy(self.graph)
         procedure = Procedure(procedure_df)
         procedure.convert(graph)
-        graph.serialize(destination=self.destination_dir / "procedure.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "procedure.ttl")
+            bar()
 
     def convertProvider(self, provider_df=None):
         graph = copy.deepcopy(self.graph)
         provider = Provider(provider_df)
         provider.convert(graph)
-        graph.serialize(destination=self.destination_dir / "provider.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "provider.ttl")
+            bar()
 
     def convertSupply(self, supply_df=None):
         graph = copy.deepcopy(self.graph)
         supply = Supply(supply_df)
         supply.convert(graph)
-        graph.serialize(destination=self.destination_dir / "supply.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "supply.ttl")
+            bar()
 
     def converDUA(self, dua_df=None):
         graph = copy.deepcopy(self.graph)
         dua = dua_resource.DataUsageAgreement(dua_df)
         dua.convert(graph)
-        graph.serialize(destination=self.destination_dir / "dua.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "dua.ttl")
+            bar()
 
     def convertTrustscore(self, trustscore_df=None):
         graph = copy.deepcopy(self.graph)
         trustscore = trust_resource.TrustScore(trustscore_df)
         trustscore.convert(graph)
-        graph.serialize(destination=self.destination_dir / "trustscore.ttl")
+        with alive_bar(
+            title="Graph Serialization",
+            unknown="waves2",
+        ) as bar:
+            graph.serialize(destination=self.destination_dir / "trustscore.ttl")
+            bar()
 
     # def convertCarePlan(self, carePlan_df=None):
     #     careplan = CarePlan(carePlan_df)
