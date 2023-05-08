@@ -95,8 +95,10 @@ class GraphBuilder:
                     del resource_df
                 else:
                     chunks = split_dataframe(resource_df, chunk_size=200000)
+                    i = 0
                     for chunk in chunks:
-                        func(chunk, chunk_id=chunks.index(chunk))
+                        func(chunk, chunk_id=i)
+                        i += 1
                         del chunk
                     del resource_df
 
