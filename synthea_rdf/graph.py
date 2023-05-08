@@ -81,8 +81,8 @@ class GraphBuilder:
     def serialize(self, destination: str):
         return self.graph.serialize(destination=destination)
 
-    def build(self):
-        self.convert()
+    def build(self, chunk_size: int = 500000):
+        self.convert(chunk_size=chunk_size)
         return self.graph
 
     def convert(self, chunk_size: int = 500000):

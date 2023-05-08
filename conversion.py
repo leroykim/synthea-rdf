@@ -11,6 +11,7 @@ def main():
     model_path = Path(args.model_path).resolve()
     csv_path = Path(args.csv_path).resolve()
     dest_path = Path(args.dest_path).resolve()
+    chunk_size = args.chunk_size
     recursive = args.recursive
     include_dua = args.include_dua
     include_trustscore = args.include_trustscore
@@ -30,7 +31,7 @@ def main():
             if path.is_dir():
                 convert(path, dest_path, builder)
     else:
-        convert(csv_path, dest_path, builder)
+        convert(csv_path, dest_path, builder, chunk_size=chunk_size)
     et = time.time()
     elapsed_time = et - st
     print(f"Elapsed time: {elapsed_time} seconds")
@@ -39,13 +40,13 @@ def main():
         os.system("shutdown now -h")
 
 
-def convert(csv_path, dest_path, builder):
+def convert(csv_path, dest_path, builder, chunk_size=500000):
     print(f"CSV file directory: {csv_path}")
     print(f"Destination directory: {dest_path}")
     print(f"Converting {PurePath(csv_path).name} ...")
 
     file_name = PurePath(csv_path).name
-    graph = builder.build()
+    graph = builder.build(chunk_size=chunk_size)
     # with alive_bar(
     #     title="Graph Serialization",
     #     unknown="waves2",
@@ -102,6 +103,16 @@ def parse_argument():
         required=False,
         help="Include Trust Score in the conversion.",
     )
+    parser.add_argument(
+        "-c",
+        "--chunk-size",
+        dest="chunk_size",
+        type=int,
+        required=False,
+        default=500000,
+        help="Provide chunk size for conversion.",
+    )
+
     parser.add_argument(
         "-sd",
         "--shutdown",
