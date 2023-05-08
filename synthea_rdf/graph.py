@@ -25,8 +25,17 @@ from .resource import (
     Supply,
 )
 from abstract.namespace import SYN, DUA, TST
-from .memory import usage
 from alive_progress import alive_bar
+
+
+def split_dataframe(df: pd.DataFrame, chunk_size: int = 500000) -> list[pd.DataFrame]:
+    chunks = list()
+    num_chunks = len(df.index) // chunk_size + 1
+    for i in range(num_chunks):
+        chunks.append(df[i * chunk_size : (i + 1) * chunk_size])
+    for c in chunks:
+        print(len(c.index))
+    return chunks
 
 
 class GraphBuilder:
@@ -79,22 +88,26 @@ class GraphBuilder:
             resource_path = Path(self.csv_dir / file)
             if Path(resource_path).exists():
                 resource_df = pd.read_csv(resource_path)
-                func(resource_df)
-                usage()
-                del resource_df
-                usage()
+                if len(resource_df.index) < 500000:
+                    func(resource_df)
+                    del resource_df
+                else:
+                    chunks = split_dataframe(resource_df)
+                    for chunk in chunks:
+                        func(chunk)
+                        del chunk
+                    del resource_df
 
         if self.include_dua:
             dua_df = pd.read_csv(self.csv_dir / "dua.csv")
             self.convertDUA(dua_df)
-            usage()
+
             del dua_df
-            usage()
 
         if self.include_trustscore:
             trustscore_df = pd.read_csv(self.csv_dir / "trustscore.csv")
             self.convertTrustscore(trustscore_df)
-            usage()
+
             del trustscore_df
 
     def setModel(self, model_path):
