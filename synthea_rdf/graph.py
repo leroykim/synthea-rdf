@@ -85,18 +85,19 @@ class GraphBuilder:
         self.convert()
         return self.graph
 
-    def convert(self):
+    def convert(self, chunk_size: int = 500000):
         for file, func in self.RESOURCE_DICT.items():
             resource_path = Path(self.csv_dir / file)
             if Path(resource_path).exists():
                 resource_df = pd.read_csv(resource_path)
-                if len(resource_df.index) < 200000:
+                if len(resource_df.index) < chunk_size:
                     func(resource_df)
                     del resource_df
                 else:
-                    chunks = split_dataframe(resource_df, chunk_size=200000)
+                    chunks = split_dataframe(resource_df, chunk_size=chunk_size)
                     i = 0
                     for chunk in chunks:
+                        print(f"Converting chunk {i}")
                         func(chunk, chunk_id=i)
                         i += 1
                         del chunk
@@ -131,7 +132,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"allergy_{chunk_id}.ttl"
                 )
@@ -147,7 +148,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"careplan_{chunk_id}.ttl"
                 )
@@ -163,7 +164,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"claim_{chunk_id}.ttl"
                 )
@@ -179,7 +180,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir
                     / f"claim_transaction_{chunk_id}.ttl"
@@ -198,7 +199,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"condition_{chunk_id}.ttl"
                 )
@@ -214,7 +215,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"device_{chunk_id}.ttl"
                 )
@@ -230,7 +231,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"encounter_{chunk_id}.ttl"
                 )
@@ -246,7 +247,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"imaging_study_{chunk_id}.ttl"
                 )
@@ -262,7 +263,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"immunization_{chunk_id}.ttl"
                 )
@@ -278,7 +279,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"medication_{chunk_id}.ttl"
                 )
@@ -294,7 +295,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"observation_{chunk_id}.ttl"
                 )
@@ -310,7 +311,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"organization_{chunk_id}.ttl"
                 )
@@ -326,7 +327,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"patient_{chunk_id}.ttl"
                 )
@@ -342,7 +343,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"payer_{chunk_id}.ttl"
                 )
@@ -358,7 +359,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir
                     / f"payer_transition_{chunk_id}.ttl"
@@ -377,7 +378,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"procedure_{chunk_id}.ttl"
                 )
@@ -393,7 +394,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"provider_{chunk_id}.ttl"
                 )
@@ -409,7 +410,7 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            if chunk_id:
+            if chunk_id is not None:
                 graph.serialize(
                     destination=self.destination_dir / f"supply_{chunk_id}.ttl"
                 )
@@ -417,7 +418,7 @@ class GraphBuilder:
                 graph.serialize(destination=self.destination_dir / "supply.ttl")
             bar()
 
-    def converDUA(self, dua_df=None):
+    def convertDUA(self, dua_df=None):
         graph = copy.deepcopy(self.graph)
         dua = dua_resource.DataUsageAgreement(dua_df)
         dua.convert(graph)
