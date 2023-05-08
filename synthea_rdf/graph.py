@@ -31,8 +31,10 @@ from alive_progress import alive_bar
 def split_dataframe(df: pd.DataFrame, chunk_size: int = 500000) -> list[pd.DataFrame]:
     chunks = list()
     num_chunks = len(df.index) // chunk_size + 1
+    print(f"Split dataframe into {num_chunks} chunks.")
     for i in range(num_chunks):
         chunks.append(df[i * chunk_size : (i + 1) * chunk_size])
+    print("Chunk sizes:")
     for c in chunks:
         print(len(c.index))
     return chunks
@@ -88,13 +90,13 @@ class GraphBuilder:
             resource_path = Path(self.csv_dir / file)
             if Path(resource_path).exists():
                 resource_df = pd.read_csv(resource_path)
-                if len(resource_df.index) < 500000:
+                if len(resource_df.index) < 200000:
                     func(resource_df)
                     del resource_df
                 else:
-                    chunks = split_dataframe(resource_df)
+                    chunks = split_dataframe(resource_df, chunk_size=200000)
                     for chunk in chunks:
-                        func(chunk)
+                        func(chunk, chunk_id=chunks.index(chunk))
                         del chunk
                     del resource_df
 
@@ -119,7 +121,7 @@ class GraphBuilder:
             self.graph.bind("tst", TST)
         print(f"Model has {len(self.graph)} triples.")
 
-    def convertAllergy(self, allergy_df=None):
+    def convertAllergy(self, allergy_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         allergy = Allergy(allergy_df)
         allergy.convert(graph)
@@ -127,10 +129,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "allergy.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"allergy_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "allergy.ttl")
             bar()
 
-    def convertCarePlan(self, carePlan_df=None):
+    def convertCarePlan(self, carePlan_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         careplan = CarePlan(carePlan_df)
         careplan.convert(graph)
@@ -138,10 +145,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "careplan.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"careplan_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "careplan.ttl")
             bar()
 
-    def convertClaim(self, claim_df=None):
+    def convertClaim(self, claim_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         claim = Claim(claim_df)
         claim.convert(graph)
@@ -149,10 +161,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "claim.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"claim_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "claim.ttl")
             bar()
 
-    def convertClaimTransaction(self, claimTransaction_df=None):
+    def convertClaimTransaction(self, claimTransaction_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         claimTransaction = ClaimTransaction(claimTransaction_df)
         claimTransaction.convert(graph)
@@ -160,10 +177,18 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "claim_transaction.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir
+                    / f"claim_transaction_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(
+                    destination=self.destination_dir / "claim_transaction.ttl"
+                )
             bar()
 
-    def convertCondition(self, condition_df=None):
+    def convertCondition(self, condition_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         condition = Condition(condition_df)
         condition.convert(graph)
@@ -171,10 +196,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "condition.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"condition_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "condition.ttl")
             bar()
 
-    def convertDevice(self, device_df=None):
+    def convertDevice(self, device_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         device = Device(device_df)
         device.convert(graph)
@@ -182,10 +212,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "device.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"device_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "device.ttl")
             bar()
 
-    def convertEncounter(self, encounter_df=None):
+    def convertEncounter(self, encounter_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         encounter = Encounter(encounter_df)
         encounter.convert(graph)
@@ -193,10 +228,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "encounter.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"encounter_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "encounter.ttl")
             bar()
 
-    def convertImagingStudy(self, imagingStudy_df=None):
+    def convertImagingStudy(self, imagingStudy_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         imagingStudy = ImagingStudy(imagingStudy_df)
         imagingStudy.convert(graph)
@@ -204,10 +244,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "imaging_study.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"imaging_study_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "imaging_study.ttl")
             bar()
 
-    def convertImmunization(self, immunization_df=None):
+    def convertImmunization(self, immunization_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         immunization = Immunization(immunization_df)
         immunization.convert(graph)
@@ -215,10 +260,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "immunization.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"immunization_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "immunization.ttl")
             bar()
 
-    def convertMedication(self, medication_df=None):
+    def convertMedication(self, medication_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         medication = Medication(medication_df)
         medication.convert(graph)
@@ -226,10 +276,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "medication.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"medication_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "medication.ttl")
             bar()
 
-    def convertObservation(self, observation_df=None):
+    def convertObservation(self, observation_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         observation = Observation(observation_df)
         observation.convert(graph)
@@ -237,10 +292,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "observation.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"observation_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "observation.ttl")
             bar()
 
-    def convertOrganization(self, organization_df=None):
+    def convertOrganization(self, organization_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         organization = Organization(organization_df)
         organization.convert(graph)
@@ -248,10 +308,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "organization.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"organization_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "organization.ttl")
             bar()
 
-    def convertPatient(self, patient_df=None):
+    def convertPatient(self, patient_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         patient = Patient(patient_df)
         patient.convert(graph)
@@ -259,10 +324,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "patient.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"patient_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "patient.ttl")
             bar()
 
-    def convertPayer(self, payer_df=None):
+    def convertPayer(self, payer_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         payer = Payer(payer_df)
         payer.convert(graph)
@@ -270,10 +340,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "payer.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"payer_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "payer.ttl")
             bar()
 
-    def convertPayerTransition(self, payerTransition_df=None):
+    def convertPayerTransition(self, payerTransition_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         payerTransition = PayerTransition(payerTransition_df)
         payerTransition.convert(graph)
@@ -281,10 +356,18 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "payer_transition.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir
+                    / f"payer_transition_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(
+                    destination=self.destination_dir / "payer_transition.ttl"
+                )
             bar()
 
-    def convertProcedure(self, procedure_df=None):
+    def convertProcedure(self, procedure_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         procedure = Procedure(procedure_df)
         procedure.convert(graph)
@@ -292,10 +375,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "procedure.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"procedure_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "procedure.ttl")
             bar()
 
-    def convertProvider(self, provider_df=None):
+    def convertProvider(self, provider_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         provider = Provider(provider_df)
         provider.convert(graph)
@@ -303,10 +391,15 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "provider.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"provider_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "provider.ttl")
             bar()
 
-    def convertSupply(self, supply_df=None):
+    def convertSupply(self, supply_df=None, chunk_id=None):
         graph = copy.deepcopy(self.graph)
         supply = Supply(supply_df)
         supply.convert(graph)
@@ -314,7 +407,12 @@ class GraphBuilder:
             title="Graph Serialization",
             unknown="waves2",
         ) as bar:
-            graph.serialize(destination=self.destination_dir / "supply.ttl")
+            if chunk_id:
+                graph.serialize(
+                    destination=self.destination_dir / f"supply_{chunk_id}.ttl"
+                )
+            else:
+                graph.serialize(destination=self.destination_dir / "supply.ttl")
             bar()
 
     def converDUA(self, dua_df=None):
