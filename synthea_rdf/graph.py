@@ -48,6 +48,7 @@ class GraphBuilder:
         destination_dir: Path,
         include_dua: bool = False,
         include_trustscore: bool = False,
+        skip: list[str] = None,
     ):
         self.RESOURCE_DICT = {
             "allergies.csv": self.convertAllergy,
@@ -72,6 +73,7 @@ class GraphBuilder:
         # Optional Trustscore and DUA
         self.include_dua = include_dua
         self.include_trustscore = include_trustscore
+        self.skip = skip
 
         self.graph = Graph()
         self.csv_dir = Path(csv_dir)
@@ -87,6 +89,9 @@ class GraphBuilder:
 
     def convert(self, chunk_size: int = 500000):
         for file, func in self.RESOURCE_DICT.items():
+            if file in self.skip:
+                print(f"Skipping {file}")
+                continue
             resource_path = Path(self.csv_dir / file)
             if Path(resource_path).exists():
                 resource_df = pd.read_csv(resource_path)
@@ -129,7 +134,7 @@ class GraphBuilder:
         allergy = Allergy(allergy_df)
         allergy.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Allergy graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -145,7 +150,7 @@ class GraphBuilder:
         careplan = CarePlan(carePlan_df)
         careplan.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Care plan graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -161,7 +166,7 @@ class GraphBuilder:
         claim = Claim(claim_df)
         claim.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Claim graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -177,7 +182,7 @@ class GraphBuilder:
         claimTransaction = ClaimTransaction(claimTransaction_df)
         claimTransaction.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Claim transaction graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -196,7 +201,7 @@ class GraphBuilder:
         condition = Condition(condition_df)
         condition.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Condition graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -212,7 +217,7 @@ class GraphBuilder:
         device = Device(device_df)
         device.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Device graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -228,7 +233,7 @@ class GraphBuilder:
         encounter = Encounter(encounter_df)
         encounter.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Encounter graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -244,7 +249,7 @@ class GraphBuilder:
         imagingStudy = ImagingStudy(imagingStudy_df)
         imagingStudy.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Imaging study graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -260,7 +265,7 @@ class GraphBuilder:
         immunization = Immunization(immunization_df)
         immunization.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Immunization graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -276,7 +281,7 @@ class GraphBuilder:
         medication = Medication(medication_df)
         medication.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Medication graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -292,7 +297,7 @@ class GraphBuilder:
         observation = Observation(observation_df)
         observation.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Observation graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -308,7 +313,7 @@ class GraphBuilder:
         organization = Organization(organization_df)
         organization.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Organization graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -324,7 +329,7 @@ class GraphBuilder:
         patient = Patient(patient_df)
         patient.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Patient graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -340,7 +345,7 @@ class GraphBuilder:
         payer = Payer(payer_df)
         payer.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Payer graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -356,7 +361,7 @@ class GraphBuilder:
         payerTransition = PayerTransition(payerTransition_df)
         payerTransition.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Payer transition graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -375,7 +380,7 @@ class GraphBuilder:
         procedure = Procedure(procedure_df)
         procedure.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Procedure graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -391,7 +396,7 @@ class GraphBuilder:
         provider = Provider(provider_df)
         provider.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Provider graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -407,7 +412,7 @@ class GraphBuilder:
         supply = Supply(supply_df)
         supply.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title=f"Supply graph {chunk_id} serialization",
             unknown="waves2",
         ) as bar:
             if chunk_id is not None:
@@ -423,7 +428,7 @@ class GraphBuilder:
         dua = dua_resource.DataUsageAgreement(dua_df)
         dua.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title="DUA graph Serialization",
             unknown="waves2",
         ) as bar:
             graph.serialize(destination=self.destination_dir / "dua.ttl")
@@ -434,7 +439,7 @@ class GraphBuilder:
         trustscore = trust_resource.TrustScore(trustscore_df)
         trustscore.convert(graph)
         with alive_bar(
-            title="Graph Serialization",
+            title="Trust score graph Serialization",
             unknown="waves2",
         ) as bar:
             graph.serialize(destination=self.destination_dir / "trustscore.ttl")

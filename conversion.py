@@ -4,34 +4,33 @@ from argparse import ArgumentParser
 from pathlib import PurePath, Path
 import time
 import os
+import yaml
 
 
 def main():
-    args = parse_argument()
-    model_path = Path(args.model_path).resolve()
-    csv_path = Path(args.csv_path).resolve()
-    dest_path = Path(args.dest_path).resolve()
-    chunk_size = args.chunk_size
-    recursive = args.recursive
-    include_dua = args.include_dua
-    include_trustscore = args.include_trustscore
-    do_shutdown = args.do_shutdown
+    with open("configuration.yaml", "r") as file:
+        config = yaml.safe_load(file)
+
+    model_path = Path(config["model_path"]).resolve()
+    synthea_csv_path = Path(config["synthea_csv_path"]).resolve()
+    output_path = Path(config["output_path"]).resolve()
+    chunk_size = config["chunk_size"]
+    include_dua = config["include_dua"]
+    include_trustscore = config["include_trustscore"]
+    do_shutdown = config["do_shutdown"]
+    skip = config["skip"]
 
     st = time.time()
     builder = GraphBuilder(
-        csv_dir=csv_path,
+        csv_dir=synthea_csv_path,
         model_path=model_path,
+        destination_dir=output_path,
         include_dua=include_dua,
         include_trustscore=include_trustscore,
-        destination_dir=dest_path,
+        skip=skip,
     )
 
-    if recursive:
-        for path in Path(csv_path).iterdir():
-            if path.is_dir():
-                convert(path, dest_path, builder)
-    else:
-        convert(csv_path, dest_path, builder, chunk_size=chunk_size)
+    convert(synthea_csv_path, output_path, builder, chunk_size=chunk_size)
     et = time.time()
     elapsed_time = et - st
     print(f"Elapsed time: {elapsed_time} seconds")
@@ -55,80 +54,5 @@ def convert(csv_path, dest_path, builder, chunk_size=500000):
     #     bar()
 
 
-def parse_argument():
-    parser = ArgumentParser()
-    parser.add_argument(
-        "-o",
-        "--ontology",
-        dest="model_path",
-        type=str,
-        required=True,
-        help="Provide model ontology path.",
-    )
-    parser.add_argument(
-        "-csv",
-        "--csv-dir",
-        dest="csv_path",
-        type=str,
-        required=True,
-        help="Provide Synthea csv directory path.",
-    )
-    # parser.add_argument("-n", "--filename", dest="file_name", type=str, required=False,
-    #                     default=None, help="Provide conversion result file name.")
-    parser.add_argument(
-        "-dest",
-        "--destination",
-        dest="dest_path",
-        type=str,
-        required=False,
-        default="result",
-        help="Provide destination path of result file.",
-    )
-    parser.add_argument("-r", dest="recursive", action="store_true", required=False)
-    parser.add_argument(
-        "-dua",
-        "--include-dua",
-        dest="include_dua",
-        action="store_true",
-        default=False,
-        required=False,
-        help="Include Data Usage Agreement in the conversion.",
-    )
-    parser.add_argument(
-        "-trustscore",
-        "--include-trustscore",
-        dest="include_trustscore",
-        action="store_true",
-        default=False,
-        required=False,
-        help="Include Trust Score in the conversion.",
-    )
-    parser.add_argument(
-        "-c",
-        "--chunk-size",
-        dest="chunk_size",
-        type=int,
-        required=False,
-        default=500000,
-        help="Provide chunk size for conversion.",
-    )
-
-    parser.add_argument(
-        "-sd",
-        "--shutdown",
-        dest="do_shutdown",
-        action="store_true",
-        default=False,
-        required=False,
-        help="Set if shutdown machine after conversion.",
-    )
-
-    return parser.parse_args()
-
-
 if __name__ == "__main__":
     main()
-
-# python3 conversion.py --ontology ./ontology/synthea_ontology --dir ./csv -r
-# python3 conversion.py --ontology synthea-rdf/synthea_ontology/synthea_ontology.ttl --csv-dir /home/k163/synthea-rdf/csv/500
-# python3 conversion.py --include-dua --include-trustscore --ontology synthea_ontology/synthea_ontology.ttl --csv-dir csv/500-veracity
