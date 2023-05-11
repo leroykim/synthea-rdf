@@ -14,7 +14,7 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 3. `source .venv/bin/activate`
 4. `poetry install`
 
-:electric_plug: activate `.venv` environment everytime before using `synthea-rdf` by running `source .venv/bin/activate` command.
+:electric_plug: Activate `.venv` environment everytime before using `synthea-rdf` by running `source .venv/bin/activate` command.
 
 ### Method 2: Pip
 ```bash
