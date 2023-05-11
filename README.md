@@ -5,13 +5,21 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 
 ![synthea_ontology](synthea_ontology/synthea_ontology.png)
 
-## :hammer: Usage
-### Installation
+
+# :hammer: Installation
+## Poetry
+[Poetry installation guide](https://python-poetry.org/docs/)
+1. `python3 -m venv .venv`
+2. `source .venv/bin/activate`
+3. `poetry install`
+
+## Pip
 ```bash
 pip install synthea-rdf
 ```
 
-### Basic Usage
+# :zap: Usage
+## Basic Usage
 All conversion configurations should be specified in [`configuration.yaml`](configuration.yaml).
 
 Here is a sample `configuration.yaml`.
@@ -48,7 +56,7 @@ After specification, simply run:
 python3 conversion.py
 ```
 
-### Running conversion process with [TMUX](https://github.com/tmux/tmux/wiki)
+## Running conversion process with [TMUX](https://github.com/tmux/tmux/wiki)
 
 The bigger the data size, the more time that the data conversion needs. In this case, it would be better to use CLI in the background and check the progress time to time. The best way is to run the process in a [TMUX](https://github.com/tmux/tmux/wiki) session and detach it. It is possible to check the progress by attaching the TMUX session.
 
@@ -60,7 +68,7 @@ Example:
     > DO NOT SHUT DOWN THE MACHINE!!
 5. `$ tmux a` to attach the session and check the progress
 
-### Trust Score and DUA generator
+## Trust Score and DUA generator
 Use [Trust score and Data Usage Agreement (DUA) generator](trustscore_dua_generator_gui.py) to generate optional `Trust Score` and `DUA` data.
 
 ```bash

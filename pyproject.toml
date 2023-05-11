@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "synthea-rdf"
+version = "0.2.0"
+description = "Semantic web representation for the Synthea."
+authors = ["Dae-young Kim <leroy.kim@umbc.edu>", "James Clavin <jclavin@umbc.edu>"]
+license = "GPL-3.0"
+readme = "README.md"
+packages = [
+{include = "synthea_rdf"},
+{include = "dua"},
+{include = "trustscore"},
+{include = "abstract"}
+]
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+rdflib = "^6.3.2"
+pandas = "^2.0.1"
+alive-progress = "^3.1.2"
+panel = "^0.14.4"
+lorem-text = "^2.1"
+PyYAML = "^6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

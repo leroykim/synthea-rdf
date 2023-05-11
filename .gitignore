@@ -151,3 +151,5 @@ ontology/dir_test.ipynb
 ontology/file_manager.ipynb
 .gitignore
 .vscode/settings.json
+README.md
+poetry.lock
