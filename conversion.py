@@ -1,6 +1,4 @@
 from synthea_rdf.graph import GraphBuilder
-from alive_progress import alive_bar
-from argparse import ArgumentParser
 from pathlib import PurePath, Path
 import time
 import os

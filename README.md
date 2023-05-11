@@ -11,11 +11,41 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 pip install synthea-rdf
 ```
 
-### Command Line Interface (CLI)
+### Basic Usage
+All conversion configurations should be specified in [`configuration.yaml`](configuration.yaml).
 
-Example:
+Here is a sample `configuration.yaml`.
+
+```yaml
+model_path: synthea_ontology/synthea_ontology.ttl
+synthea_csv_path: ../synthea/output/1000k/csv
+output_path: result/1000k
+chunk_size: 300000
+include_dua: True
+include_trustscore: True
+skip:
+  - allergies.csv
+  - careplans.csv
+  - claims_transactions.csv
+  - claims.csv
+  - conditions.csv
+  - devices.csv
+  - encounters.csv
+  - imaging_studies.csv
+  - immunizations.csv
+  - medications.csv
+  - observations.csv
+  - organizations.csv
+  - patients.csv
+  - patient_expenses.csv
+  - payer_transitions.csv
+do_shutdown: False
+```
+
+After specification, simply run:
+
 ```bash
-python3 conversion.py --include-dua --include-trustscore --ontology ~/synthea-rdf/synthea_ontology/synthea_ontology.ttl --csv-dir ~/synthea/output/1000k/csv --chunk-size 300000 
+python3 conversion.py
 ```
 
 ### Running CLI with [TMUX](https://github.com/tmux/tmux/wiki)
@@ -24,21 +54,14 @@ The bigger the data size, the more time that the data conversion needs. In this 
 
 Example:
 1. `$ tmux`
-2. `$ python3 conversion.py --include-dua --include-trustscore --ontology ~/synthea-rdf/synthea_ontology/synthea_ontology.ttl --csv-dir ~/synthea/output/1000k/csv --chunk-size 300000`
+2. `$ python3 conversion.py`
 3. Press `[CTRL]+[b]`, then `[d]` to detach the TMUX session.
 4. Now it is okay to log off.
     > DO NOT SHUT DOWN THE MACHINE!!
 5. `$ tmux a` to attach the session and check the progress
 
-### Graphical User Interface (GUI)
-There are user interfaces that ends with `_gui.py`.
-- [Synthea CSV to RDF converter](synthea_converter_gui.py)
-- [Trust score and Data Usage Agreement (DUA) generator](trustscore_dua_generator_gui.py)
-
-```bash
-python3 synthea_converter.py
-```
-![synthea_converter](synthea_ontology/synthea_converter.png)
+### Trust Score and DUA generator
+Use [Trust score and Data Usage Agreement (DUA) generator](trustscore_dua_generator_gui.py) to generate optional `Trust Score` and `DUA` data.
 
 ```bash
 python3 trustscore_dua_generator.py
