@@ -2,10 +2,10 @@ from setuptools import setup
 
 setup(
     name="synthea-rdf",
-    version="0.1.6",
+    version="0.2",
     description="Semantic web representation for the Synthea.",
-    author="Dae-young Kim",
-    author_email="leroy.kim@umbc.edu",
+    author="Dae-young Kim, James Clavin",
+    author_email="leroy.kim@umbc.edu, jclavin@umbc.edu",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     project_urls={"Source Code": "https://github.com/leroykim/synthea-rdf"},
@@ -21,7 +21,7 @@ setup(
         "pandas",
         "alive_progress",
         "panel",
-        "psutil",
-        "lorem_text"
+        "lorem_text",
+        "pyyaml",
     ],
 )
