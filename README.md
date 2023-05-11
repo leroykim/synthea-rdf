@@ -6,20 +6,23 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 ![synthea_ontology](synthea_ontology/synthea_ontology.png)
 
 
-# :hammer: Installation
-## Poetry
+## :hammer: Installation
+### Method 1: Poetry
 [Poetry installation guide](https://python-poetry.org/docs/)
-1. `python3 -m venv .venv`
-2. `source .venv/bin/activate`
-3. `poetry install`
+1. clone the repo
+2. `python3 -m venv .venv`
+3. `source .venv/bin/activate`
+4. `poetry install`
 
-## Pip
+:electric_plug: activate `.venv` environment everytime before using `synthea-rdf` by running `source .venv/bin/activate` command.
+
+### Method 2: Pip
 ```bash
 pip install synthea-rdf
 ```
 
-# :zap: Usage
-## Basic Usage
+## :zap: Usage
+### Conversion
 All conversion configurations should be specified in [`configuration.yaml`](configuration.yaml).
 
 Here is a sample `configuration.yaml`.
@@ -56,7 +59,7 @@ After specification, simply run:
 python3 conversion.py
 ```
 
-## Running conversion process with [TMUX](https://github.com/tmux/tmux/wiki)
+### Running conversion process with [TMUX](https://github.com/tmux/tmux/wiki)
 
 The bigger the data size, the more time that the data conversion needs. In this case, it would be better to use CLI in the background and check the progress time to time. The best way is to run the process in a [TMUX](https://github.com/tmux/tmux/wiki) session and detach it. It is possible to check the progress by attaching the TMUX session.
 
@@ -64,11 +67,10 @@ Example:
 1. `$ tmux`
 2. `$ python3 conversion.py`
 3. Press `[CTRL]+[b]`, then `[d]` to detach the TMUX session.
-4. Now it is okay to log off.
-    > DO NOT SHUT DOWN THE MACHINE!!
+4. Now it is okay to log off. (:warning:DO NOT SHUT DOWN THE MACHINE!!)
 5. `$ tmux a` to attach the session and check the progress
 
-## Trust Score and DUA generator
+### Trust Score and DUA generation
 Use [Trust score and Data Usage Agreement (DUA) generator](trustscore_dua_generator_gui.py) to generate optional `Trust Score` and `DUA` data.
 
 ```bash
