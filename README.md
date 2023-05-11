@@ -48,7 +48,7 @@ After specification, simply run:
 python3 conversion.py
 ```
 
-### Running CLI with [TMUX](https://github.com/tmux/tmux/wiki)
+### Running conversion process with [TMUX](https://github.com/tmux/tmux/wiki)
 
 The bigger the data size, the more time that the data conversion needs. In this case, it would be better to use CLI in the background and check the progress time to time. The best way is to run the process in a [TMUX](https://github.com/tmux/tmux/wiki) session and detach it. It is possible to check the progress by attaching the TMUX session.
 
