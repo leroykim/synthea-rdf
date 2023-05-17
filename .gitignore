@@ -153,3 +153,4 @@ ontology/file_manager.ipynb
 .vscode/settings.json
 README.md
 poetry.lock
+configuration.yaml

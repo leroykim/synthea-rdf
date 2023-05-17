@@ -1,23 +1,8 @@
 model_path: synthea_ontology/synthea_ontology.ttl
-synthea_csv_path: ../synthea/output/1000k/csv
-output_path: result/1000k
+synthea_csv_path: ../synthea/output/1k/csv
+output_path: result/1k
 chunk_size: 300000
 include_dua: True
 include_trustscore: True
-skip:
-  - allergies.csv
-  - careplans.csv
-  - claims_transactions.csv
-  - claims.csv
-  - conditions.csv
-  - devices.csv
-  - encounters.csv
-  - imaging_studies.csv
-  - immunizations.csv
-  - medications.csv
-  - observations.csv
-  - organizations.csv
-  - patients.csv
-  - patient_expenses.csv
-  - payer_transitions.csv
+skip: []
 do_shutdown: False

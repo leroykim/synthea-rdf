@@ -48,7 +48,7 @@ class GraphBuilder:
         destination_dir: Path,
         include_dua: bool = False,
         include_trustscore: bool = False,
-        skip: list[str] = None,
+        skip: list[str] = [],
     ):
         self.RESOURCE_DICT = {
             "allergies.csv": self.convertAllergy,

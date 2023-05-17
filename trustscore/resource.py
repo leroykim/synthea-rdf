@@ -28,9 +28,7 @@ class TrustScore(Resource):
 
     def convert(self, graph):
         # Data custodian
-        data_custodian = trustscoreUserUri("data_custodian")
-        graph.add((data_custodian, RDF.type, TST.User))
-        graph.add((data_custodian, RDFS.label, plainLiteral("user_data_custodian")))
+        data_custodian = organizationUri("dataCustodian")
         graph.add((data_custodian, TST.credibility, floatLiteral(1.0)))
         graph.add((data_custodian, TST.objectivity, floatLiteral(1.0)))
         graph.add((data_custodian, TST.trustfulness, floatLiteral(1.0)))
