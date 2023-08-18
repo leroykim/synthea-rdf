@@ -21,6 +21,7 @@ panel = "^0.14.4"
 lorem-text = "^2.1"
 PyYAML = "^6.0"
 owlready2 = "^0.44"
+jupyter = "^1.0.0"
 
 
 [build-system]

@@ -1,3 +1,8 @@
+# SYNTHEA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#"
+# DUA_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/data-usage-agreement#"
+# TRUST_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/trust#"
+# DATA_EXCHANGE_IRI = "https://knacc.umbc.edu/dae-young/kim/ontologies/data-exchange#"
+synthea_namespace: https://knacc.umbc.edu/dae-young/kim/ontologies/synthea#
 model_path: synthea_ontology/synthea_ontology.ttl
 synthea_csv_path: ../synthea/output/1k/csv
 output_path: result/1k
