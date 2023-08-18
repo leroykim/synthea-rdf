@@ -9,7 +9,8 @@ packages = [
 {include = "synthea_rdf"},
 {include = "dua"},
 {include = "trustscore"},
-{include = "abstract"}
+{include = "abstract"},
+{include = "definitions"},
 ]
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
@@ -19,6 +20,7 @@ alive-progress = "^3.1.2"
 panel = "^0.14.4"
 lorem-text = "^2.1"
 PyYAML = "^6.0"
+owlready2 = "^0.44"
 
 
 [build-system]
