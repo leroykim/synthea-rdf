@@ -12,7 +12,9 @@ Semantic web representation for the [Synthea<sup>TM</sup>](https://github.com/sy
 1. clone the repo
 2. `python3 -m venv .venv`
 3. `source .venv/bin/activate`
-4. `poetry install`
+4. `python -m pip install --upgrade pip`
+5. `pip install poetry`
+6. `poetry install`
 
 :electric_plug: Activate `.venv` environment everytime before using `synthea-rdf` by running `source .venv/bin/activate` command.
 

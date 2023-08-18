@@ -154,3 +154,4 @@ ontology/file_manager.ipynb
 README.md
 poetry.lock
 configuration.yaml
+.DS_Store
