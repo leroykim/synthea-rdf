@@ -2,7 +2,7 @@
 Warning: The datatype must be declared **BEFORE** loading any ontology that uses it.
 """
 
-from owlready2 import *
+from owlready2 import declare_datatype
 
 """
 SUMMARY

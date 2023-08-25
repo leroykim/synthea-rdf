@@ -1,4 +1,4 @@
-from owlready2 import *
+from owlready2 import get_ontology, Thing
 from synthea_rdf.util.configuration import Configuration
 
 synthea_ontology = get_ontology(Configuration.synthea_namespace)
