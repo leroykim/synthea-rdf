@@ -7,6 +7,8 @@ synthea_ontology = get_ontology(Configuration.synthea_namespace)
 with synthea_ontology:
     """
     Allergy object properties
+    - isAbout
+    - isDiagnosedDuring
     """
 
     class isAbout(ObjectProperty):
