@@ -26,6 +26,8 @@ with synthea_ontology:
             Immunization,
             Medication,
             Observation,
+            Procedure,
+            Supply,
         ]
         range = [str]
 
@@ -40,6 +42,8 @@ with synthea_ontology:
             Immunization,
             Medication,
             Observation,
+            Procedure,
+            Supply,
         ]
         range = [URN_UUID]
 
@@ -64,6 +68,9 @@ with synthea_ontology:
             Immunization,
             Medication,
             Observation,
+            PayerTransition,
+            Procedure,
+            Supply,
         ]
         range = [URN_UUID]
 
@@ -87,6 +94,8 @@ with synthea_ontology:
             Immunization,
             Medication,
             Observation,
+            Procedure,
+            Supply,
         ]
         range = [SNOMED_CT]
 
@@ -122,7 +131,16 @@ with synthea_ontology:
         range = [URN_UUID]
 
     class id(DataProperty):
-        domain = [Claim, ClaimTransaction, Encounter, ImagingStudy]
+        domain = [
+            Claim,
+            ClaimTransaction,
+            Encounter,
+            ImagingStudy,
+            Organization,
+            Patient,
+            Payer,
+            Provider,
+        ]
         range = [URN_UUID]
 
     class patientDepartmentId(DataProperty):
@@ -189,7 +207,7 @@ with synthea_ontology:
     """
 
     class startDateTime(DataProperty):
-        domain = [Device, Encounter, Medication]
+        domain = [Device, Encounter, Medication, Procedure]
         range = [datetime]
 
     class udi(DataProperty):
@@ -221,7 +239,7 @@ with synthea_ontology:
         range = [str]
 
     class organizationId(DataProperty):
-        domain = [Encounter]
+        domain = [Encounter, Provider]
         range = [URN_UUID]
 
     class payerCoverage(DataProperty):
@@ -229,7 +247,7 @@ with synthea_ontology:
         range = [float]
 
     class payerId(DataProperty):
-        domain = [Encounter, Medication]
+        domain = [Encounter, Medication, PayerTransition]
         range = [URN_UUID]
 
     class totalClaimCost(DataProperty):
@@ -322,7 +340,7 @@ with synthea_ontology:
     """
 
     class baseCost(DataProperty):
-        domain = [Medication]
+        domain = [Medication, Procedure]
         range = [float]
 
     class dispense(DataProperty):
@@ -350,5 +368,237 @@ with synthea_ontology:
 
     """
     Organization data properties:
-    
+    - address
+    - city
+    - id: defined in Claim
+    - name
+    - revenue
+    - utilization
     """
+
+    class address(DataProperty):
+        domain = [Organization, Patient, Provider]
+        range = [str]
+
+    class city(DataProperty):
+        domain = [Organization, Patient, Provider]
+        range = [str]
+
+    class name(DataProperty):
+        domain = [Organization, Payer, Provider]
+        range = [str]
+
+    class revenue(DataProperty):
+        domain = [Organization, Payer]
+        range = [float]
+
+    class utilization(DataProperty):
+        domain = [Organization, Provider]
+        range = [int]
+
+    """
+    Patient data properties:
+    - address: defined in Organization
+    - birthDate
+    - birthplace
+    - city: defined in Organization
+    - ethnicity
+    - first
+    - gender
+    - healthcareCoverage
+    - healthcareExpense
+    - id: defined in Claim
+    - income
+    - last
+    - race
+    - ssn
+    - state
+
+    NOTE
+    ----
+    - [ ] Check data type of healthcareCoverage and healthcareExpense.
+    """
+
+    class birthDate(DataProperty):
+        domain = [Patient]
+        range = [datetime]
+
+    class birthplace(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class ethnicity(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class first(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class gender(DataProperty):
+        domain = [Patient, Provider]
+        range = [str]
+
+    class healthcareCoverage(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class healthcareExpense(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class income(DataProperty):
+        domain = [Patient]
+        range = [int]
+
+    class last(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class race(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class ssn(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    class state(DataProperty):
+        domain = [Patient]
+        range = [str]
+
+    """
+    Payer data properties:
+    - amountCovered
+    - amountUncovered
+    - coveredEncounters
+    - coveredImmunizations
+    - coveredMedications
+    - coveredProcedures
+    - id: defined in Claim
+    - memberMonths
+    - name: defined in Organization
+    - qolsAvg
+    - revenue: defined in Organization
+    - uncoveredEncounters
+    - uncoveredImmunizations
+    - uncoveredMedications
+    - uncoveredProcedures
+    - uniqueCustomers
+    """
+
+    class amountCovered(DataProperty):
+        domain = [Payer]
+        range = [float]
+
+    class amountUncovered(DataProperty):
+        domain = [Payer]
+        range = [float]
+
+    class coveredEncounters(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class coveredImmunizations(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class coveredMedications(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class coveredProcedures(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class memberMonths(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class qolsAvg(DataProperty):
+        domain = [Payer]
+        range = [float]
+
+    class uncoveredEncounters(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class uncoveredImmunizations(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class uncoveredMedications(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class uncoveredProcedures(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    class uniqueCustomers(DataProperty):
+        domain = [Payer]
+        range = [int]
+
+    """
+    PayerTransition data properties:
+    - endYear
+    - patientId: defined in Allergy
+    - payerId: defined in Encounter
+    - startYear
+
+    NOTE
+    ----
+    - [ ] Check data type of endYear and startYear.
+    """
+
+    class endYear(DataProperty):
+        domain = [PayerTransition]
+        range = [datetime]
+
+    class startYear(DataProperty):
+        domain = [PayerTransition]
+        range = [datetime]
+
+    """
+    Procedure data properties:
+    - baseCost: defined in Medication
+    - code: defined in CarePlan
+    - description: defined in Allergy
+    - encounterId: defined in Allergy
+    - patientId: defined in Allergy
+    - startDateTime: defined in Device
+    """
+
+    """
+    Provider data properties:
+    - address: defined in Organization
+    - city: defined in Organization
+    - gender: defined in Patient
+    - id: defined in Claim
+    - name: defined in Organization
+    - organizationId: defined in Encounter
+    - specialty
+    - utilization: defined in Organization
+    """
+
+    class specialty(DataProperty):
+        domain = [Provider]
+        range = [str]
+
+    """
+    Supply data properties:
+    - code: defined in CarePlan
+    - date
+    - description: defined in Allergy
+    - encounterId: defined in Allergy
+    - patientId: defined in Allergy
+    - quantity
+    """
+
+    class date(DataProperty):
+        domain = [Supply]
+        range = [datetime]
+
+    class quantity(DataProperty):
+        domain = [Supply]
+        range = [int]

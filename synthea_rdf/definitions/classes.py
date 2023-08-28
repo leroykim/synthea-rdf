@@ -55,3 +55,6 @@ with synthea_ontology:
 
     class Provider(Thing):
         pass
+
+    class Supply(Thing):
+        pass
