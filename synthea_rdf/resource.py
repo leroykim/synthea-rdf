@@ -148,8 +148,6 @@ class CarePlan(Resource):
 
 class Claim(Resource):
     def __init__(self, df):
-        print("DEBUG ******************* 1")
-        print(df)
         self.__resource_df = df
 
     @property
@@ -165,7 +163,6 @@ class Claim(Resource):
         Object properties covered by other resource conversion:
             - [x] syn:Claim syn:hasTransaction syn:ClaimTransaction
         """
-        print("DEBUG ******************* 2")
         rows = self.__resource_df.shape[0]
         with alive_bar(rows, force_tty=True, title="Claim Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
