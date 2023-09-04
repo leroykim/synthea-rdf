@@ -148,6 +148,8 @@ class CarePlan(Resource):
 
 class Claim(Resource):
     def __init__(self, df):
+        print("DEBUG ******************* 1")
+        print(df)
         self.__resource_df = df
 
     @property
@@ -163,6 +165,7 @@ class Claim(Resource):
         Object properties covered by other resource conversion:
             - [x] syn:Claim syn:hasTransaction syn:ClaimTransaction
         """
+        print("DEBUG ******************* 2")
         rows = self.__resource_df.shape[0]
         with alive_bar(rows, force_tty=True, title="Claim Conversion") as bar:
             for index, row in self.__resource_df.iterrows():
@@ -184,6 +187,62 @@ class Claim(Resource):
                         claim,
                         SYN.patientDepartmentId,
                         urnUuidLiteral(row["PATIENTDEPARTMENTID"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis1,
+                        snomedCtLiteral(row["DIAGNOSIS1"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis2,
+                        snomedCtLiteral(row["DIAGNOSIS2"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis3,
+                        snomedCtLiteral(row["DIAGNOSIS3"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis4,
+                        snomedCtLiteral(row["DIAGNOSIS4"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis5,
+                        snomedCtLiteral(row["DIAGNOSIS5"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis6,
+                        snomedCtLiteral(row["DIAGNOSIS6"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis7,
+                        snomedCtLiteral(row["DIAGNOSIS7"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis8,
+                        snomedCtLiteral(row["DIAGNOSIS8"]),
                     )
                 )
                 graph.add(
