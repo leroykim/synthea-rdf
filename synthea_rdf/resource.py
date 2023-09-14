@@ -189,6 +189,62 @@ class Claim(Resource):
                 graph.add(
                     (
                         claim,
+                        SYN.diagnosis1,
+                        snomedCtLiteral(row["DIAGNOSIS1"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis2,
+                        snomedCtLiteral(row["DIAGNOSIS2"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis3,
+                        snomedCtLiteral(row["DIAGNOSIS3"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis4,
+                        snomedCtLiteral(row["DIAGNOSIS4"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis5,
+                        snomedCtLiteral(row["DIAGNOSIS5"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis6,
+                        snomedCtLiteral(row["DIAGNOSIS6"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis7,
+                        snomedCtLiteral(row["DIAGNOSIS7"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
+                        SYN.diagnosis8,
+                        snomedCtLiteral(row["DIAGNOSIS8"]),
+                    )
+                )
+                graph.add(
+                    (
+                        claim,
                         SYN.currentIllnessDate,
                         dateTimeLiteral(row["CURRENTILLNESSDATE"]),
                     )
